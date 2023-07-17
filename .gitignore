@@ -16,3 +16,7 @@ HaxelCommunication/.vs/HaxelCommunication/v17/.suo
 *.log
 *.idb
 *.pdb
+.vs/ProjectSettings.json
+.vs/slnx.sqlite
+.vs/VSWorkspaceState.json
+HaxelCommunication/.vs/HaxelCommunication/v17/HierarchyCache.v1.txt
