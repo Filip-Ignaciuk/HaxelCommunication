@@ -1,5 +1,8 @@
 #include <iostream>
 #include <string>
+#include "TextViewer.h"
+
+
 
 class User
 {
@@ -45,6 +48,13 @@ public:
 
 int main()
 {
-	Interface::InputText();	
+	TextViewer Textviewer;
+	std::map<std::string, bool> map = Textviewer.ReadFile("Hello.txt");
+
+	for (const auto& Kvp : map)
+	{
+		std::cout << Kvp.first << " " << Kvp.second << std::endl;
+	}
+
 }
 
