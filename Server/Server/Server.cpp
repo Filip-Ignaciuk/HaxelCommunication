@@ -3,6 +3,8 @@
 #include <WS2tcpip.h>
 #include <iostream>
 
+#include "user.hpp"
+
 int main()
 {
     const int port = 8192;
@@ -66,6 +68,11 @@ int main()
     }
 
     std::cout << "Successfully accepted socket." << std::endl;
-    system("pause");
+
+    User* user;
+    int byteCount = recv(acceptSocket, (char*)&user, sizeof(user), 0);
+
+    std::cout << user->GetDisplayName() << std::endl;
+
     WSACleanup();
 }

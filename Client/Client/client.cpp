@@ -3,8 +3,14 @@
 #include <WS2tcpip.h>
 #include <iostream>
 
+#include "user.hpp"
+
+
+
 int main()
 {
+	
+
 	const int port = 8192;
 
 	SOCKET clientSocket;
@@ -44,7 +50,10 @@ int main()
 	}
 
 	std::cout << "Successfully connected to server." << std::endl;
-	system("pause");
+	User clientUser("Filip");
+	send(clientSocket, (char*)&clientUser, sizeof(clientUser), 0);
+
+
 	WSACleanup();
 
 }
