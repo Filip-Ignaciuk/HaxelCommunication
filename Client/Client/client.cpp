@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <Windows.h>
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 #include <iostream>
@@ -9,9 +10,10 @@
 
 int main()
 {
-	
-
 	const int port = 8192;
+	const int bufferSize = 200;
+
+	
 
 	SOCKET clientSocket;
 	WORD version = MAKEWORD(2, 2);
@@ -50,9 +52,26 @@ int main()
 	}
 
 	std::cout << "Successfully connected to server." << std::endl;
-	User clientUser("Filip");
-	send(clientSocket, (char*)&clientUser, sizeof(clientUser), 0);
+	std::cout << "Display Name:" << std::endl;
+	std::string displayName;
+	std::getline(std::cin, displayName);
+	std::string bufferString = "I" + displayName.size() + displayName;
+	const char* buffer = bufferString.c_str();
+	Sleep(2000);
+	send(clientSocket, buffer, bufferSize, 0);
 
+	User userClient("PLACEHOLDER", "999");
+	while(true)
+	{
+		recv(clientSocket,(char*)&userClient, bufferSize, 0);
+		std::cout << "Name is: " << userClient.GetDisplayName() << " and ID is: " << userClient.GetId() << std::endl;
+	}
+
+
+
+	
+
+	
 
 	WSACleanup();
 

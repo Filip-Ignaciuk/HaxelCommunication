@@ -2,18 +2,15 @@
 
 #include <vector>
 
-std::vector<User> users;
 
 
-User::User(std::string _displayName) : displayName(_displayName)
-
+User::User(std::string _displayName, std::string _id) : displayName(_displayName), id(_id)
 {
-	id = users.size();
-	users.emplace_back(*this);
+
 }
 
 
-int User::GetId() const
+std::string User::GetId() const
 {
 	return id;
 }
@@ -21,4 +18,9 @@ int User::GetId() const
 std::string User::GetDisplayName() const
 {
 	return displayName;
+}
+
+void User::SetDisplayName(std::string _displayName)
+{
+	displayName = std::move(_displayName);
 }
