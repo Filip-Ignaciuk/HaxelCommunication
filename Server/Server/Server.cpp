@@ -2,12 +2,53 @@
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 #include <iostream>
+#include <vector>
 
 #include "user.hpp"
+
+
+std::vector<std::string> texts;
+
+
+DWORD WINAPI clientThreadSendUserText(LPVOID param)
+{
+    SOCKET clientSocket = (SOCKET)param;
+    char buffer[200];
+    int bytecount = send(clientSocket, buffer, 200, 0);
+
+    
+
+}
+
+DWORD WINAPI clientThreadReceive(LPVOID param)
+{
+    SOCKET clientSocket = (SOCKET)param;
+    char buffer[200];
+    int bytecount = recv(clientSocket, buffer, 200, 0);
+
+    if (buffer[0] == 'U' && buffer[1] == 'T')
+    {
+        //UT[User]Hello!
+        //In square brackets is the user class
+        clientThreadSendUserText(buffer);
+        buffer[0] = (char)"";
+        buffer[1] = (char)"";
+    }
+
+}
+
+DWORD WINAPI clientThread(LPVOID param)
+{
+    SOCKET clientSocket = (SOCKET)param;
+
+    recv(clientSocket, )
+}
 
 int main()
 {
     const int port = 8192;
+
+
 
 
     SOCKET serverSocket = INVALID_SOCKET;
@@ -69,10 +110,9 @@ int main()
 
     std::cout << "Successfully accepted socket." << std::endl;
 
-    User* user;
-    int byteCount = recv(acceptSocket, (char*)&user, sizeof(user), 0);
-
-    std::cout << user->GetDisplayName() << std::endl;
+    DWORD threadid;
+    HANDLE hdl;
+    hdl = CreateThread(NULL, 0, clientThread, (LPVOID)acceptSocket, 0, &threadid);
 
     WSACleanup();
 }

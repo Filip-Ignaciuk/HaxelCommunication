@@ -6,12 +6,21 @@
 #include "user.hpp"
 
 
+User CreateUserClient()
+{
+	char buffer[200];
+	std::cout << "Input the display name you would like:" << std::endl;
+	std::cin.getline(buffer, 200);
+	return User(buffer);
+}
 
 int main()
 {
-	
-
 	const int port = 8192;
+	User clientUser = CreateUserClient();
+
+
+	
 
 	SOCKET clientSocket;
 	WORD version = MAKEWORD(2, 2);
@@ -50,8 +59,8 @@ int main()
 	}
 
 	std::cout << "Successfully connected to server." << std::endl;
-	User clientUser("Filip");
-	send(clientSocket, (char*)&clientUser, sizeof(clientUser), 0);
+	
+	send(clientSocket, (char*)&clientUser, sizeof(User), 0);
 
 
 	WSACleanup();
