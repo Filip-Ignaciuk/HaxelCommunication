@@ -6,47 +6,108 @@
 
 #include "user.hpp"
 
+const int port = 8192;
+const int bufferSize = 200;
 
 std::vector<std::string> texts;
+std::vector<User> users;
+std::vector<bool> finished;
 
-
-DWORD WINAPI clientThreadSendUserText(LPVOID param)
+struct SocketUserHolder
 {
-    SOCKET clientSocket = (SOCKET)param;
-    char buffer[200];
-    int bytecount = send(clientSocket, buffer, 200, 0);
+    SOCKET socket;
+    User user;
+};
+
+struct SocketBufferHolder
+{
+    SOCKET socket;
+    char buffer[bufferSize];
+};
+
+DWORD WINAPI clientThreadI(LPVOID param)
+{
+    SocketBufferHolder* SBH = (SocketBufferHolder*)param;
+    std::string displayName;
+    std::string id;
+
+    int displayNameLength = SBH->buffer[1];
+
+    for (size_t i = 2; i < displayNameLength; i++)
+    {
+        displayName.push_back(SBH->buffer[i]);
+    }
+
+    int numOfUsers = users.size();
+    if (numOfUsers < 1000)
+    {
+        if (numOfUsers < 10)
+        {
+            id = numOfUsers + "00";
+        }
+        if (numOfUsers < 100)
+        {
+            id = numOfUsers + "0";
+        }
+        else
+        {
+            id = numOfUsers;
+        }
+    }
+    
+    User user(displayName, id);
+    char* buffer = 'I' + (char*)&user;
+    int bytecount = send(SBH->socket, (char*)&buffer, bufferSize, 0);
 
     
-
+    return 0;
 }
+
+DWORD WINAPI clientThreadU(LPVOID param)
+{
+    SOCKET clientSocket = (SOCKET)param;
+    char buffer[bufferSize];
+    int bytecount = send(clientSocket, buffer, bufferSize, 0);
+
+
+    return 0;
+}
+
 
 DWORD WINAPI clientThreadReceive(LPVOID param)
 {
     SOCKET clientSocket = (SOCKET)param;
-    char buffer[200];
-    int bytecount = recv(clientSocket, buffer, 200, 0);
+    char buffer[bufferSize];
+    int bytecount = recv(clientSocket, buffer, bufferSize, 0);
 
-    if (buffer[0] == 'U' && buffer[1] == 'T')
+    if(buffer[0] == 'I')
     {
-        //UT[User]Hello!
-        //In square brackets is the user class
-        clientThreadSendUserText(buffer);
-        buffer[0] = (char)"";
-        buffer[1] = (char)"";
+        DWORD threadid;
+        HANDLE hdl;
+        SocketBufferHolder SBH = { clientSocket, (char)buffer };
+        hdl = CreateThread(NULL, 0, clientThreadI, param, 0, &threadid);
+    }
+    else if(buffer[0] == 'U')
+    {
+	    
     }
 
+    return 0;
 }
 
-DWORD WINAPI clientThread(LPVOID param)
-{
-    SOCKET clientSocket = (SOCKET)param;
-
-    recv(clientSocket, )
-}
+//DWORD WINAPI clientThread(LPVOID param)
+//{
+//    SOCKET clientSocket = (SOCKET)param;
+//    DWORD threadid;
+//    HANDLE hdl;
+//    hdl = CreateThread(NULL, 0, clientThreadReceive, param, 0, &threadid);
+//
+//
+//}
 
 int main()
 {
-    const int port = 8192;
+    
 
 
 
@@ -112,7 +173,10 @@ int main()
 
     DWORD threadid;
     HANDLE hdl;
-    hdl = CreateThread(NULL, 0, clientThread, (LPVOID)acceptSocket, 0, &threadid);
-
-    WSACleanup();
+    hdl = CreateThread(NULL, 0, clientThreadReceive, (LPVOID)acceptSocket, 0, &threadid);
+    finished.emplace_back(false);
+    while(true)
+    {
+	    
+    }
 }

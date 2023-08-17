@@ -10,14 +10,15 @@ class IDGenerator
 class User
 {
 private:
-	int id;
+	std::string id;
 	std::string displayName;
 
 public:
-	User(std::string _displayName);
+	User(std::string _displayName, std::string _id);
 
 
-	int GetId() const;
+	std::string GetId() const;
 	std::string GetDisplayName() const;
+	void SetDisplayName(std::string _displayName);
 
 };
