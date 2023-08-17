@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <Windows.h>
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 #include <iostream>
@@ -56,8 +57,21 @@ int main()
 	std::getline(std::cin, displayName);
 	std::string bufferString = "I" + displayName.size() + displayName;
 	const char* buffer = bufferString.c_str();
-
+	Sleep(2000);
 	send(clientSocket, buffer, bufferSize, 0);
+
+	User userClient("PLACEHOLDER", "999");
+	while(true)
+	{
+		recv(clientSocket,(char*)&userClient, bufferSize, 0);
+		std::cout << "Name is: " << userClient.GetDisplayName() << " and ID is: " << userClient.GetId() << std::endl;
+	}
+
+
+
+	
+
+	
 
 	WSACleanup();
 
