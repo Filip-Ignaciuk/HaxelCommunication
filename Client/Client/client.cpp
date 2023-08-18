@@ -6,11 +6,14 @@
 
 #include "user.hpp"
 
-
+void InitialiseSocket()
+{
+	
+}
 
 int main()
 {
-	const int port = 8192;
+	
 	const int bufferSize = 200;
 
 	
@@ -37,7 +40,11 @@ int main()
 
 	std::cout << "Client socket has been successfully created." << std::endl;
 
+	std::cout << "IP:" << std::endl;
+
 	sockaddr_in service;
+	// const wchar_t
+	const int port = 8192;
 	PCWSTR ip = L"127.0.0.1";
 	service.sin_family = AF_INET;
 	service.sin_port = htons(port);
@@ -55,17 +62,18 @@ int main()
 	std::cout << "Display Name:" << std::endl;
 	std::string displayName;
 	std::getline(std::cin, displayName);
-	std::string bufferString = "I" + displayName.size() + displayName;
+	// Need to opt
+	std::string bufferString = "I";
+	int size = displayName.size();
+	bufferString.append(std::to_string(size));
+	bufferString.append(displayName);
 	const char* buffer = bufferString.c_str();
 	Sleep(2000);
 	send(clientSocket, buffer, bufferSize, 0);
 
 	User userClient("PLACEHOLDER", "999");
-	while(true)
-	{
-		recv(clientSocket,(char*)&userClient, bufferSize, 0);
-		std::cout << "Name is: " << userClient.GetDisplayName() << " and ID is: " << userClient.GetId() << std::endl;
-	}
+	int bytecount = recv(clientSocket, (char*)&userClient, sizeof(User), 0);
+	std::cout << "Name is: " << userClient.GetDisplayName() << " and ID is: " << userClient.GetId() << std::endl;
 
 
 
