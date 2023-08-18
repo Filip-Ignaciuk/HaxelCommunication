@@ -24,7 +24,7 @@ struct SocketUserHolder
 struct SocketBufferHolder
 {
     SOCKET socket;
-    char buffer[bufferSize];
+    std::string buffer;
 };
 
 
@@ -35,61 +35,91 @@ int pos = 0;
 
 DWORD WINAPI clientThreadI(LPVOID param)
 {
-    SocketBufferHolder SBH = *(SocketBufferHolder*)param;
+    SocketBufferHolder* SBH = (SocketBufferHolder*)param;
     std::string displayName;
     std::string id;
 
-    int displayNameLength = SBH.buffer[1];
+    std::string displayNameLengthS = "0";
+    displayNameLengthS[0] = SBH->buffer[1];
+    int displayNameLength = std::stoi(displayNameLengthS) + 2;
 
-    for (size_t i = 2; i < displayNameLength; i++)
+    for (int i = 2; i < displayNameLength; i++)
     {
-        displayName.push_back(SBH.buffer[i]);
+        displayName.push_back(SBH->buffer[i]);
     }
 
+    std::cout << displayName << std::endl;
     int numOfUsers = users.size();
+    
     if (numOfUsers < 1000)
     {
         if (numOfUsers < 10)
         {
-            id = numOfUsers + "00";
+            id = std::to_string(numOfUsers) + "00";
         }
-        if (numOfUsers < 100)
+        else if (numOfUsers < 100)
         {
-            id = numOfUsers + "0";
+            id = std::to_string(numOfUsers) + "0";
         }
         else
         {
-            id = numOfUsers;
+            id = std::to_string(numOfUsers);
         }
     }
+
+    std::cout << id << std::endl;
     
     User user(displayName, id);
     int pos;
     for (size_t i = 0; i < users.size(); i++)
     {
-        if(users[i].socket == SBH.socket)
+        if(users[i].socket == SBH->socket)
         {
             users[i].user = user;
             pos = i;
         }
     }
-    char* buffer = 'I' + (char*)&user;
     std::cout << "Sending user object" << std::endl;
     std::cout << "DisplayName = " << user.GetDisplayName() << std::endl;
     std::cout << "ID = " << user.GetId() << std::endl;
-    int bytecount = send(SBH.socket, (char*)&buffer, bufferSize, 0);
+    int bytecount = send(SBH->socket, (char*)&user, sizeof(User), 0);
 
+    delete SBH;
     finished[pos] = true;
+    
     return 0;
 }
 
 DWORD WINAPI clientThreadU(LPVOID param)
 {
-    SOCKET clientSocket = (SOCKET)param;
-    char buffer[bufferSize];
-    int bytecount = send(clientSocket, buffer, bufferSize, 0);
+    SocketBufferHolder* SBH = (SocketBufferHolder*)param;
+    std::string displayName;
+    std::string id;
 
+    if(SBH->buffer[1] == 'D')
+    {
+        std::string displayNameLengthS = "0";
+        displayNameLengthS[0] = SBH->buffer[2];
+        int displayNameLength = std::stoi(displayNameLengthS) + 3;
+        std::string newDisplayName;
+        for (int i = 3; i < displayNameLength; i++)
+        {
+            newDisplayName.push_back(SBH->buffer[i]);
+        }
 
+        for (int i = 0; i < users.size(); i++)
+        {
+            if(users[i].socket == SBH->socket)
+            {
+                users[i].user.SetDisplayName(newDisplayName);
+                int bytecount = send(SBH->socket, (char*)&users[i].user, sizeof(User), 0);
+            }
+        }
+
+        
+    }
+
+    delete param;
     return 0;
 }
 
@@ -97,11 +127,11 @@ DWORD WINAPI clientThreadU(LPVOID param)
 DWORD WINAPI clientThreadReceive(LPVOID param)
 {
     Sleep(2000);
-    SocketPositionHolder SPH = *((SocketPositionHolder*)param);
+    SocketPositionHolder* SPH = (SocketPositionHolder*)param;
 
     char buffer[bufferSize];
     std::cout << "Receiving message..." << std::endl;
-    int bytecount = recv(SPH.socket, buffer, bufferSize, 0);
+    int bytecount = recv(SPH->socket, buffer, bufferSize, 0);
     std::cout << "Checking message." << std::endl;
     std::cout << "Message: " << buffer << std::endl;
     if(buffer[0] == 'I')
@@ -109,16 +139,24 @@ DWORD WINAPI clientThreadReceive(LPVOID param)
         std::cout << "Initialising user" << std::endl;
         DWORD threadid;
         HANDLE hdl;
-        SocketBufferHolder SBH = { SPH.socket, (char)buffer };
-        hdl = CreateThread(NULL, 0, clientThreadI, &SBH, 0, &threadid);
+        SocketBufferHolder* SBH = new SocketBufferHolder{ SPH->socket, buffer };
+        hdl = CreateThread(NULL, 0, clientThreadI, SBH, 0, &threadid);
+        delete SPH;
         return 0;
     }
     else if(buffer[0] == 'U')
     {
-	    
+        std::cout << "Updating user" << std::endl;
+        DWORD threadid;
+        HANDLE hdl;
+        SocketBufferHolder* SBH = new SocketBufferHolder{ SPH->socket, buffer };
+        hdl = CreateThread(NULL, 0, clientThreadU, SBH, 0, &threadid);
+        delete SPH;
+        return 0;
     }
 
-    finished[SPH.pos] = true;
+    finished[SPH->pos] = true;
+    delete SPH;
     return 0;
 }
 
@@ -156,9 +194,9 @@ DWORD WINAPI ListenThread(LPVOID param)
 
     DWORD threadid;
     HANDLE hdl;
-    SocketPositionHolder SPH = { acceptSocket, pos };
+    SocketPositionHolder* SPH = new SocketPositionHolder{ acceptSocket, pos };
     std::cout << "Creating thread for socket." << std::endl;
-    hdl = CreateThread(NULL, 0, clientThreadReceive, &SPH, 0, &threadid);
+    hdl = CreateThread(NULL, 0, clientThreadReceive, SPH, 0, &threadid);
     
 	finished.emplace_back(false);
     pos++;
