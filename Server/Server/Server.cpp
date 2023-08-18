@@ -92,9 +92,32 @@ DWORD WINAPI clientThreadI(LPVOID param)
 
 DWORD WINAPI clientThreadU(LPVOID param)
 {
-    SOCKET clientSocket = (SOCKET)param;
-    char buffer[bufferSize];
-    int bytecount = send(clientSocket, buffer, bufferSize, 0);
+    SocketBufferHolder* SBH = (SocketBufferHolder*)param;
+    std::string displayName;
+    std::string id;
+
+    if(SBH->buffer[1] == 'D')
+    {
+        std::string displayNameLengthS = "0";
+        displayNameLengthS[0] = SBH->buffer[2];
+        int displayNameLength = std::stoi(displayNameLengthS) + 3;
+        std::string newDisplayName;
+        for (int i = 3; i < displayNameLength; i++)
+        {
+            newDisplayName.push_back(SBH->buffer[i]);
+        }
+
+        for (int i = 0; i < users.size(); i++)
+        {
+            if(users[i].socket == SBH->socket)
+            {
+                users[i].user.SetDisplayName(newDisplayName);
+                int bytecount = send(SBH->socket, (char*)&users[i].user, sizeof(User), 0);
+            }
+        }
+
+        
+    }
 
     delete param;
     return 0;
@@ -123,7 +146,13 @@ DWORD WINAPI clientThreadReceive(LPVOID param)
     }
     else if(buffer[0] == 'U')
     {
-	    
+        std::cout << "Updating user" << std::endl;
+        DWORD threadid;
+        HANDLE hdl;
+        SocketBufferHolder* SBH = new SocketBufferHolder{ SPH->socket, buffer };
+        hdl = CreateThread(NULL, 0, clientThreadU, SBH, 0, &threadid);
+        delete SPH;
+        return 0;
     }
 
     finished[SPH->pos] = true;
