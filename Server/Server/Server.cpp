@@ -13,6 +13,7 @@ struct SocketPositionHolder
 {
     SOCKET socket;
     int pos;
+
 };
 
 struct SocketUserHolder
@@ -25,6 +26,7 @@ struct SocketBufferHolder
 {
     SOCKET socket;
     std::string buffer;
+
 };
 
 
@@ -95,9 +97,10 @@ DWORD WINAPI clientThreadU(LPVOID param)
     SocketBufferHolder* SBH = (SocketBufferHolder*)param;
     std::string displayName;
     std::string id;
-
+    std::cout << "Updating..." << std::endl;
     if(SBH->buffer[1] == 'D')
     {
+        std::cout << "Updating Display name..." << std::endl;
         std::string displayNameLengthS = "0";
         displayNameLengthS[0] = SBH->buffer[2];
         int displayNameLength = std::stoi(displayNameLengthS) + 3;
@@ -116,19 +119,23 @@ DWORD WINAPI clientThreadU(LPVOID param)
             }
         }
 
+        delete SBH;
+        return 0;
+
         
     }
 
-    delete param;
+    delete SBH;
     return 0;
 }
 
 
 DWORD WINAPI clientThreadReceive(LPVOID param)
 {
+    
     Sleep(2000);
     SocketPositionHolder* SPH = (SocketPositionHolder*)param;
-
+    
     char buffer[bufferSize];
     std::cout << "Receiving message..." << std::endl;
     int bytecount = recv(SPH->socket, buffer, bufferSize, 0);
@@ -156,7 +163,7 @@ DWORD WINAPI clientThreadReceive(LPVOID param)
     }
 
     finished[SPH->pos] = true;
-    delete SPH;
+    delete[] SPH;
     return 0;
 }
 
@@ -267,7 +274,8 @@ int main()
             {
                 DWORD threadid;
                 HANDLE hdl;
-                SocketPositionHolder SPH = { users[i].socket, i };
+                SocketPositionHolder* SPH = new SocketPositionHolder{ users[i].socket, i };
+                finished[i] = false;
                 hdl = CreateThread(NULL, 0, clientThreadReceive, &SPH, 0, &threadid);
             }
         }

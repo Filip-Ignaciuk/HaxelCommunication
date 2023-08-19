@@ -68,12 +68,24 @@ int main()
 	bufferString.append(std::to_string(size));
 	bufferString.append(displayName);
 	const char* buffer = bufferString.c_str();
-	Sleep(2000);
+	Sleep(1000);
 	send(clientSocket, buffer, bufferSize, 0);
 
 	User userClient("PLACEHOLDER", "999");
 	int bytecount = recv(clientSocket, (char*)&userClient, sizeof(User), 0);
 	std::cout << "Name is: " << userClient.GetDisplayName() << " and ID is: " << userClient.GetId() << std::endl;
+
+	std::string newNameString = "UD3Lol";
+	const char* newName = newNameString.c_str();
+	Sleep(1000);
+	bytecount = send(clientSocket, newName, bufferSize, 0);
+	Sleep(1000);
+	recv(clientSocket, (char*)&userClient, sizeof(User), 0);
+
+	std::cout << "Name is: " << userClient.GetDisplayName() << " and ID is: " << userClient.GetId() << std::endl;
+
+
+
 
 
 
