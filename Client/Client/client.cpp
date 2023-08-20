@@ -10,7 +10,6 @@ const int bufferSize = 200;
 SOCKET clientSocket;
 bool isConsoleInUse = false;
 bool isTextInputThreadFinished = true;
-bool isClientRecvThreadFinished = true;
 User userClient("PLACEHOLDER", "999");
 
 void EditUser()
@@ -53,48 +52,46 @@ void EditUser()
 
 
 
-DWORD WINAPI ClientRecvThread(LPVOID param)
+DWORD WINAPI SendAndRecieveTextThread(LPVOID param)
 {
-	isClientRecvThreadFinished = false;
-	std::string buffer;
-	recv(clientSocket, (char*)&buffer, bufferSize, 0);
-	if (buffer[0] == 'M')
-	{
-		std::string message;
-		std::string lengthS = std::to_string(buffer[1]);
-		int length = std::stoi(lengthS);
-		for (int i = 2; i < length + 2; i++)
-		{
-			message.push_back(buffer[i]);
-		}
-		while (true)
-		{
-			if (!isConsoleInUse)
-			{
-				std::cout << message << std::endl;
-				isConsoleInUse = false;
-				break;
-			}
-		}
-
-	}
-
-	isClientRecvThreadFinished = true;
-}
-
-DWORD WINAPI SendTextThread(LPVOID param)
-{
+	std::cout << "Created SendTextThread" << std::endl;
 	std::string* message = (std::string*)param;
 	std::string messageWithUser = userClient.GetDisplayName() + ", ID: " + userClient.GetId() + " >> " + *message;
 	int messageSize = messageWithUser.size();
-	std::string messageFinal = "M" + messageSize + messageWithUser;
-	int bytecount = send(clientSocket, (char*)&messageFinal, bufferSize, 0);
+	std::string messageFinal = "M" + std::to_string(messageSize) + messageWithUser;
+	int bytecount = send(clientSocket, messageFinal.c_str(), bufferSize, 0);
+	delete message;
+
+	char buffer[bufferSize];
+	bytecount = recv(clientSocket, buffer, bufferSize, 0);
+	if (buffer[0] == 'M')
+	{
+		std::string message;
+		std::string LengthS = "";
+		int j = 1;
+		while (isdigit(buffer[j]))
+		{
+			LengthS.push_back(buffer[j]);
+			j++;
+		}
+		int length = std::stoi(LengthS) + j;
+		for (int i = j; i < length; i++)
+		{
+			message.push_back(buffer[i]);
+		}
+		std::cout << message << std::endl;
+		isConsoleInUse = false;
+
+
+	}
+
+	return 0;
 	
 }
 
 DWORD WINAPI TextInputThread(LPVOID param)
 {
-	isTextInputThreadFinished = false;
+	std::cout << "Created TextInputThread" << std::endl;
 	if(!isConsoleInUse)
 	{
 		isConsoleInUse = true;
@@ -111,17 +108,20 @@ DWORD WINAPI TextInputThread(LPVOID param)
 			}
 			else if (textInput == "/q" || textInput == "/Q")
 			{
-				isReadyToStayInChatRoom = false;
+				*isReadyToStayInChatRoom = false;
 			}
 		}
 		else
 		{
 			DWORD threadid;
 			HANDLE hdl;
-			hdl = CreateThread(NULL, 0, SendTextThread, &textInput, 0, &threadid);
+			std::string* textInputPara = new std::string(textInput);
+			hdl = CreateThread(NULL, 0, SendAndRecieveTextThread, textInputPara, 0, &threadid);
 		}
 		isConsoleInUse = false;
 	}
+	isTextInputThreadFinished = true;
+	return 0;
 }
 
 int main()
@@ -131,7 +131,6 @@ int main()
 
 	
 
-	SOCKET clientSocket;
 	WORD version = MAKEWORD(2, 2);
 	WSADATA wsaData;
 	if(WSAStartup(version, &wsaData))
@@ -189,15 +188,10 @@ int main()
 	bufferString.append(std::to_string(size));
 	bufferString.append(displayName);
 	const char* buffer = bufferString.c_str();
-	Sleep(1000);
 	send(clientSocket, buffer, bufferSize, 0);
-
-
 	int bytecount = recv(clientSocket, (char*)&userClient, sizeof(User), 0);
 	std::cout << "Name is: " << userClient.GetDisplayName() << " and ID is: " << userClient.GetId() << std::endl;
-	DWORD threadid;
-	HANDLE hdl;
-	hdl = CreateThread(NULL, 0, TextInputThread, NULL, 0, &threadid);
+	
 
 
 	std::cout << "Would you like to enter the chat room. (Y/N)" << std::endl;
@@ -223,14 +217,10 @@ int main()
 					{
 						DWORD threadid;
 						HANDLE hdl;
+						isTextInputThreadFinished = false;
 						hdl = CreateThread(NULL, 0, TextInputThread, &isReadyToStayInChatRoom, 0, &threadid);
 					}
-					if(isClientRecvThreadFinished)
-					{
-						DWORD threadid;
-						HANDLE hdl;
-						hdl = CreateThread(NULL, 0, ClientRecvThread, NULL, 0, &threadid);
-					}
+					
 				}
 				std::cout << "Leaving chat room." << std::endl;
 				isReady = false;
