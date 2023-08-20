@@ -54,7 +54,6 @@ void EditUser()
 
 DWORD WINAPI SendAndRecieveTextThread(LPVOID param)
 {
-	std::cout << "Created SendTextThread" << std::endl;
 	std::string* message = (std::string*)param;
 	std::string messageWithUser = userClient.GetDisplayName() + ", ID: " + userClient.GetId() + " >> " + *message;
 	int messageSize = messageWithUser.size();
@@ -91,7 +90,6 @@ DWORD WINAPI SendAndRecieveTextThread(LPVOID param)
 
 DWORD WINAPI TextInputThread(LPVOID param)
 {
-	std::cout << "Created TextInputThread" << std::endl;
 	if(!isConsoleInUse)
 	{
 		isConsoleInUse = true;
