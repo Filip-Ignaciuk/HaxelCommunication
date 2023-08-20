@@ -36,7 +36,7 @@ std::vector<bool> finished;
 std::vector<bool> entered;
 int position = 0;
 
-DWORD WINAPI clientThreadI(LPVOID param)
+DWORD WINAPI clientInitialiseThread(LPVOID param)
 {
     SocketBufferHolder* SBH = (SocketBufferHolder*)param;
     std::string displayName;
@@ -93,7 +93,19 @@ DWORD WINAPI clientThreadI(LPVOID param)
     return 0;
 }
 
-DWORD WINAPI clientThreadU(LPVOID param)
+DWORD WINAPI clientMessageThread(LPVOID param)
+{
+    SocketBufferHolder* SBH = (SocketBufferHolder*)param;
+    for (SocketUserHolder SUH : users)
+    {
+        int bytecount = send(SUH.socket, (char*)&SBH->buffer, bufferSize, 0);
+    }
+
+    delete SBH;
+    return 0;
+}
+
+DWORD WINAPI clientUpdateThread(LPVOID param)
 {
     SocketBufferHolder* SBH = (SocketBufferHolder*)param;
     std::string displayName;
@@ -155,7 +167,18 @@ DWORD WINAPI clientThreadReceive(LPVOID param)
         HANDLE hdl;
         SocketBufferHolder* SBH = new SocketBufferHolder{ SPH->socket, buffer };
         Sleep(250);
-        hdl = CreateThread(NULL, 0, clientThreadI, SBH, 0, &threadid);
+        hdl = CreateThread(NULL, 0, clientInitialiseThread, SBH, 0, &threadid);
+        delete SPH;
+        return 0;
+    }
+    else if(buffer[0] == 'M')
+    {
+        std::cout << "Request to send a message. From client: " << SPH->socket << ", name:" << users[SPH->pos].user.GetDisplayName() << ", id: " << users[SPH->pos].user.GetId() << std::endl;
+        DWORD threadid;
+        HANDLE hdl;
+        SocketBufferHolder* SBH = new SocketBufferHolder{ SPH->socket, buffer };
+        Sleep(250);
+        hdl = CreateThread(NULL, 0, clientMessageThread, SBH, 0, &threadid);
         delete SPH;
         return 0;
     }
@@ -166,7 +189,7 @@ DWORD WINAPI clientThreadReceive(LPVOID param)
         HANDLE hdl;
         SocketBufferHolder* SBH = new SocketBufferHolder{ SPH->socket, buffer };
         Sleep(250);
-        hdl = CreateThread(NULL, 0, clientThreadU, SBH, 0, &threadid);
+        hdl = CreateThread(NULL, 0, clientUpdateThread, SBH, 0, &threadid);
         delete SPH;
         return 0;
     }
