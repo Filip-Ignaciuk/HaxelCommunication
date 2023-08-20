@@ -7,10 +7,12 @@
 #include "user.hpp"
 
 const int bufferSize = 200;
-bool chatRoomUpdate;
+SOCKET clientSocket;
+bool isConsoleInUse = false;
+bool isTextInputThreadFinished = true;
 User userClient("PLACEHOLDER", "999");
 
-void EditUser(SOCKET socket)
+void EditUser()
 {
 	bool isEditing = true;
 	while(isEditing)
@@ -19,7 +21,7 @@ void EditUser(SOCKET socket)
 		std::cout << "What would you like to edit." << std::endl;
 		std::cout << "d - Display name" << std::endl;
 		std::getline(std::cin, editInput);
-		if (editInput == "d" && editInput == "D")
+		if (editInput == "d" || editInput == "D")
 		{
 			std::cout << "Please enter the new display name you would like. " << std::endl;
 			std::cout << "If you wish to revert you can always type /q" << std::endl;
@@ -28,8 +30,8 @@ void EditUser(SOCKET socket)
 
 			if(editInput != "/q" || editInput != "/Q")
 			{
-				int bytecount = send(socket, editInput.c_str(), bufferSize, 0);
-				bytecount = recv(socket, (char*)&userClient, sizeof(User), 0);
+				int bytecount = send(clientSocket, editInput.c_str(), bufferSize, 0);
+				bytecount = recv(clientSocket, (char*)&userClient, sizeof(User), 0);
 				std::cout << "Display name is now: " << userClient.GetDisplayName() << std::endl;
 			}
 
@@ -48,6 +50,78 @@ void EditUser(SOCKET socket)
 	
 }
 
+
+
+DWORD WINAPI SendAndRecieveTextThread(LPVOID param)
+{
+	std::string* message = (std::string*)param;
+	std::string messageWithUser = userClient.GetDisplayName() + ", ID: " + userClient.GetId() + " >> " + *message;
+	int messageSize = messageWithUser.size();
+	std::string messageFinal = "M" + std::to_string(messageSize) + messageWithUser;
+	int bytecount = send(clientSocket, messageFinal.c_str(), bufferSize, 0);
+	delete message;
+
+	char buffer[bufferSize];
+	bytecount = recv(clientSocket, buffer, bufferSize, 0);
+	if (buffer[0] == 'M')
+	{
+		std::string message;
+		std::string LengthS = "";
+		int j = 1;
+		while (isdigit(buffer[j]))
+		{
+			LengthS.push_back(buffer[j]);
+			j++;
+		}
+		int length = std::stoi(LengthS) + j;
+		for (int i = j; i < length; i++)
+		{
+			message.push_back(buffer[i]);
+		}
+		std::cout << message << std::endl;
+		isConsoleInUse = false;
+
+
+	}
+
+	return 0;
+	
+}
+
+DWORD WINAPI TextInputThread(LPVOID param)
+{
+	if(!isConsoleInUse)
+	{
+		isConsoleInUse = true;
+		bool* isReadyToStayInChatRoom = (bool*)param;
+		std::string textInput;
+		std::getline(std::cin, textInput);
+		if (textInput[0] == '/')
+		{
+			if (textInput == "/h" || textInput == "/H")
+			{
+				std::cout << "Here are all of the commands in chat room" << std::endl;
+				std::cout << "/q - Transverse back from current scope, use twice from chatroom or once in settings to leave application." << std::endl;
+				std::cout << "Anything that doesnt contain / as the first charater is treated as a text message." << std::endl;
+			}
+			else if (textInput == "/q" || textInput == "/Q")
+			{
+				*isReadyToStayInChatRoom = false;
+			}
+		}
+		else
+		{
+			DWORD threadid;
+			HANDLE hdl;
+			std::string* textInputPara = new std::string(textInput);
+			hdl = CreateThread(NULL, 0, SendAndRecieveTextThread, textInputPara, 0, &threadid);
+		}
+		isConsoleInUse = false;
+	}
+	isTextInputThreadFinished = true;
+	return 0;
+}
+
 int main()
 {
 	
@@ -55,7 +129,6 @@ int main()
 
 	
 
-	SOCKET clientSocket;
 	WORD version = MAKEWORD(2, 2);
 	WSADATA wsaData;
 	if(WSAStartup(version, &wsaData))
@@ -113,12 +186,11 @@ int main()
 	bufferString.append(std::to_string(size));
 	bufferString.append(displayName);
 	const char* buffer = bufferString.c_str();
-	Sleep(1000);
 	send(clientSocket, buffer, bufferSize, 0);
-
-
 	int bytecount = recv(clientSocket, (char*)&userClient, sizeof(User), 0);
 	std::cout << "Name is: " << userClient.GetDisplayName() << " and ID is: " << userClient.GetId() << std::endl;
+	
+
 
 	std::cout << "Would you like to enter the chat room. (Y/N)" << std::endl;
 	std::string input;
@@ -134,19 +206,19 @@ int main()
 		{
 			if (isReady)
 			{
+				std::cout << "In chat room, say Hi!" << std::endl;
+				std::cout << "Type /h for help" << std::endl;
 				// Equivalent to chat room.
 				while (isReadyToStayInChatRoom)
 				{
-					std::cout << "In chat room, say Hi!" << std::endl;
-					if(chatRoomUpdate)
+					if(isTextInputThreadFinished)
 					{
-						
+						DWORD threadid;
+						HANDLE hdl;
+						isTextInputThreadFinished = false;
+						hdl = CreateThread(NULL, 0, TextInputThread, &isReadyToStayInChatRoom, 0, &threadid);
 					}
-					std::getline(std::cin, input);
-					if(input == "/q" || input == "/Q")
-					{
-						isReadyToStayInChatRoom = false;
-					}
+					
 				}
 				std::cout << "Leaving chat room." << std::endl;
 				isReady = false;
@@ -177,7 +249,7 @@ int main()
 				else if (input == "/u" || input == "/U")
 				{
 					std::cout << "Editing user profile." << std::endl;
-					EditUser(clientSocket);
+					EditUser();
 				}
 			}
 		}
