@@ -250,7 +250,7 @@ DWORD WINAPI ListenThread(LPVOID param)
     
 	finished.emplace_back(false);
     position++;
-
+    isListenFinished = true;
 }
 
 int main()
@@ -282,8 +282,14 @@ int main()
 
     std::cout << "Server socket has been successfully created." << std::endl;
 
+    std::cout << "IP: " << std::endl;
+    std::string ipInput;
+    std::getline(std::cin, ipInput);
+    // converting ip input to const wchar_t
+    std::wstring wideIpInput = std::wstring(ipInput.begin(), ipInput.end());
+    PCWSTR ip = wideIpInput.c_str();
+
     sockaddr_in service;
-    PCWSTR ip = L"127.0.0.1";
     service.sin_family = AF_INET;
     service.sin_port = htons(port);
     InetPtonW(AF_INET, ip, &service.sin_addr.S_un.S_addr);
