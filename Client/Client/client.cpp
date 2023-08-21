@@ -4,8 +4,10 @@
 #include <WS2tcpip.h>
 #include <iostream>
 #include <vector>
+#include <thread>
 
 #include "user.hpp"
+#include "gui.h"	
 
 const int bufferSize = 200;
 SOCKET clientSocket;
@@ -14,6 +16,27 @@ User userClient("PLACEHOLDER", "999");
 HANDLE currentTextInputThread;
 std::vector<std::string> allTextsInChatRoom = {"In chat room.","Type /h for help" };
 
+
+int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _arguments, int commandShow)
+{
+	gui::CreateHWindow("Cold", "Coldness");
+	gui::CreateDevice();
+	gui::CreateImGui();
+
+	while(gui::exit)
+	{
+		gui::BeginRender();
+		gui::Render();
+		gui::EndRender();
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+	}
+
+
+	gui::DestroyImGui();
+	gui::DestroyDevice();
+	gui::DestroyHWindow();
+	return EXIT_SUCCESS;
+}
 
 void EditUser()
 {
