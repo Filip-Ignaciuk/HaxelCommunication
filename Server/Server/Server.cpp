@@ -165,9 +165,10 @@ DWORD WINAPI clientThreadReceive(LPVOID param)
     std::cout << "Socket: " << SPH->socket << std::endl;
     int bytecount = recv(SPH->socket, buffer, bufferSize, 0);
     
-    if (!bytecount || bytecount == -1)
+    if (!bytecount)
     {
-        finished[SPH->pos] = true;
+        users.erase(users.begin() + SPH->pos);
+        finished.erase(finished.begin() + SPH->pos);
         delete SPH;
         return 0;
     }

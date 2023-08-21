@@ -3,14 +3,17 @@
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 #include <iostream>
+#include <vector>
 
 #include "user.hpp"
 
 const int bufferSize = 200;
 SOCKET clientSocket;
-bool isConsoleInUse = false;
 bool isTextInputThreadFinished = true;
 User userClient("PLACEHOLDER", "999");
+HANDLE currentTextInputThread;
+std::vector<std::string> allTextsInChatRoom = {"In chat room.","Type /h for help" };
+
 
 void EditUser()
 {
@@ -78,45 +81,48 @@ DWORD WINAPI SendAndRecieveTextThread(LPVOID param)
 		{
 			message.push_back(buffer[i]);
 		}
-		std::cout << message << std::endl;
-		isConsoleInUse = false;
+		allTextsInChatRoom.emplace_back(message);
+		DWORD exitCode = 0;
+		isTextInputThreadFinished = false;
+		TerminateThread(currentTextInputThread, exitCode);
+		system("cls");
+		for (std::string text : allTextsInChatRoom)
+		{
+			std::cout << text << std::endl;
+		}
+		DWORD threadid;
+		isTextInputThreadFinished = true;
 
+		return 0;
 
 	}
-
-	return 0;
-	
 }
 
 DWORD WINAPI TextInputThread(LPVOID param)
 {
-	if(!isConsoleInUse)
+	bool* isReadyToStayInChatRoom = (bool*)param;
+	std::string textInput;
+	std::getline(std::cin, textInput);
+	std::cout << "Message was " << textInput << std::endl;
+	if (textInput[0] == '/')
 	{
-		isConsoleInUse = true;
-		bool* isReadyToStayInChatRoom = (bool*)param;
-		std::string textInput;
-		std::getline(std::cin, textInput);
-		if (textInput[0] == '/')
+		if (textInput == "/h" || textInput == "/H")
 		{
-			if (textInput == "/h" || textInput == "/H")
-			{
-				std::cout << "Here are all of the commands in chat room" << std::endl;
-				std::cout << "/q - Transverse back from current scope, use twice from chatroom or once in settings to leave application." << std::endl;
-				std::cout << "Anything that doesnt contain / as the first charater is treated as a text message." << std::endl;
-			}
-			else if (textInput == "/q" || textInput == "/Q")
-			{
-				*isReadyToStayInChatRoom = false;
-			}
+			std::cout << "Here are all of the commands in chat room" << std::endl;
+			std::cout << "/q - Transverse back from current scope, use twice from chatroom or once in settings to leave application." << std::endl;
+			std::cout << "Anything that doesnt contain / as the first charater is treated as a text message." << std::endl;
 		}
-		else
+		else if (textInput == "/q" || textInput == "/Q")
 		{
-			DWORD threadid;
-			HANDLE hdl;
-			std::string* textInputPara = new std::string(textInput);
-			hdl = CreateThread(NULL, 0, SendAndRecieveTextThread, textInputPara, 0, &threadid);
+			*isReadyToStayInChatRoom = false;
 		}
-		isConsoleInUse = false;
+	}
+	else
+	{
+		DWORD threadid;
+		HANDLE hdl;
+		std::string* textInputPara = new std::string(textInput);
+		hdl = CreateThread(NULL, 0, SendAndRecieveTextThread, textInputPara, 0, &threadid);
 	}
 	isTextInputThreadFinished = true;
 	return 0;
@@ -206,17 +212,17 @@ int main()
 		{
 			if (isReady)
 			{
-				std::cout << "In chat room, say Hi!" << std::endl;
+				std::cout << "In chat room." << std::endl;
 				std::cout << "Type /h for help" << std::endl;
 				// Equivalent to chat room.
 				while (isReadyToStayInChatRoom)
 				{
 					if(isTextInputThreadFinished)
 					{
+						std::cout << "Creating Thread" << std::endl;
 						DWORD threadid;
-						HANDLE hdl;
 						isTextInputThreadFinished = false;
-						hdl = CreateThread(NULL, 0, TextInputThread, &isReadyToStayInChatRoom, 0, &threadid);
+						currentTextInputThread = CreateThread(NULL, 0, TextInputThread, &isReadyToStayInChatRoom, 0, &threadid);
 					}
 					
 				}
