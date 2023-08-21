@@ -102,7 +102,8 @@ DWORD WINAPI TextInputThread(LPVOID param)
 {
 	bool* isReadyToStayInChatRoom = (bool*)param;
 	std::string textInput;
-	std::getline(std::cin, textInput);
+	std::cout << "Checking Text" << std::endl;
+	std::cin >> textInput;
 	std::cout << "Message was " << textInput << std::endl;
 	if (textInput[0] == '/')
 	{
