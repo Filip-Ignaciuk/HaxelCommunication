@@ -1,11 +1,10 @@
 #include <filesystem>
-
+#include <fstream>
 #include "stdafx.h"
 #include <Windows.h>
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 #include <iostream>
-#include <iso646.h>
 #include <vector>
 #include <thread>
 
@@ -13,39 +12,63 @@
 #include "gui.h"	
 #include "ImGui/imgui.h"
 
+// Converting all the \\ slashes into one singular forward slash.
+std::string NormaliseDir(std::string& _str)
+{
+	for (unsigned int i = 0; i < _str.size(); i++)
+	{
+		if (_str[i] == '\\')
+		{
+			_str[i] = '/';
+		}
+	}
+	return _str;
+}
+
 const int bufferSize = 200;
 SOCKET clientSocket;
 User clientUser("PLACEHOLDER", "999");
+std::string currentDir = std::filesystem::current_path().string();
+std::string currentDirNormalised = NormaliseDir(currentDir);
 
-std::vector<std::string> allTextsInChatRoom = {"In chat room.","Type /h for help" };
+void InitFolders()
+{
+	if (std::filesystem::create_directory(currentDirNormalised + "/Languages") == 0)
+	{
+		std::cin.get();
+	}
+
+	if (std::filesystem::create_directory(currentDirNormalised + "/Users") == 0)
+	{
+		std::cin.get();
+	}
+}
+
+void InitLanguageFiles()
+{
+	
+}
+
 
 int CreateSocket()
 {
 	WORD version = MAKEWORD(2, 2);
 	WSADATA wsaData;
 	if (WSAStartup(version, &wsaData))
-	{
-		std::cout << "Winsock DLL failed to be found/loaded." << std::endl;
+	{	
 		std::cout << WSAGetLastError() << std::endl;
 		return 0;
 	}
 
-	std::cout << "DLL has been successfully found/loaded." << std::endl;
 
 	clientSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (clientSocket == INVALID_SOCKET)
 	{
-		std::cout << "Error creating client socket." << std::endl;
 		WSACleanup();
 		return 0;
 	}
 
-	std::cout << "Client socket has been successfully created." << std::endl;
 }
-
-
-
-
 
 DWORD WINAPI SendTextThread(LPVOID param)
 {
@@ -57,6 +80,8 @@ DWORD WINAPI SendTextThread(LPVOID param)
 	delete message;
 	return 0;
 }
+
+std::vector<std::string> allTextsInChatRoom = { "In chat room.","Type /h for help" };
 
 HANDLE recieveThread;
 
@@ -85,6 +110,7 @@ struct DisplayNameHolder
 
 bool isConnecting = false;
 bool isInitialised = false;
+bool isApplicationInitialised = false;
 bool isChangingDisplayName = false;
 bool isRecieving = true;
 
@@ -244,6 +270,10 @@ DWORD WINAPI RecieveThread(LPVOID param)
 	return 0;
 }
 
+void AddHelpText()
+{
+	const std::string helpers[3] = {};
+}
 
 int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _arguments, int commandShow)
 {
@@ -258,6 +288,19 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 
 	CreateSocket();
 
+	std::ifstream file;
+	file.open(currentDirNormalised + "initialised.txt");
+	if (!file.is_open())
+	{
+		InitFolders();
+		file.close();
+		std::ofstream file(currentDirNormalised + "initialised.txt");
+		file << "1";
+		file.close();
+		InitLanguageFiles();
+	}
+	
+	isApplicationInitialised
 
 	while (gui::exit)
 	{
@@ -342,10 +385,21 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 				ImGui::EndChild();
 				if(ImGui::InputText("Message", messageText, IM_ARRAYSIZE(messageText), ImGuiInputTextFlags_EnterReturnsTrue))
 				{
-					DWORD threadid;
-					HANDLE hdl;
-					std::string* messagePtr = new std::string(messageText);
-					hdl = CreateThread(NULL, 0, SendTextThread, messagePtr, 0, &threadid);
+					if(messageText[0] == '/')
+					{
+						if(messageText[1] == 'h')
+						{
+							AddHelpText();
+						}
+					}
+					else
+					{
+						DWORD threadid;
+						HANDLE hdl;
+						std::string* messagePtr = new std::string(messageText);
+						hdl = CreateThread(NULL, 0, SendTextThread, messagePtr, 0, &threadid);
+					}
+					
 				}
 				
 				
