@@ -90,7 +90,7 @@ DWORD WINAPI clientInitialiseThread(LPVOID param)
     std::cout << "DisplayName = " << user.GetDisplayName() << std::endl;
     std::cout << "ID = " << user.GetId() << std::endl;
     int bytecount = send(SBPH->socket, (char*)&user, sizeof(User), 0);
-
+    std::cout << bytecount << std::endl;
     
     finished[SBPH->pos] = true;
     delete SBPH;
