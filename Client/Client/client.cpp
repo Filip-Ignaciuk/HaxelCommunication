@@ -337,7 +337,7 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 				ImGui::BeginChild("Scrolling");
 				for (int i = 0; i < allTextsInChatRoom.size(); i++)
 				{
-					ImGui::TextColored(ImVec4(1, 1, 0, 1), allTextsInChatRoom[i].c_str());
+					ImGui::TextColored(ImVec4(1, 1, 1, 1), allTextsInChatRoom[i].c_str());
 				}
 				ImGui::EndChild();
 				if(ImGui::InputText("Message", messageText, IM_ARRAYSIZE(messageText), ImGuiInputTextFlags_EnterReturnsTrue))

@@ -164,12 +164,15 @@ DWORD WINAPI clientThreadReceive(LPVOID param)
     std::cout << "Detecting messages." << std::endl;
     std::cout << "Socket: " << SPH->socket << std::endl;
     int bytecount = recv(SPH->socket, buffer, bufferSize, 0);
-    
-    if (!bytecount)
+
+
+    if (!bytecount || bytecount == SOCKET_ERROR)
     {
+        std::cout << "Client is lost." << std::endl;
         users.erase(users.begin() + SPH->pos);
         finished.erase(finished.begin() + SPH->pos);
         delete SPH;
+        std::cout << "There is now: " << users.size() << " users, and " << finished.size() << " finishes." << std::endl;
         return 0;
     }
     std::cout << "Received message. From client: " << SPH->socket << std::endl;
