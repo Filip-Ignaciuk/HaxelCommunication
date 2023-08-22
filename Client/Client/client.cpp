@@ -58,6 +58,7 @@ DWORD WINAPI SendTextThread(LPVOID param)
 	return 0;
 }
 
+HANDLE recieveThread;
 
 const ImVec4 notConnectedColour = ImVec4(0.1, 0.8, 0.9, 1);
 const ImVec4 tryingToConnectColour = ImVec4(0.90, 0.8, 0.12, 1);
@@ -85,8 +86,7 @@ struct DisplayNameHolder
 bool isConnecting = false;
 bool isInitialised = false;
 bool isChangingDisplayName = false;
-bool isRecieving = false;
-bool expectUser = false;
+bool isRecieving = true;
 
 DWORD WINAPI TryToConnectThread(LPVOID param)
 {
@@ -143,6 +143,7 @@ DWORD WINAPI ConnectingThread(LPVOID param)
 	return 0;
 }
 
+
 DWORD WINAPI InitialiseUserThread(LPVOID param)
 {
 	DisplayNameHolder* DNH = (DisplayNameHolder*)param;
@@ -153,8 +154,11 @@ DWORD WINAPI InitialiseUserThread(LPVOID param)
 	bufferString.append(displayName);
 	const char* buffer = bufferString.c_str();
 	send(clientSocket, buffer, bufferSize, 0);
-	expectUser = true;
-	isChangingDisplayName = true;
+	int bytecount = recv(clientSocket, (char*)&clientUser, sizeof(User), 0);
+	isRecieving = false;
+	isChangingDisplayName = false;
+	currentStatusChangingUser = "Successfully initialised user.";
+	currentColourChangingUser = connectedColour;
 	return 0;
 	
 }
@@ -168,9 +172,14 @@ DWORD WINAPI ChangeDisplayNameThread(LPVOID param)
 	bufferString.append(std::to_string(size));
 	bufferString.append(displayName);
 	const char* buffer = bufferString.c_str();
+	isRecieving = true;
+	TerminateThread(recieveThread, 0);
 	send(clientSocket, buffer, bufferSize, 0);
-	expectUser = true;
-	isChangingDisplayName = true;
+	int bytecount = recv(clientSocket, (char*)&clientUser, sizeof(User), 0);
+	isRecieving = false;
+	isChangingDisplayName = false;
+	currentStatusChangingUser = "Successfully changed user data";
+	currentColourChangingUser = connectedColour;
 	return 0;
 }
 
@@ -194,26 +203,21 @@ DWORD WINAPI ChangingThread(LPVOID param)
 	return 0;
 }
 
+
+
+
 DWORD WINAPI RecieveThread(LPVOID param)
 {
-	std::string buffer;
+	char buffer[bufferSize];
+	int bytecount = recv(clientSocket, buffer, bufferSize, 0);
 
-	int bytecount = recv(clientSocket, (char*)&buffer, bufferSize, 0);
-
-	if(expectUser)
-	{
-		User* user = (User*)&buffer;
-		clientUser = *user;
-		isChangingDisplayName = false;
-		currentStatusChangingUser = "Successfully updated user information.";
-		currentColourChangingUser = connectedColour;
-		isChangingDisplayName = false;
-	}
 	if (bytecount == 0)
 	{
-		
+		isRecieving = false;
+		return 0;
 	}
-	else if (buffer[0] == 'M')
+
+	if (buffer[0] == 'M')
 	{
 		std::string message;
 		std::string LengthS = "";
@@ -234,6 +238,7 @@ DWORD WINAPI RecieveThread(LPVOID param)
 	{
 
 	}
+	
 
 	isRecieving = false;
 	return 0;
@@ -294,12 +299,15 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 			if (!isRecieving)
 			{
 				isRecieving = true;
-				DWORD threadid;
-				HANDLE hdl;
-				hdl = CreateThread(NULL, 0, RecieveThread, 0, 0, &threadid);
+				DWORD threadid; 
+				recieveThread = CreateThread(NULL, 0, RecieveThread, 0, 0, &threadid);
 			}
 
 			ImGui::SeparatorText("User");
+			if(isInitialised)
+			{
+				ImGui::Text(clientUser.GetDisplayName().c_str());
+			}
 			ImGui::InputText("Display Name", charDisplayName, IM_ARRAYSIZE(charDisplayName));
 			ImGui::TextColored(currentColourChangingUser, currentStatusChangingUser.c_str());
 			if(ImGui::Button("Update user"))
@@ -323,16 +331,25 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 					
 				}
 			}
-
-			ImGui::SeparatorText("Chat Room");
-			ImGui::BeginChild("Scrolling");
-			for (int i = 0; i < allTextsInChatRoom.size(); i++)
+			if(isInitialised)
 			{
-				ImGui::TextColored(ImVec4(1, 1, 0, 1), allTextsInChatRoom[i].c_str());
+				ImGui::SeparatorText("Chat Room");
+				ImGui::BeginChild("Scrolling");
+				for (int i = 0; i < allTextsInChatRoom.size(); i++)
+				{
+					ImGui::TextColored(ImVec4(1, 1, 0, 1), allTextsInChatRoom[i].c_str());
+				}
+				ImGui::EndChild();
+				if(ImGui::InputText("Message", messageText, IM_ARRAYSIZE(messageText), ImGuiInputTextFlags_EnterReturnsTrue))
+				{
+					DWORD threadid;
+					HANDLE hdl;
+					std::string* messagePtr = new std::string(messageText);
+					hdl = CreateThread(NULL, 0, SendTextThread, messagePtr, 0, &threadid);
+				}
+				
+				
 			}
-			ImGui::EndChild();
-			ImGui::InputText("messageText", messageText, IM_ARRAYSIZE(messageText));
-			
 		}
 
 		
