@@ -83,7 +83,7 @@ DWORD WINAPI clientInitialiseThread(LPVOID param)
     }
 
     std::cout << id << std::endl;
-    
+    std::cout << displayName.size() << std::endl;
     User user(displayName, id);
     users[SBPH->pos].user = user;
     std::cout << "Sending user object" << std::endl;
@@ -126,9 +126,9 @@ DWORD WINAPI clientUpdateThread(LPVOID param)
             displayNameLengthS.push_back(SBPH->buffer[j]);
             j++;
         }
-        int displayNameLength = std::stoi(displayNameLengthS) + j + 1;
+        int displayNameLength = std::stoi(displayNameLengthS) + j;
         std::string newDisplayName;
-        for (int i = j + 1; i < displayNameLength; i++)
+        for (int i = j; i < displayNameLength; i++)
         {
             newDisplayName.push_back(SBPH->buffer[i]);
         }

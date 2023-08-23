@@ -44,10 +44,7 @@ void InitFolders()
 	}
 }
 
-void InitLanguageFiles()
-{
-	
-}
+
 
 
 int CreateSocket()
@@ -81,7 +78,13 @@ DWORD WINAPI SendTextThread(LPVOID param)
 	return 0;
 }
 
-std::vector<std::string> allTextsInChatRoom = { "In chat room.","Type /h for help" };
+const unsigned char numOfSentences = 25;
+
+std::string allTextsInApplication[numOfSentences];
+const char* charAllTextsInApplication[numOfSentences];
+
+std::vector<std::string> allTextsInChatRoom;
+
 
 HANDLE recieveThread;
 
@@ -90,8 +93,8 @@ const ImVec4 tryingToConnectColour = ImVec4(0.90, 0.8, 0.12, 1);
 const ImVec4 connectedColour = ImVec4(0.16, 0.9, 0.1, 1);
 const ImVec4 failedToConnectColour = ImVec4(1, 0, 0, 1);
 
-std::string currentConnectionStatus = "Not connected";
-std::string currentStatusChangingUser = "Not connected";
+std::string currentConnectionStatus = "";
+std::string currentStatusChangingUser = "";
 ImVec4 currentColourConnection = notConnectedColour;
 ImVec4 currentColourChangingUser = notConnectedColour;
 
@@ -114,6 +117,9 @@ bool isApplicationInitialised = false;
 bool isChangingDisplayName = false;
 bool isRecieving = true;
 
+int language;
+const std::string languages[2] = { "/en-gb.txt", "/pl.txt" };
+
 DWORD WINAPI TryToConnectThread(LPVOID param)
 {
 	ConnectHolder* CH = (ConnectHolder*)param;
@@ -132,16 +138,15 @@ DWORD WINAPI TryToConnectThread(LPVOID param)
 	if (connect(clientSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
 	{
 		isConnecting = false;
-		currentConnectionStatus = "Failed to connect";
+		currentConnectionStatus = allTextsInApplication[6];
 		currentColourConnection = failedToConnectColour;
-		WSACleanup();
 		delete CH;
 	}
 	else
 	{
 		isConnecting = false;
 		isConnected = true;
-		currentConnectionStatus = "Connected";
+		currentConnectionStatus = allTextsInApplication[4];
 		currentColourConnection = connectedColour;
 		return 0;
 		delete CH;
@@ -152,7 +157,7 @@ DWORD WINAPI TryToConnectThread(LPVOID param)
 DWORD WINAPI ConnectingThread(LPVOID param)
 {
 	int i = 0;
-	std::string connectingArray[3] = { "Connecting.", "Connecting..", "Connecting..." };
+	std::string connectingArray[3] = { allTextsInApplication[7], allTextsInApplication[8], allTextsInApplication[9] };
 	currentConnectionStatus = connectingArray[0];
 	currentColourConnection = tryingToConnectColour;
 	while (isConnecting)
@@ -183,7 +188,7 @@ DWORD WINAPI InitialiseUserThread(LPVOID param)
 	int bytecount = recv(clientSocket, (char*)&clientUser, sizeof(User), 0);
 	isRecieving = false;
 	isChangingDisplayName = false;
-	currentStatusChangingUser = "Successfully initialised user.";
+	currentStatusChangingUser = allTextsInApplication[15];
 	currentColourChangingUser = connectedColour;
 	return 0;
 	
@@ -204,7 +209,7 @@ DWORD WINAPI ChangeDisplayNameThread(LPVOID param)
 	int bytecount = recv(clientSocket, (char*)&clientUser, sizeof(User), 0);
 	isRecieving = false;
 	isChangingDisplayName = false;
-	currentStatusChangingUser = "Successfully changed user data";
+	currentStatusChangingUser = allTextsInApplication[21];
 	currentColourChangingUser = connectedColour;
 	return 0;
 }
@@ -212,7 +217,7 @@ DWORD WINAPI ChangeDisplayNameThread(LPVOID param)
 DWORD WINAPI ChangingThread(LPVOID param)
 {
 	int i = 0;
-	std::string connectingArray[3] = { "Changing.", "Changing..", "Changing..." };
+	std::string connectingArray[3] = { allTextsInApplication[12],allTextsInApplication[13], allTextsInApplication[14] };
 	currentStatusChangingUser = connectingArray[0];
 	currentColourChangingUser = tryingToConnectColour;
 	while (isChangingDisplayName)
@@ -275,6 +280,65 @@ void AddHelpText()
 	const std::string helpers[3] = {};
 }
 
+void InitLanguageFiles()
+{
+	const std::string langWord = "/Languages";
+	std::ofstream fileengb(currentDirNormalised + langWord + languages[0]);
+	fileengb << "IP" << std::endl;
+	fileengb << "Port" << std::endl;
+	fileengb << "Connection" << std::endl;
+	fileengb << "Not connected" << std::endl;
+	fileengb << "Connected" << std::endl;
+	fileengb << "Connect " << std::endl;
+	fileengb << "Failed to connect" << std::endl;
+	fileengb << "Connecting." << std::endl;
+	fileengb << "Connecting.." << std::endl;
+	fileengb << "Connecting..." << std::endl;
+	fileengb << "User" << std::endl;
+	fileengb << "Display Name" << std::endl;
+	fileengb << "Changing." << std::endl;
+	fileengb << "Changing.." << std::endl;
+	fileengb << "Changing..." << std::endl;
+	fileengb << "Successfully initialised user" << std::endl;
+	fileengb << "Update user" << std::endl;
+	fileengb << "Chat room" << std::endl;
+	fileengb << "In chat room" << std::endl;
+	fileengb << "Type /h for help" << std::endl;
+	fileengb << "Message" << std::endl;
+	fileengb << "Successfully changed user data" << std::endl;
+	fileengb << "Languages" << std::endl;
+	fileengb << "Display Name is too large" << std::endl;
+	fileengb << "Invalid port or IP" << std::endl;
+	fileengb.close();
+
+	std::ofstream filepl(currentDirNormalised + langWord + languages[1]);
+	filepl.close();
+}
+
+void InitialiseApplication()
+{
+	int i = 0;
+	std::ifstream languageFile(currentDirNormalised + "/Languages" + languages[language]);
+	if(languageFile.is_open())
+	{
+		std::string line;
+		while(std::getline(languageFile, line))
+		{
+			allTextsInApplication[i] = line;
+			charAllTextsInApplication[i] = allTextsInApplication[i].c_str();
+			i++;
+		}
+	}
+	else
+	{
+		
+	}
+	currentConnectionStatus = allTextsInApplication[3];
+	currentStatusChangingUser = allTextsInApplication[3];
+	allTextsInChatRoom.emplace_back(allTextsInApplication[18]);
+	allTextsInChatRoom.emplace_back(allTextsInApplication[19]);
+}
+
 int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _arguments, int commandShow)
 {
 	gui::CreateHWindow("Haxel Communication", "haxelClass");
@@ -286,46 +350,100 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 	char charDisplayName[bufferSize] = "";
 	static char messageText[bufferSize] = "";
 
+	bool isTooLarge = false;
+	bool isPortOrIPValid = true;
+	
+
 	CreateSocket();
 
 	std::ifstream file;
-	file.open(currentDirNormalised + "initialised.txt");
+	file.open(currentDirNormalised + "/initialised.txt");
 	if (!file.is_open())
 	{
 		InitFolders();
 		file.close();
-		std::ofstream file(currentDirNormalised + "initialised.txt");
-		file << "1";
+		std::ofstream file(currentDirNormalised + "/initialised.txt");
+		file << "1" << std::endl;
+		file << "0" << std::endl;
+		language = 0;
 		file.close();
 		InitLanguageFiles();
 	}
+	isApplicationInitialised = true;
+
+	InitialiseApplication();
+
 	
-	isApplicationInitialised
+	
 
 	while (gui::exit)
 	{
 		gui::BeginRender();
 		gui::Render();
 
+		//if (ImGui::BeginMainMenuBar())
+		//{
+		//	if (ImGui::BeginMenu("Open Recent"))
+		//	{
+		//		ImGui::MenuItem("fish_hat.c");
+		//		ImGui::MenuItem("fish_hat.inl");
+		//		ImGui::MenuItem("fish_hat.h");
+		//
+		//		ImGui::EndMenu();
+		//	}
+		//	ImGui::EndMainMenuBar();
+		//}
+
+		
 		
 
-		ImGui::SeparatorText("Connection");
+		ImGui::SeparatorText(charAllTextsInApplication[3]);
+
 		// Ip
-		ImGui::InputText("IP", charIp, IM_ARRAYSIZE(charIp));
-		
+		ImGui::InputText(charAllTextsInApplication[0], charIp, IM_ARRAYSIZE(charIp));
 
 		// Port
-		ImGui::InputText("Port", charPort, IM_ARRAYSIZE(charPort));
-		
+		ImGui::InputText(charAllTextsInApplication[1], charPort, IM_ARRAYSIZE(charPort));
 
 		// Status
-		
 		ImGui::TextColored(currentColourConnection, currentConnectionStatus.c_str());
 
-		if (ImGui::Button("Connect"))
+		if (!isPortOrIPValid)
 		{
+			ImGui::Text(charAllTextsInApplication[24]);
+		}
+
+		if (ImGui::Button(charAllTextsInApplication[5]))
+		{
+			std::string IP = charIp;
+			for (unsigned char i = 0; i < IP.size(); i++)
+			{
+				if(isdigit(IP[i]) || IP[i] == '.')
+				{
+					
+				}
+				else
+				{
+					isPortOrIPValid = false;
+					break;
+				}
+			}
+			std::string port = charPort;
+			for(unsigned char j = 0; j < port.size(); j++)
+			{
+				if(isdigit(port[j]))
+				{
+					
+				}
+				else
+				{
+					isPortOrIPValid = false;
+					break;
+				}
+			}
+
 			// Just in case so that it doesn't spam threads.
-			if (!isConnecting)
+			if (!isConnecting && isPortOrIPValid)
 			{
 				isConnecting = true;
 				DWORD threadid;
@@ -346,16 +464,26 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 				recieveThread = CreateThread(NULL, 0, RecieveThread, 0, 0, &threadid);
 			}
 
-			ImGui::SeparatorText("User");
+			ImGui::SeparatorText(charAllTextsInApplication[10]);
 			if(isInitialised)
 			{
 				ImGui::Text(clientUser.GetDisplayName().c_str());
 			}
-			ImGui::InputText("Display Name", charDisplayName, IM_ARRAYSIZE(charDisplayName));
+			ImGui::InputText(charAllTextsInApplication[11], charDisplayName, IM_ARRAYSIZE(charDisplayName));
 			ImGui::TextColored(currentColourChangingUser, currentStatusChangingUser.c_str());
-			if(ImGui::Button("Update user"))
+			if(isTooLarge)
 			{
-				if(!isChangingDisplayName)
+				ImGui::Text(charAllTextsInApplication[23]);
+			}
+			if(ImGui::Button(charAllTextsInApplication[16]))
+			{
+				std::string name = charDisplayName;
+				if(name.size() > 15)
+				{
+					isTooLarge = true;
+				}
+				
+				if(!isChangingDisplayName || !isTooLarge)
 				{
 					isChangingDisplayName = true;
 					DWORD threadid;
@@ -376,14 +504,14 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 			}
 			if(isInitialised)
 			{
-				ImGui::SeparatorText("Chat Room");
+				ImGui::SeparatorText(charAllTextsInApplication[17]);
 				ImGui::BeginChild("Scrolling");
 				for (int i = 0; i < allTextsInChatRoom.size(); i++)
 				{
 					ImGui::TextColored(ImVec4(1, 1, 1, 1), allTextsInChatRoom[i].c_str());
 				}
 				ImGui::EndChild();
-				if(ImGui::InputText("Message", messageText, IM_ARRAYSIZE(messageText), ImGuiInputTextFlags_EnterReturnsTrue))
+				if(ImGui::InputText(charAllTextsInApplication[20], messageText, IM_ARRAYSIZE(messageText), ImGuiInputTextFlags_EnterReturnsTrue))
 				{
 					if(messageText[0] == '/')
 					{
