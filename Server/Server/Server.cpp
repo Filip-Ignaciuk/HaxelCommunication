@@ -39,7 +39,7 @@ struct SocketBufferPositionHolder
 
 std::vector<std::string> texts;
 std::vector<SocketUserHolder> users;
-std::vector<bool> finished;
+std::vector<int> finished;
 std::vector<bool> entered;
 int position = 0;
 

@@ -478,12 +478,16 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 			if(ImGui::Button(charAllTextsInApplication[16]))
 			{
 				std::string name = charDisplayName;
-				if(name.size() > 15)
+				if(name.size() > 10)
 				{
 					isTooLarge = true;
 				}
+				else
+				{
+					isTooLarge = false;
+				}
 				
-				if(!isChangingDisplayName || !isTooLarge)
+				if(!isChangingDisplayName && !isTooLarge)
 				{
 					isChangingDisplayName = true;
 					DWORD threadid;
