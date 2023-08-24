@@ -14,6 +14,7 @@ private:
 	std::string displayName;
 
 public:
+	User();
 	User(std::string _displayName, std::string _id);
 
 	std::string GetId() const;
