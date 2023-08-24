@@ -2,7 +2,7 @@
 
 #include <vector>
 
-
+User::User() = default;
 
 User::User(std::string _displayName, std::string _id) : displayName(_displayName), id(_id)
 {
