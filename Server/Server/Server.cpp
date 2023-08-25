@@ -26,11 +26,10 @@ int position = 0;
 DWORD WINAPI clientInitialiseThread(LPVOID param)
 {
     PositionBufferHolder* PBH = (PositionBufferHolder*)param;
-    const std::string buffer = PBH->buffer;
+	const std::string buffer = PBH->buffer;
     const int pos = PBH->position;
     delete PBH;
     std::string displayName;
-    std::string id;
 
     std::string displayNameLengthS = "";
     int j = 1;
@@ -47,31 +46,16 @@ DWORD WINAPI clientInitialiseThread(LPVOID param)
     }
 
     std::cout << displayName << std::endl;
-    
-    if (numOfUsers < 1000)
-    {
-        if (numOfUsers < 10)
-        {
-            id = std::to_string(numOfUsers) + "00";
-        }
-        else if (numOfUsers < 100)
-        {
-            id = std::to_string(numOfUsers) + "0";
-        }
-        else
-        {
-            id = std::to_string(numOfUsers);
-        }
-    }
 
-    std::cout << id << std::endl;
+
+    std::cout << numOfUsers << std::endl;
     std::cout << displayName.size() << std::endl;
-    User user(displayName, id);
+    User user(displayName, std::to_string(numOfUsers));
     users[position] = user;
-    std::cout << "Sending user object" << std::endl;
-    std::cout << "DisplayName = " << user.GetDisplayName() << std::endl;
-    std::cout << "ID = " << user.GetId() << std::endl;
-    int bytecount = send(sockets[position], (char*)&user, sizeof(User), 0);
+    std::string sizeOfIdS = std::to_string(numOfUsers);
+    int sizeOfId = sizeOfIdS.size();
+    std::string sendBuffer = "I" + std::to_string(sizeOfId) + std::to_string(numOfUsers);
+    int bytecount = send(sockets[position], sendBuffer.c_str(), bufferSize, 0);
     std::cout << bytecount << std::endl;
     finished[position] = true;
     return 0;
@@ -117,7 +101,7 @@ DWORD WINAPI clientUpdateThread(LPVOID param)
         }
 
         users[position].SetDisplayName(newDisplayName);
-        int bytecount = send(sockets[position], (char*)&users[position], sizeof(User), 0);
+        int bytecount = send(sockets[position], "U", sizeof(User), 0);
 
         finished[position] = true;
         return 0;
@@ -131,8 +115,13 @@ DWORD WINAPI clientUpdateThread(LPVOID param)
 
 DWORD WINAPI clientQuitThread(LPVOID param)
 {
-    PositionBufferHolder* PBH = (PositionBufferHolder*)param;
-    delete PBH;
+    const int position = (int)param;
+
+    sockets[position] = 0;
+    User user;
+    users[position] = user;
+    finished[position] = false;
+    numOfUsers--;
     return 0;
 }
 
@@ -145,12 +134,14 @@ DWORD WINAPI clientThreadReceive(LPVOID param)
     char buffer[bufferSize];
     std::cout << "Detecting messages." << std::endl;
     std::cout << "Socket: " << sockets[pos] << std::endl;
+    std::cout << "User: " << currentUser.GetDisplayName() << ", ID: " << currentUser.GetId() << std::endl;
     int bytecount = recv(currentSocket, buffer, bufferSize, 0);
 
 
     if (!bytecount || bytecount == SOCKET_ERROR)
     {
         std::cout << "Client is lost." << std::endl;
+        sockets[pos] = 0;
         User user;
         users[pos] = user;
         finished[pos] = false;
@@ -191,7 +182,8 @@ DWORD WINAPI clientThreadReceive(LPVOID param)
 	    std::cout << "Request to quit a user. From client: " << currentSocket << ", name:" << currentUser.GetDisplayName() << ", id: " << currentUser.GetId() << std::endl;
         DWORD threadid;
         HANDLE hdl;
-        hdl = CreateThread(NULL, 0, clientQuitThread, PBH, 0, &threadid);
+        hdl = CreateThread(NULL, 0, clientQuitThread, (LPVOID)pos, 0, &threadid);
+        delete PBH;
         return 0;
     }
 

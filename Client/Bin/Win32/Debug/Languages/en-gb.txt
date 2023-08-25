@@ -1,0 +1,25 @@
+IP
+Port
+Connection
+Not connected
+Connected
+Connect 
+Failed to connect
+Connecting.
+Connecting..
+Connecting...
+User
+Display Name
+Changing.
+Changing..
+Changing...
+Successfully initialised user
+Update user
+Chat room
+In chat room
+Type /h for help
+Message
+Successfully changed user data
+Languages
+Display Name is too large
+Invalid port or IP

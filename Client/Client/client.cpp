@@ -69,12 +69,12 @@ int CreateSocket()
 
 DWORD WINAPI SendTextThread(LPVOID param)
 {
-	std::string* message = (std::string*)param;
-	std::string messageWithUser = clientUser.GetDisplayName() + ", ID: " + clientUser.GetId() + " >> " + *message;
+	std::string* messageptr = (std::string*)param;
+	std::string messageWithUser = clientUser.GetDisplayName() + ", ID: " + clientUser.GetId() + " >> " + *messageptr;
 	int messageSize = messageWithUser.size();
 	std::string messageFinal = "M" + std::to_string(messageSize) + messageWithUser;
 	int bytecount = send(clientSocket, messageFinal.c_str(), bufferSize, 0);
-	delete message;
+	delete messageptr;
 	return 0;
 }
 
@@ -100,6 +100,8 @@ ImVec4 currentColourChangingUser = notConnectedColour;
 
 bool isConnected = false;
 
+std::string wantedDisplayName;
+
 struct ConnectHolder
 {
 	char* charIp;
@@ -115,7 +117,7 @@ bool isConnecting = false;
 bool isInitialised = false;
 bool isApplicationInitialised = false;
 bool isChangingDisplayName = false;
-bool isRecieving = true;
+bool isRecieving = false;
 
 int language;
 const std::string languages[2] = { "/en-gb.txt", "/pl.txt" };
@@ -179,17 +181,13 @@ DWORD WINAPI InitialiseUserThread(LPVOID param)
 {
 	DisplayNameHolder* DNH = (DisplayNameHolder*)param;
 	std::string displayName = DNH->charDisplayName;
+	wantedDisplayName = displayName;
 	std::string bufferString = "I";
 	int size = displayName.size();
 	bufferString.append(std::to_string(size));
 	bufferString.append(displayName);
 	const char* buffer = bufferString.c_str();
 	send(clientSocket, buffer, bufferSize, 0);
-	int bytecount = recv(clientSocket, (char*)&clientUser, sizeof(User), 0);
-	isRecieving = false;
-	isChangingDisplayName = false;
-	currentStatusChangingUser = allTextsInApplication[15];
-	currentColourChangingUser = connectedColour;
 	return 0;
 	
 }
@@ -198,19 +196,14 @@ DWORD WINAPI ChangeDisplayNameThread(LPVOID param)
 {
 	DisplayNameHolder* DNH = (DisplayNameHolder*)param;
 	std::string displayName = DNH->charDisplayName;
+	wantedDisplayName = displayName;
 	std::string bufferString = "UD";
 	int size = displayName.size();
 	bufferString.append(std::to_string(size));
 	bufferString.append(displayName);
 	const char* buffer = bufferString.c_str();
-	isRecieving = true;
-	TerminateThread(recieveThread, 0);
 	send(clientSocket, buffer, bufferSize, 0);
-	int bytecount = recv(clientSocket, (char*)&clientUser, sizeof(User), 0);
-	isRecieving = false;
-	isChangingDisplayName = false;
-	currentStatusChangingUser = allTextsInApplication[21];
-	currentColourChangingUser = connectedColour;
+	
 	return 0;
 }
 
@@ -265,11 +258,37 @@ DWORD WINAPI RecieveThread(LPVOID param)
 		}
 		allTextsInChatRoom.emplace_back(message);
 	}
-	else
+	else if (buffer[0] == 'I')
 	{
+		isChangingDisplayName = false;
+		currentStatusChangingUser = allTextsInApplication[15];
+		currentColourChangingUser = connectedColour;
+		std::string id;
+		if(buffer[1] == '1')
+		{
+			id = " ";
+			id[0] = buffer[2];
+		}
+		else
+		{
+			id = "  ";
+			id[0] = buffer[2];
+			id[1] = buffer[3];
+		}
 
+		const User user(wantedDisplayName, id);
+		clientUser = user;
+		isInitialised = true;
+		
 	}
-	
+	else if (buffer[0] == 'U')
+	{
+		isChangingDisplayName = false;
+		currentStatusChangingUser = allTextsInApplication[21];
+		currentColourChangingUser = connectedColour;
+		clientUser.SetDisplayName(wantedDisplayName);
+		
+	}
 
 	isRecieving = false;
 	return 0;
@@ -478,7 +497,7 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 			if(ImGui::Button(charAllTextsInApplication[16]))
 			{
 				std::string name = charDisplayName;
-				if(name.size() > 10)
+				if(name.size() > 50)
 				{
 					isTooLarge = true;
 				}
@@ -500,7 +519,6 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 					else
 					{
 						hdl = CreateThread(NULL, 0, InitialiseUserThread, DNH, 0, &threadid);
-						isInitialised = true;
 					}
 					hdl = CreateThread(NULL, 0, ChangingThread, 0, 0, &threadid);
 					
@@ -548,6 +566,8 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	}
 
+	const char* quitBuffer = "Q";
+	send(clientSocket, quitBuffer, bufferSize, 0);
 	closesocket(clientSocket);
 	WSACleanup();
 	gui::DestroyImGui();
