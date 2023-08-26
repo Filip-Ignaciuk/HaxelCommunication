@@ -54,6 +54,15 @@ DWORD WINAPI clientInitialiseThread(LPVOID param)
     std::string sizeOfIdS = std::to_string(numOfUsers);
     int sizeOfId = sizeOfIdS.size();
     std::string sendBuffer = "I" + std::to_string(sizeOfId) + std::to_string(numOfUsers);
+    // To Do
+    //if(bufferSize < sizeof(buffer))
+    //{
+	//    
+    //}
+    //else
+    //{
+	//    
+    //}
     int bytecount = send(sockets[position], sendBuffer.c_str(), bufferSize, 0);
     std::cout << bytecount << std::endl;
     finished[position] = true;
@@ -100,7 +109,7 @@ DWORD WINAPI clientUpdateThread(LPVOID param)
         }
 
         users[position].SetDisplayName(newDisplayName);
-        int bytecount = send(sockets[position], "U", sizeof(User), 0);
+        int bytecount = send(sockets[position], "U", bufferSize, 0);
 
         finished[position] = true;
         return 0;
@@ -218,16 +227,26 @@ DWORD WINAPI ListenThread(LPVOID param)
 
     std::cout << "Successfully accepted client. Socket: " << acceptSocket << std::endl;
 
-    User user("PLACEHOLDER", "999");
-    users[numOfUsers] = user;
-    sockets[numOfUsers] = acceptSocket;
-    finished[numOfUsers] = false;
-    DWORD threadid;
-    HANDLE hdl;
-    std::cout << "Creating thread for socket." << std::endl;
-    hdl = CreateThread(NULL, 0, clientThreadReceive, (LPVOID)numOfUsers, 0, &threadid);
-    numOfUsers++;
-    isListenFinished = true;
+    if(numOfUsers == 32)
+    {
+        std::cout << "Max clients reached!, Declining socket." << std::endl;
+        int bytecount = send(acceptSocket, "EM", sizeof("EM"), 0);
+    }
+    else
+    {
+        User user("PLACEHOLDER", "999");
+        users[numOfUsers] = user;
+        sockets[numOfUsers] = acceptSocket;
+        finished[numOfUsers] = false;
+        DWORD threadid;
+        HANDLE hdl;
+        std::cout << "Creating thread for socket." << std::endl;
+        hdl = CreateThread(NULL, 0, clientThreadReceive, (LPVOID)numOfUsers, 0, &threadid);
+        numOfUsers++;
+        isListenFinished = true;
+    }
+
+    
 }
 
 int main()

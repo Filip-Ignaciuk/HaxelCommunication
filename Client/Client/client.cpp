@@ -118,9 +118,35 @@ bool isInitialised = false;
 bool isApplicationInitialised = false;
 bool isChangingDisplayName = false;
 bool isRecieving = false;
+bool isTimedOut = false;
 
 int language;
 const std::string languages[2] = { "/en-gb.txt", "/pl.txt" };
+
+HANDLE timedOutHandles[3];
+int numOfTimedOutThreads = 0;
+
+DWORD WINAPI TimedOutThread(LPVOID param)
+{
+	Sleep(25000);
+	isTimedOut = true;
+	currentConnectionStatus = allTextsInApplication[26];
+	currentColourConnection = failedToConnectColour;
+}
+void StartTimedOutThread()
+{
+	if(numOfTimedOutThreads != 3)
+	{
+		DWORD threadid;
+		timedOutHandles[numOfTimedOutThreads] = CreateThread(NULL, 0, TimedOutThread, 0, 0, &threadid);
+		numOfTimedOutThreads++;
+	}
+}
+void StopTimedOutThread()
+{
+	// ToDO
+	//TerminateThread();
+}
 
 DWORD WINAPI TryToConnectThread(LPVOID param)
 {
@@ -188,6 +214,7 @@ DWORD WINAPI InitialiseUserThread(LPVOID param)
 	bufferString.append(displayName);
 	const char* buffer = bufferString.c_str();
 	send(clientSocket, buffer, bufferSize, 0);
+	
 	return 0;
 	
 }
@@ -289,6 +316,14 @@ DWORD WINAPI RecieveThread(LPVOID param)
 		clientUser.SetDisplayName(wantedDisplayName);
 		
 	}
+	else if (buffer[0] == 'E')
+	{
+		if(buffer[0] == 'M')
+		{
+			currentConnectionStatus = allTextsInApplication[25];
+			currentColourChangingUser = notConnectedColour;
+		}
+	}
 
 	isRecieving = false;
 	return 0;
@@ -328,6 +363,8 @@ void InitLanguageFiles()
 	fileengb << "Languages" << std::endl;
 	fileengb << "Display Name is too large" << std::endl;
 	fileengb << "Invalid port or IP" << std::endl;
+	fileengb << "Max clients within chatroom! Please wait for someone to leave or join another one." << std::endl;
+	fileengb << "Request timed out. Please try to reconnect to the server." << std::endl;
 	fileengb.close();
 
 	std::ofstream filepl(currentDirNormalised + langWord + languages[1]);
