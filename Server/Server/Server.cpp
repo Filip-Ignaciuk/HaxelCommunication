@@ -21,13 +21,12 @@ int numOfUsers = 0;
 User users[32];
 SOCKET sockets[32];
 bool finished[32];
-int position = 0;
 
 DWORD WINAPI clientInitialiseThread(LPVOID param)
 {
     PositionBufferHolder* PBH = (PositionBufferHolder*)param;
 	const std::string buffer = PBH->buffer;
-    const int pos = PBH->position;
+    const int position = PBH->position;
     delete PBH;
     std::string displayName;
 
