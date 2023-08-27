@@ -126,27 +126,27 @@ const std::string languages[2] = { "/en-gb.txt", "/pl.txt" };
 HANDLE timedOutHandles[3];
 int numOfTimedOutThreads = 0;
 
-DWORD WINAPI TimedOutThread(LPVOID param)
-{
-	Sleep(25000);
-	isTimedOut = true;
-	currentConnectionStatus = allTextsInApplication[26];
-	currentColourConnection = failedToConnectColour;
-}
-void StartTimedOutThread()
-{
-	if(numOfTimedOutThreads != 3)
-	{
-		DWORD threadid;
-		timedOutHandles[numOfTimedOutThreads] = CreateThread(NULL, 0, TimedOutThread, 0, 0, &threadid);
-		numOfTimedOutThreads++;
-	}
-}
-void StopTimedOutThread()
-{
-	// ToDO
-	//TerminateThread();
-}
+//DWORD WINAPI TimedOutThread(LPVOID param)
+//{
+//	Sleep(25000);
+//	isTimedOut = true;
+//	currentConnectionStatus = allTextsInApplication[26];
+//	currentColourConnection = failedToConnectColour;
+//}
+//void StartTimedOutThread()
+//{
+//	if(numOfTimedOutThreads != 3)
+//	{
+//		DWORD threadid;
+//		timedOutHandles[numOfTimedOutThreads] = CreateThread(NULL, 0, TimedOutThread, 0, 0, &threadid);
+//		numOfTimedOutThreads++;
+//	}
+//}
+//void StopTimedOutThread()
+//{
+//	// ToDO
+//	//TerminateThread();
+//}
 
 DWORD WINAPI TryToConnectThread(LPVOID param)
 {
@@ -404,7 +404,7 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 	char charIp[bufferSize] = "";
 	char charPort[bufferSize] = "";
 	char charDisplayName[bufferSize] = "";
-	static char messageText[bufferSize] = "";
+
 
 	bool isTooLarge = false;
 	bool isPortOrIPValid = true;
@@ -434,6 +434,7 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 
 	while (gui::exit)
 	{
+		char messageText[bufferSize] = "";
 		gui::BeginRender();
 		gui::Render();
 
@@ -567,11 +568,13 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 				ImGui::BeginChild("Scrolling");
 				for (int i = 0; i < allTextsInChatRoom.size(); i++)
 				{
-					ImGui::TextColored(ImVec4(1, 1, 1, 1), allTextsInChatRoom[i].c_str());
+					
+					ImGui::TextWrapped(allTextsInChatRoom[i].c_str());
 				}
 				ImGui::EndChild();
 				if(ImGui::InputText(charAllTextsInApplication[20], messageText, IM_ARRAYSIZE(messageText), ImGuiInputTextFlags_EnterReturnsTrue))
 				{
+					ImGui::SetKeyboardFocusHere(-1);
 					if(messageText[0] == '/')
 					{
 						if(messageText[1] == 'h')
