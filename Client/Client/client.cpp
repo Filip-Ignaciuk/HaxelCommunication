@@ -408,8 +408,9 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 
 	bool isTooLarge = false;
 	bool isPortOrIPValid = true;
-	
 
+	bool hasTextSizeChanged = true;
+	int previousSize = 0;
 	CreateSocket();
 
 	std::ifstream file;
@@ -566,11 +567,28 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 			{
 				ImGui::SeparatorText(charAllTextsInApplication[17]);
 				ImGui::BeginChild("Scrolling");
-				for (int i = 0; i < allTextsInChatRoom.size(); i++)
+				const int currentSize = allTextsInChatRoom.size();
+
+				if (previousSize == currentSize)
 				{
-					
-					ImGui::TextWrapped(allTextsInChatRoom[i].c_str());
+					for (int i = 0; i < currentSize; i++)
+					{
+						ImGui::TextWrapped(allTextsInChatRoom[i].c_str());
+					}
 				}
+				else
+				{
+					for (int i = 0; i < currentSize; i++)
+					{
+						ImGui::TextWrapped(allTextsInChatRoom[i].c_str());
+						previousSize = currentSize;
+						ImGui::SetScrollHereY(1.0f);
+					}
+				}
+				
+				
+
+				
 				ImGui::EndChild();
 				if(ImGui::InputText(charAllTextsInApplication[20], messageText, IM_ARRAYSIZE(messageText), ImGuiInputTextFlags_EnterReturnsTrue))
 				{
