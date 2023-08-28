@@ -256,7 +256,7 @@ DWORD WINAPI ListenThread(LPVOID param)
 
 int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _arguments, int commandShow)
 {
-    gui::CreateHWindow("Haxel Communication", "haxelClass");
+    gui::CreateHWindow("Haxel Communication Server", "haxelClass");
     gui::CreateDevice();
     gui::CreateImGui();
 
@@ -282,19 +282,25 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
         return 0;
     }
 
+    allServerText.emplace_back("Server socket has been successfully created.");
+
     char ip[bufferSize] = "";
 
     bool wantsToExit = false;
+    bool isServerInitialised = false;
 
     int previousSize = 0;
 
     while (gui::exit || wantsToExit)
     {
+        gui::BeginRender();
+        gui::Render();
+        ImGui::SeparatorText("Current Error");
         ImGui::Text(currentError.c_str());
 
-        allServerText.emplace_back("Server socket has been successfully created.");
+        
         ImGui::SeparatorText("Server Configuration");
-        if (ImGui::InputText("IP", ip, IM_ARRAYSIZE(ip), ImGuiInputTextFlags_EnterReturnsTrue))
+        if (ImGui::InputText("IP", ip, IM_ARRAYSIZE(ip), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::Button("Create Server"))
         {
             // converting ip input to const wchar_t
             std::string ipInput = ip;
@@ -311,33 +317,38 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
                 WSACleanup();
                 return 0;
             }
+            isServerInitialised = true;
 
             allServerText.emplace_back("Server socket bind has been successfully done.");
 
             
         }
-
-        if (isListenFinished)
+        if(isServerInitialised)
         {
-            isListenFinished = false;
-            DWORD threadid;
-            HANDLE hdl;
-            Sleep(250);
-            hdl = CreateThread(NULL, 0, ListenThread, (LPVOID)serverSocket, 0, &threadid);
-
-        }
-
-        for (int i = 0; i < numOfUsers; i++)
-        {
-            if (finished[i])
+            if (isListenFinished)
             {
+                isListenFinished = false;
                 DWORD threadid;
                 HANDLE hdl;
-                std::cout << i << std::endl;
-                finished[i] = false;
-                hdl = CreateThread(NULL, 0, clientThreadReceive, (LPVOID)i, 0, &threadid);
+                Sleep(250);
+                hdl = CreateThread(NULL, 0, ListenThread, (LPVOID)serverSocket, 0, &threadid);
+
+            }
+
+            for (int i = 0; i < numOfUsers; i++)
+            {
+                if (finished[i])
+                {
+                    DWORD threadid;
+                    HANDLE hdl;
+                    std::cout << i << std::endl;
+                    finished[i] = false;
+                    hdl = CreateThread(NULL, 0, clientThreadReceive, (LPVOID)i, 0, &threadid);
+                }
             }
         }
+
+        
 
         ImGui::SeparatorText("Activity");
         ImGui::BeginChild("Scrolling");
@@ -367,11 +378,10 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
         }
 
         
-
-
-
+        ImGui::EndChild();
         ImGui::End();
         gui::EndRender();
+        
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
