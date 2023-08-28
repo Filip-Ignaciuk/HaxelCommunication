@@ -99,7 +99,7 @@ DWORD WINAPI clientUpdateThread(LPVOID param)
     std::string id;
     if(buffer[1] == 'D')
     {
-        std::cout << "Updating Display name..." << std::endl;
+        allServerText.emplace_back("Updating Display name...");
         std::string displayNameLengthS = "";
         int j = 2;
         while(isdigit(buffer[j]))
@@ -146,30 +146,29 @@ DWORD WINAPI clientThreadReceive(LPVOID param)
     User currentUser = users[pos];
     
     char buffer[bufferSize];
-    std::cout << "Detecting messages." << std::endl;
-    std::cout << "Socket: " << sockets[pos] << std::endl;
-    std::cout << "User: " << currentUser.GetDisplayName() << ", ID: " << currentUser.GetId() << std::endl;
+    allServerText.emplace_back("Detecting messages.");
+    allServerText.emplace_back("Socket: " + sockets[pos]);
+    allServerText.emplace_back("User: " + currentUser.GetDisplayName() + ", ID: " + currentUser.GetId());
     int bytecount = recv(currentSocket, buffer, bufferSize, 0);
 
 
     if (!bytecount || bytecount == SOCKET_ERROR)
     {
-        std::cout << "Client is lost." << std::endl;
+        allServerText.emplace_back("Client is lost.");
         sockets[pos] = 0;
         User user;
         users[pos] = user;
         finished[pos] = false;
         numOfUsers--;
-        std::cout << "There is now: " << numOfUsers << " users, and " << numOfUsers << " finishes." << std::endl;
+        allServerText.emplace_back("There is now: " + std::to_string(numOfUsers) + " users.");
         return 0;
     }
-    std::cout << "Received message. From client: " << currentSocket << std::endl;
-    std::cout << "Message: " << buffer << std::endl;
+
+    allServerText.emplace_back("Received message. From client: " + std::to_string(currentSocket));
     PositionBufferHolder* PBH = new PositionBufferHolder{ buffer, pos };
     if(buffer[0] == 'I')
     {
-
-        std::cout << "Request to initialise a user. From socket: " << currentSocket << ", name: " << currentUser.GetDisplayName() << ", id: " << currentUser.GetId() << std::endl;
+        allServerText.emplace_back("Request to initialise a user. From socket: " + std::to_string(currentSocket) + ", name: " + currentUser.GetDisplayName() + ", id: " + currentUser.GetId());
         DWORD threadid;
         HANDLE hdl;
         hdl = CreateThread(NULL, 0, clientInitialiseThread, PBH, 0, &threadid);
@@ -177,7 +176,8 @@ DWORD WINAPI clientThreadReceive(LPVOID param)
     }
     else if(buffer[0] == 'M')
     {
-        std::cout << "Request to send a message. From client: " << currentSocket << ", name: " << currentUser.GetDisplayName() << ", id: " << currentUser.GetId() << std::endl;
+        allServerText.emplace_back("Request to send a message. From client: " + std::to_string(currentSocket) + ", name: " + currentUser.GetDisplayName() + ", id: " + currentUser.GetId());
+
         DWORD threadid;
         HANDLE hdl;
         hdl = CreateThread(NULL, 0, clientMessageThread, PBH, 0, &threadid);
@@ -185,7 +185,7 @@ DWORD WINAPI clientThreadReceive(LPVOID param)
     }
     else if(buffer[0] == 'U')
     {
-        std::cout << "Request to update a user. From client: " << currentSocket << ", name: " << currentUser.GetDisplayName() << ", id: " << currentUser.GetId() << std::endl;
+        allServerText.emplace_back("Request to update a user. From client: " + std::to_string(currentSocket) + ", name: " + currentUser.GetDisplayName() + ", id: " + currentUser.GetId());
         DWORD threadid;
         HANDLE hdl;
         hdl = CreateThread(NULL, 0, clientUpdateThread, PBH, 0, &threadid);
@@ -193,12 +193,12 @@ DWORD WINAPI clientThreadReceive(LPVOID param)
     }
     else if(buffer[0] == 'Q')
     {
-	    std::cout << "Request to quit a user. From client: " << currentSocket << ", name: " << currentUser.GetDisplayName() << ", id: " << currentUser.GetId() << std::endl;
+        allServerText.emplace_back("Request to quit a user. From client: " + std::to_string(currentSocket) + ", name: " + currentUser.GetDisplayName() + ", id: " + currentUser.GetId());
         DWORD threadid;
         HANDLE hdl;
         hdl = CreateThread(NULL, 0, clientQuitThread, (LPVOID)pos, 0, &threadid);
         delete PBH;
-        std::cout << "There is now: " << numOfUsers << " users, and " << numOfUsers << " finishes." << std::endl;
+        allServerText.emplace_back("There is now: " + std::to_string(numOfUsers) + " users.");
         return 0;
     }
 
@@ -288,11 +288,13 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 
     bool wantsToExit = false;
     bool isServerInitialised = false;
+    bool isPortOrIPValid = true;
 
     int previousSize = 0;
 
-    while (gui::exit || wantsToExit)
+    while (gui::exit && !wantsToExit)
     {
+        isPortOrIPValid = true;
         gui::BeginRender();
         gui::Render();
         ImGui::SeparatorText("Current Error");
@@ -302,24 +304,57 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
         ImGui::SeparatorText("Server Configuration");
         if (ImGui::InputText("IP", ip, IM_ARRAYSIZE(ip), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::Button("Create Server"))
         {
-            // converting ip input to const wchar_t
-            std::string ipInput = ip;
-            std::wstring wideIpInput = std::wstring(ipInput.begin(), ipInput.end());
-            PCWSTR ip = wideIpInput.c_str();
-            sockaddr_in service;
-            service.sin_family = AF_INET;
-            service.sin_port = htons(port);
-            InetPtonW(AF_INET, ip, &service.sin_addr.S_un.S_addr);
-            if (bind(serverSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
+            std::string IP = ip;
+            int dotCount = 0;
+            for (unsigned char i = 0; i < IP.size(); i++)
             {
-                currentError = "Binding failed.";
-                closesocket(serverSocket);
-                WSACleanup();
-                return 0;
-            }
-            isServerInitialised = true;
+                if (isdigit(IP[i]))
+                {
 
-            allServerText.emplace_back("Server socket bind has been successfully done.");
+                }
+                else if(IP[i] == '.')
+                {
+                    dotCount++;
+                }
+                else
+                {
+                    isPortOrIPValid = false;
+                    break;
+                }
+            }
+
+            if(dotCount != 3)
+            {
+                isPortOrIPValid = false;
+            }
+            
+
+            if(isPortOrIPValid)
+            {
+                // converting ip input to const wchar_t
+                std::string ipInput = ip;
+                std::wstring wideIpInput = std::wstring(ipInput.begin(), ipInput.end());
+                PCWSTR ip = wideIpInput.c_str();
+                sockaddr_in service;
+                service.sin_family = AF_INET;
+                service.sin_port = htons(port);
+                InetPtonW(AF_INET, ip, &service.sin_addr.S_un.S_addr);
+                if (bind(serverSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
+                {
+                    currentError = "Binding failed.";
+                    closesocket(serverSocket);
+                    WSACleanup();
+                    return 0;
+                }
+                isServerInitialised = true;
+
+                allServerText.emplace_back("Server socket bind has been successfully done.");
+            }
+            else
+            {
+                currentError = "Ip or port inputted is invalid.";
+            }
+            
 
             
         }
