@@ -3,12 +3,18 @@
 #include <WS2tcpip.h>
 #include <iostream>
 #include <vector>
-#include <array>
+#include <thread>
 
 #include "user.hpp"
+#include "gui.h"	
+#include "ImGui/imgui.h"
 
 const int port = 8192;
 const int bufferSize = 200;
+
+std::vector<std::string> allServerText;
+
+std::string currentError;
 
 struct PositionBufferHolder
 {
@@ -163,7 +169,7 @@ DWORD WINAPI clientThreadReceive(LPVOID param)
     if(buffer[0] == 'I')
     {
 
-        std::cout << "Request to initialise a user. From socket: " << currentSocket << ", name:" << currentUser.GetDisplayName() << ", id: " << currentUser.GetId() << std::endl;
+        std::cout << "Request to initialise a user. From socket: " << currentSocket << ", name: " << currentUser.GetDisplayName() << ", id: " << currentUser.GetId() << std::endl;
         DWORD threadid;
         HANDLE hdl;
         hdl = CreateThread(NULL, 0, clientInitialiseThread, PBH, 0, &threadid);
@@ -171,7 +177,7 @@ DWORD WINAPI clientThreadReceive(LPVOID param)
     }
     else if(buffer[0] == 'M')
     {
-        std::cout << "Request to send a message. From client: " << currentSocket << ", name:" << currentUser.GetDisplayName() << ", id: " << currentUser.GetId() << std::endl;
+        std::cout << "Request to send a message. From client: " << currentSocket << ", name: " << currentUser.GetDisplayName() << ", id: " << currentUser.GetId() << std::endl;
         DWORD threadid;
         HANDLE hdl;
         hdl = CreateThread(NULL, 0, clientMessageThread, PBH, 0, &threadid);
@@ -179,7 +185,7 @@ DWORD WINAPI clientThreadReceive(LPVOID param)
     }
     else if(buffer[0] == 'U')
     {
-        std::cout << "Request to update a user. From client: " << currentSocket << ", name:" << currentUser.GetDisplayName() << ", id: " << currentUser.GetId() << std::endl;
+        std::cout << "Request to update a user. From client: " << currentSocket << ", name: " << currentUser.GetDisplayName() << ", id: " << currentUser.GetId() << std::endl;
         DWORD threadid;
         HANDLE hdl;
         hdl = CreateThread(NULL, 0, clientUpdateThread, PBH, 0, &threadid);
@@ -187,11 +193,12 @@ DWORD WINAPI clientThreadReceive(LPVOID param)
     }
     else if(buffer[0] == 'Q')
     {
-	    std::cout << "Request to quit a user. From client: " << currentSocket << ", name:" << currentUser.GetDisplayName() << ", id: " << currentUser.GetId() << std::endl;
+	    std::cout << "Request to quit a user. From client: " << currentSocket << ", name: " << currentUser.GetDisplayName() << ", id: " << currentUser.GetId() << std::endl;
         DWORD threadid;
         HANDLE hdl;
         hdl = CreateThread(NULL, 0, clientQuitThread, (LPVOID)pos, 0, &threadid);
         delete PBH;
+        std::cout << "There is now: " << numOfUsers << " users, and " << numOfUsers << " finishes." << std::endl;
         return 0;
     }
 
@@ -208,28 +215,26 @@ DWORD WINAPI ListenThread(LPVOID param)
     SOCKET serverSocket = (SOCKET)param;
     if (listen(serverSocket, 1) == SOCKET_ERROR)
     {
-        std::cout << "Setting up listening failed." << std::endl;
+        currentError = "Setting up listening failed.";
         closesocket(serverSocket);
         WSACleanup();
         return 0;
     }
-
-    std::cout << "Listening for clients on port: " << port << std::endl;
-
+    allServerText.emplace_back("Listening for clients on port: " + std::to_string(port));
     SOCKET acceptSocket = accept(serverSocket, NULL, NULL);
     if (acceptSocket == INVALID_SOCKET)
     {
-        std::cout << "Accepting failed." << std::endl;
+        currentError = "Accepting failed.";
         WSACleanup();
         return 0;
     }
 
 
-    std::cout << "Successfully accepted client. Socket: " << acceptSocket << std::endl;
+    allServerText.emplace_back("Successfully accepted client. Socket: " + std::to_string(acceptSocket));
 
     if(numOfUsers == 32)
     {
-        std::cout << "Max clients reached!, Declining socket." << std::endl;
+        allServerText.emplace_back("Max clients reached!, Declining socket.");
         int bytecount = send(acceptSocket, "EM", sizeof("EM"), 0);
     }
     else
@@ -240,7 +245,7 @@ DWORD WINAPI ListenThread(LPVOID param)
         finished[numOfUsers] = false;
         DWORD threadid;
         HANDLE hdl;
-        std::cout << "Creating thread for socket." << std::endl;
+        allServerText.emplace_back("Creating thread for socket.");
         hdl = CreateThread(NULL, 0, clientThreadReceive, (LPVOID)numOfUsers, 0, &threadid);
         numOfUsers++;
         isListenFinished = true;
@@ -249,10 +254,11 @@ DWORD WINAPI ListenThread(LPVOID param)
     
 }
 
-int main()
+int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _arguments, int commandShow)
 {
-    
-
+    gui::CreateHWindow("Haxel Communication", "haxelClass");
+    gui::CreateDevice();
+    gui::CreateImGui();
 
 
 
@@ -261,50 +267,57 @@ int main()
     WORD version = MAKEWORD(2, 2);
     if (WSAStartup(version, &wsaData))
     {
-        std::cout << "Winsock DLL failed to be found/loaded." << std::endl;
+        currentError = "Winsock DLL failed to be found/loaded.";
         std::cout << WSAGetLastError() << std::endl;
         return 0;
     }
 
-    std::cout << "DLL has been successfully found/loaded." << std::endl;
+    allServerText.emplace_back("DLL has been successfully found/loaded.");
 
     serverSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (serverSocket == INVALID_SOCKET)
     {
-        std::cout << "Error creating server socket." << std::endl;
+        currentError = "Error creating server socket.";
         WSACleanup();
         return 0;
     }
 
-    std::cout << "Server socket has been successfully created." << std::endl;
+    char ip[bufferSize] = "";
 
-    std::cout << "IP: " << std::endl;
-    std::string ipInput;
-    std::getline(std::cin, ipInput);
-    // converting ip input to const wchar_t
-    std::wstring wideIpInput = std::wstring(ipInput.begin(), ipInput.end());
-    PCWSTR ip = wideIpInput.c_str();
+    bool wantsToExit = false;
 
-    sockaddr_in service;
-    service.sin_family = AF_INET;
-    service.sin_port = htons(port);
-    InetPtonW(AF_INET, ip, &service.sin_addr.S_un.S_addr);
-    
-    if(bind(serverSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
+    int previousSize = 0;
+
+    while (gui::exit || wantsToExit)
     {
-        std::cout << "Binding failed." << std::endl;
-        closesocket(serverSocket);
-        WSACleanup();
-        return 0;
-    }
+        ImGui::Text(currentError.c_str());
 
-    std::cout << "Server socket bind has been successfully done." << std::endl;
+        allServerText.emplace_back("Server socket has been successfully created.");
+        ImGui::SeparatorText("Server Configuration");
+        if (ImGui::InputText("IP", ip, IM_ARRAYSIZE(ip), ImGuiInputTextFlags_EnterReturnsTrue))
+        {
+            // converting ip input to const wchar_t
+            std::string ipInput = ip;
+            std::wstring wideIpInput = std::wstring(ipInput.begin(), ipInput.end());
+            PCWSTR ip = wideIpInput.c_str();
+            sockaddr_in service;
+            service.sin_family = AF_INET;
+            service.sin_port = htons(port);
+            InetPtonW(AF_INET, ip, &service.sin_addr.S_un.S_addr);
+            if (bind(serverSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
+            {
+                currentError = "Binding failed.";
+                closesocket(serverSocket);
+                WSACleanup();
+                return 0;
+            }
 
+            allServerText.emplace_back("Server socket bind has been successfully done.");
 
-   
-    while(true)
-    {
-        if(isListenFinished)
+            
+        }
+
+        if (isListenFinished)
         {
             isListenFinished = false;
             DWORD threadid;
@@ -316,14 +329,55 @@ int main()
 
         for (int i = 0; i < numOfUsers; i++)
         {
-            if(finished[i])
+            if (finished[i])
             {
                 DWORD threadid;
                 HANDLE hdl;
                 std::cout << i << std::endl;
                 finished[i] = false;
-            	hdl = CreateThread(NULL, 0, clientThreadReceive, (LPVOID)i, 0, &threadid);
+                hdl = CreateThread(NULL, 0, clientThreadReceive, (LPVOID)i, 0, &threadid);
             }
         }
+
+        ImGui::SeparatorText("Activity");
+        ImGui::BeginChild("Scrolling");
+        const int currentSize = allServerText.size();
+
+        if (previousSize == currentSize)
+        {
+            for (int i = 0; i < currentSize; i++)
+            {
+                ImGui::TextWrapped(allServerText[i].c_str());
+            }
+        }
+        else
+        {
+            for (int i = 0; i < currentSize; i++)
+            {
+                // Wont work when a new message comes.
+                ImGui::TextWrapped(allServerText[i].c_str());
+                previousSize = currentSize;
+                ImGui::SetScrollHereY(1.0f);
+            }
+        }
+
+        if (ImGui::Button("Exit"))
+        {
+            wantsToExit = true;
+        }
+
+        
+
+
+
+        ImGui::End();
+        gui::EndRender();
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
+
+    WSACleanup();
+    gui::DestroyImGui();
+    gui::DestroyDevice();
+    gui::DestroyHWindow();
+    return EXIT_SUCCESS;
 }

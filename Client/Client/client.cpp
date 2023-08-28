@@ -580,6 +580,7 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 				{
 					for (int i = 0; i < currentSize; i++)
 					{
+						// Wont work when a new message comes.
 						ImGui::TextWrapped(allTextsInChatRoom[i].c_str());
 						previousSize = currentSize;
 						ImGui::SetScrollHereY(1.0f);
