@@ -216,7 +216,7 @@ void gui::Render() noexcept
 {
 	ImGui::SetNextWindowPos({ 0,0 });
 	ImGui::SetNextWindowSize({ WIDTH, HEIGHT });
-	ImGui::Begin("Haxel Communication", &exit, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings);
+	ImGui::Begin("Haxel Communication Client", &exit, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings);
 	
 
 	
