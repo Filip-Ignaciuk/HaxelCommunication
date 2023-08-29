@@ -435,6 +435,7 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 
 	while (gui::exit)
 	{
+
 		char messageText[bufferSize] = "";
 		gui::BeginRender();
 		gui::Render();
@@ -473,31 +474,38 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 
 		if (ImGui::Button(charAllTextsInApplication[5]))
 		{
+			isPortOrIPValid = true;
 			std::string IP = charIp;
+			int dotCount = 0;
 			for (unsigned char i = 0; i < IP.size(); i++)
 			{
-				if(isdigit(IP[i]) || IP[i] == '.')
+				if (IP[i] == '.')
 				{
-					
+					dotCount++;
 				}
-				else
+				else if (!isdigit(IP[i]))
 				{
 					isPortOrIPValid = false;
-					break;
 				}
+
 			}
+
+
+
+
 			std::string port = charPort;
-			for(unsigned char j = 0; j < port.size(); j++)
+			for (unsigned char j = 0; j < port.size(); j++)
 			{
-				if(isdigit(port[j]))
-				{
-					
-				}
-				else
+				if (!isdigit(port[j]))
 				{
 					isPortOrIPValid = false;
 					break;
 				}
+
+			}
+			if (dotCount != 3)
+			{
+				isPortOrIPValid = false;
 			}
 
 			// Just in case so that it doesn't spam threads.

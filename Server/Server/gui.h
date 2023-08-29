@@ -3,8 +3,8 @@
 
 namespace gui
 {
-	const int WIDTH = 500;
-	const int HEIGHT = 400;
+	const int WIDTH = 640;
+	const int HEIGHT = 480;
 
 	inline bool exit = true;
 
