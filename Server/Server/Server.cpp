@@ -396,7 +396,9 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
             }
         }
 
-        
+        ImGui::SeparatorText("Server information");
+        std::string infoUsers = "Number of connected users: " + std::to_string(numOfUsers);
+        ImGui::Text(infoUsers.c_str());
 
         ImGui::SeparatorText("Activity");
         ImGui::BeginChild("Scrolling");
@@ -429,6 +431,13 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
         
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
+
+    for (SOCKET socket : sockets)
+    {
+        int byteCount = send(socket, "QS", bufferSize, 0);
+    }
+
+
 
     WSACleanup();
     gui::DestroyImGui();

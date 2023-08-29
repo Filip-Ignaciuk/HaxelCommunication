@@ -23,3 +23,6 @@ Successfully changed user data
 Languages
 Display Name is too large
 Invalid port or IP
+Max clients within chatroom! Please wait for someone to leave or join another one.
+Request timed out. Please try to reconnect to the server.
+The server has been disconnected.

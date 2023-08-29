@@ -78,7 +78,7 @@ DWORD WINAPI SendTextThread(LPVOID param)
 	return 0;
 }
 
-const unsigned char numOfSentences = 25;
+const unsigned char numOfSentences = 28;
 
 std::string allTextsInApplication[numOfSentences];
 const char* charAllTextsInApplication[numOfSentences];
@@ -324,6 +324,15 @@ DWORD WINAPI RecieveThread(LPVOID param)
 			currentColourChangingUser = notConnectedColour;
 		}
 	}
+	else if (buffer[0] == 'Q')
+	{
+		if(buffer[1] == 'S')
+		{
+			currentConnectionStatus = allTextsInApplication[27];
+			currentColourConnection = tryingToConnectColour;
+			isConnected = false;
+		}
+	}
 
 	isRecieving = false;
 	return 0;
@@ -365,6 +374,7 @@ void InitLanguageFiles()
 	fileengb << "Invalid port or IP" << std::endl;
 	fileengb << "Max clients within chatroom! Please wait for someone to leave or join another one." << std::endl;
 	fileengb << "Request timed out. Please try to reconnect to the server." << std::endl;
+	fileengb << "The server has been disconnected." << std::endl;
 	fileengb.close();
 
 	std::ofstream filepl(currentDirNormalised + langWord + languages[1]);
@@ -601,6 +611,7 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 				ImGui::EndChild();
 				if(ImGui::InputText(charAllTextsInApplication[20], messageText, IM_ARRAYSIZE(messageText), ImGuiInputTextFlags_EnterReturnsTrue))
 				{
+
 					ImGui::SetKeyboardFocusHere(-1);
 					if(messageText[0] == '/')
 					{
@@ -609,6 +620,8 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 							AddHelpText();
 						}
 					}
+					std::string stringMessage = messageText;
+					if(stringMessage.size() < 200)
 					else
 					{
 						DWORD threadid;
