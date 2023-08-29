@@ -284,7 +284,8 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 
     allServerText.emplace_back("Server socket has been successfully created.");
 
-    char ip[bufferSize] = "";
+    char charIp[bufferSize] = "";
+    char charPort[bufferSize] = "";
 
     bool wantsToExit = false;
     bool isServerInitialised = false;
@@ -302,27 +303,33 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 
         
         ImGui::SeparatorText("Server Configuration");
-        if (ImGui::InputText("IP", ip, IM_ARRAYSIZE(ip), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::Button("Create Server"))
+        if (ImGui::InputText("IP", charIp, IM_ARRAYSIZE(charIp), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::InputText("Port", charPort, IM_ARRAYSIZE(charPort), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::Button("Create Server"))
         {
-            std::string IP = ip;
+            std::string IP = charIp;
             int dotCount = 0;
             for (unsigned char i = 0; i < IP.size(); i++)
             {
-                if (isdigit(IP[i]))
+				if (IP[i] == '.')
+				{
+					dotCount++;
+				}
+                else if (!isdigit(IP[i]))
                 {
+                    isPortOrIPValid = false;
+                }
+                
+            }
 
-                }
-                else if(IP[i] == '.')
-                {
-                    dotCount++;
-                }
-                else
+            std::string port = charPort;
+            for (unsigned char j = 0; j < port.size(); j++)
+            {
+                if (!isdigit(port[j]))
                 {
                     isPortOrIPValid = false;
                     break;
                 }
-            }
 
+            }
             if(dotCount != 3)
             {
                 isPortOrIPValid = false;
@@ -331,33 +338,39 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 
             if(isPortOrIPValid)
             {
+                
                 // converting ip input to const wchar_t
-                std::string ipInput = ip;
-                std::wstring wideIpInput = std::wstring(ipInput.begin(), ipInput.end());
+                std::wstring wideIpInput = std::wstring(IP.begin(), IP.end());
                 PCWSTR ip = wideIpInput.c_str();
                 sockaddr_in service;
                 service.sin_family = AF_INET;
-                service.sin_port = htons(port);
+                service.sin_port = htons(std::stoi(port));
                 InetPtonW(AF_INET, ip, &service.sin_addr.S_un.S_addr);
                 if (bind(serverSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
                 {
-                    currentError = "Binding failed.";
-                    closesocket(serverSocket);
-                    WSACleanup();
-                    return 0;
+                    currentError = "Binding failed, perhaps an invalid or non-existent ip";
                 }
-                isServerInitialised = true;
-
-                allServerText.emplace_back("Server socket bind has been successfully done.");
+                else
+                {
+                    isServerInitialised = true;
+                    allServerText.emplace_back("Server socket bind has been successfully done.");
+                }
+                
             }
             else
             {
-                currentError = "Ip or port inputted is invalid.";
+                currentError = "Ip or port format inputted is invalid.";
             }
             
 
             
         }
+
+        if (ImGui::Button("Exit"))
+        {
+            wantsToExit = true;
+        }
+
         if(isServerInitialised)
         {
             if (isListenFinished)
@@ -407,10 +420,7 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
             }
         }
 
-        if (ImGui::Button("Exit"))
-        {
-            wantsToExit = true;
-        }
+        
 
         
         ImGui::EndChild();
