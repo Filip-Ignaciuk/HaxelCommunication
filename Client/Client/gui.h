@@ -33,4 +33,6 @@ namespace gui
 	void EndRender() noexcept;
 	void Render() noexcept;
 
+	inline int currentLanguage;
+
 }

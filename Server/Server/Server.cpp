@@ -147,7 +147,7 @@ DWORD WINAPI clientThreadReceive(LPVOID param)
     
     char buffer[bufferSize];
     allServerText.emplace_back("Detecting messages.");
-    allServerText.emplace_back("Socket: " + sockets[pos]);
+    allServerText.emplace_back("Socket: " + std::to_string(sockets[pos]));
     allServerText.emplace_back("User: " + currentUser.GetDisplayName() + ", ID: " + currentUser.GetId());
     int bytecount = recv(currentSocket, buffer, bufferSize, 0);
 
