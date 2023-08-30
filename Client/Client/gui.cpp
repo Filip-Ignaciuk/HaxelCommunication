@@ -214,10 +214,40 @@ void gui::EndRender() noexcept
 }
 void gui::Render() noexcept
 {
+
 	ImGui::SetNextWindowPos({ 0,0 });
 	ImGui::SetNextWindowSize({ WIDTH, HEIGHT });
-	ImGui::Begin("Haxel Communication Client", &exit, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings);
+
 	
 
+	if(!ImGui::Begin("Haxel Communication Client", &exit, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings))
+	{
+		ImGui::End();
+		return;
+	}
+
+	//if (ImGui::BeginMenuBar())
+	//{
+	//	ImGui::EndMenuBar();
+	//}
+	static bool isEnglishGB = false;
+	static bool isPolish = false;
+
+	if (ImGui::BeginMenu("Settings"))
+	{
+		if (ImGui::BeginMenu("Languages"))
+		{
+			ImGui::MenuItem("English GB", NULL, &isEnglishGB);
+			ImGui::MenuItem("polski", NULL, &isPolish);
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenu();
+	}
+
+	if (isEnglishGB) { gui::currentLanguage = 0; }
+	else if (isPolish){ gui::currentLanguage = 1; }
+	
+
+	
 	
 }
