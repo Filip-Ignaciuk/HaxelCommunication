@@ -143,7 +143,7 @@ int numOfTimedOutThreads = 0;
 DWORD WINAPI SendTextThread(LPVOID param)
 {
 	std::string* messageptr = (std::string*)param;
-	std::string messageWithUser = clientUser.GetDisplayName() + ", ID: " + clientUser.GetId() + " >> " + *messageptr;
+	std::string messageWithUser = clientUser.GetDisplayName() + " >> " + *messageptr;
 	int messageSize = messageWithUser.size();
 	std::string messageFinal = "M" + std::to_string(messageSize) + messageWithUser;
 	int bytecount = send(clientSocket, messageFinal.c_str(), bufferSize, 0);
@@ -372,7 +372,7 @@ DWORD WINAPI RecieveThread(LPVOID param)
 			displayName.push_back(buffer[startPos]);
 		}
 		User user(id, displayName);
-		users[std::stoi(id)] = user;
+		users[std::stoi(id) - 1] = user;
 		
 	}
 	else if (buffer[0] == 'E')
@@ -618,21 +618,61 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 		{
 			if (ImGui::Button("All users"))
 			{
-				ImGui::OpenPopup("UsersModal");
+				ImGui::OpenPopup("All users");
 			}
 				
 
-			if (ImGui::BeginPopupModal("UsersModal", NULL, ImGuiWindowFlags_MenuBar))
+			if (ImGui::BeginPopupModal("All users", NULL, ImGuiWindowFlags_MenuBar))
 			{
-				if (ImGui::BeginTable("Current users in chatroom:", 3))
+				if (ImGui::BeginTable("Header", 2))
 				{
+
+					for (int row = 0; row < 1; row++)
+					{
+						ImGui::TableNextRow();
+						for (int column = 0; column < 2; column++)
+						{
+							ImGui::TableSetColumnIndex(column);
+							if(column)
+							{
+								ImGui::Text("Display Name");
+							}
+							else
+							{
+								ImGui::Text("ID");
+							}
+							
+						}
+					}
+					ImGui::EndTable();
+				}
+				if (ImGui::BeginTable("Current users in chatroom:", 2))
+				{
+
+
 					for (int row = 0; row < 32; row++)
 					{
 						ImGui::TableNextRow();
 						for (int column = 0; column < 2; column++)
 						{
 							ImGui::TableSetColumnIndex(column);
-							ImGui::Text("Row %d Column %d", row, column);
+							if(column)
+							{
+								const std::string userDisplayName = users[row].GetDisplayName();
+								if(!userDisplayName.empty())
+								{
+									ImGui::Text(userDisplayName.c_str());
+								}
+								
+							}
+							else
+							{
+								const std::string userID = users[row].GetId();
+								if (!userID.empty())
+								{
+									ImGui::Text(userID.c_str());
+								}
+							}
 						}
 					}
 					ImGui::EndTable();

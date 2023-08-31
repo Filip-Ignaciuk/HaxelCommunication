@@ -28,6 +28,72 @@ User users[32];
 SOCKET sockets[32];
 bool finished[32];
 
+DWORD WINAPI clientTableThread(LPVOID param)
+{
+    const int position = int(param);
+    User user = users[position];
+
+    std::string userDisplayName = user.GetDisplayName();
+    const int sizeOfDisplayName = userDisplayName.size();
+
+    std::string userId = user.GetId();
+    const int sizeOfId = userId.size();
+
+    std::string sendBuffer = "T" + std::to_string(sizeOfId) + userId + std::to_string(sizeOfDisplayName) + userDisplayName;
+    int bytecount;
+    for (SOCKET socket : sockets)
+    {
+        if(socket)
+        {
+            bytecount = send(socket, sendBuffer.c_str(), bufferSize, 0);
+        }
+        
+    }
+
+    return 0;
+}
+
+DWORD WINAPI clientAllTableThread(LPVOID param)
+{
+    const int socket = sockets[(int)param];
+    int bytecount;
+	for (User user : users)
+	{
+        if(user.GetDisplayName() != "" && user.GetId() != "")
+        {
+            std::string userDisplayName = user.GetDisplayName();
+            const int sizeOfDisplayName = userDisplayName.size();
+
+            std::string userId = user.GetId();
+            const int sizeOfId = userId.size();
+
+            std::string sendBuffer = "T" + std::to_string(sizeOfId) + userId + std::to_string(sizeOfDisplayName) + userDisplayName;
+            
+            bytecount = send(socket, sendBuffer.c_str(), bufferSize, 0);
+        }
+        
+	}
+    
+
+    return 0;
+}
+
+
+void UpdateTable(int _position)
+{
+    DWORD threadid;
+    HANDLE hdl;
+    hdl = CreateThread(NULL, 0, clientTableThread, (LPVOID)_position, 0, &threadid);
+}
+
+void UpdateThisTable(int _position)
+{
+    DWORD threadid;
+    HANDLE hdl;
+    hdl = CreateThread(NULL, 0, clientAllTableThread, (LPVOID)_position, 0, &threadid);
+}
+
+
 DWORD WINAPI clientInitialiseThread(LPVOID param)
 {
     PositionBufferHolder* PBH = (PositionBufferHolder*)param;
@@ -70,10 +136,14 @@ DWORD WINAPI clientInitialiseThread(LPVOID param)
 	//    
     //}
     int bytecount = send(sockets[position], sendBuffer.c_str(), bufferSize, 0);
-    std::cout << bytecount << std::endl;
+    UpdateTable(position);
+    UpdateThisTable(position);
+    
     finished[position] = true;
     return 0;
 }
+
+
 
 DWORD WINAPI clientMessageThread(LPVOID param)
 {
@@ -83,7 +153,11 @@ DWORD WINAPI clientMessageThread(LPVOID param)
     delete PBH;
     for (SOCKET socket : sockets)
     {
-        int bytecount = send(socket, buffer.c_str(), bufferSize, 0);
+        if(socket)
+        {
+            int bytecount = send(socket, buffer.c_str(), bufferSize, 0);
+        }
+        
     }
     finished[position] = true;
     return 0;
@@ -116,7 +190,7 @@ DWORD WINAPI clientUpdateThread(LPVOID param)
 
         users[position].SetDisplayName(newDisplayName);
         int bytecount = send(sockets[position], "U", bufferSize, 0);
-
+        UpdateTable(position);
         finished[position] = true;
         return 0;
 
@@ -136,6 +210,7 @@ DWORD WINAPI clientQuitThread(LPVOID param)
     users[position] = user;
     finished[position] = false;
     numOfUsers--;
+    UpdateTable(position);
     return 0;
 }
 
