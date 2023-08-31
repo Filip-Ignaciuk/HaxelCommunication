@@ -35,4 +35,6 @@ namespace gui
 
 	inline int currentLanguage;
 
+	inline bool isTimeFormatOn;
+
 }

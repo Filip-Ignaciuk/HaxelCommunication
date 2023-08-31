@@ -7,7 +7,7 @@
 #include <iostream>
 #include <vector>
 #include <thread>
-
+#include <ctime>
 #include "user.hpp"
 #include "gui.h"	
 #include "ImGui/imgui.h"
@@ -273,6 +273,7 @@ DWORD WINAPI RecieveThread(LPVOID param)
 
 	if (buffer[0] == 'M')
 	{
+		std::string defaultMessage;
 		std::string message;
 		std::string LengthS = "";
 		int j = 1;
@@ -284,8 +285,22 @@ DWORD WINAPI RecieveThread(LPVOID param)
 		int length = std::stoi(LengthS) + j;
 		for (int i = j; i < length; i++)
 		{
-			message.push_back(buffer[i]);
+			defaultMessage.push_back(buffer[i]);
 		}
+		// Add on stuff based upon the person's preference.
+		if(gui::isTimeFormatOn)
+		{
+			const time_t timeNow = time(0);
+			tm* ltm = new tm();
+			localtime_s(ltm, &timeNow);
+			message = "(" + std::to_string(ltm->tm_hour) + ":" + std::to_string(ltm->tm_min) + ") " + defaultMessage;
+			delete ltm;
+		}
+		else
+		{
+			message = defaultMessage;
+		}
+		
 		allTextsInChatRoom.emplace_back(message);
 	}
 	else if (buffer[0] == 'I')
@@ -524,10 +539,30 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 		std::ofstream file(currentDirNormalised + "/initialised.txt");
 		file << "1" << std::endl;
 		file << "0" << std::endl;
+		file << "1" << std::endl;
+
 		language = 0;
+
+		gui::currentLanguage = 0;
+		gui::isTimeFormatOn = true;
+
 		file.close();
 		InitLanguageFiles();
 	}
+	else
+	{
+		std::string line;
+		int i = 0;
+		while(std::getline(file, line))
+		{
+			if (i == 1) { gui::currentLanguage = std::stoi(line); }
+			else if (i == 2) { gui::isTimeFormatOn = std::stoi(line); }
+
+			i++;
+		}
+		file.close();
+	}
+
 	isApplicationInitialised = true;
 
 	InitialiseApplication();
