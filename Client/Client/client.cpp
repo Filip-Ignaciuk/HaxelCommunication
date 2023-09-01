@@ -357,6 +357,10 @@ DWORD WINAPI RecieveThread(LPVOID param)
 				startPos = 4;
 			}
 		}
+		else if (buffer[0] == 'D')
+		{
+			
+		}
 		else
 		{
 			id = "  ";
