@@ -28,7 +28,7 @@ User users[32];
 SOCKET sockets[32];
 bool finished[32];
 
-DWORD WINAPI clientTableThread(LPVOID param)
+DWORD WINAPI ClientTableThread(LPVOID param)
 {
     const int position = int(param);
     User user = users[position];
@@ -53,7 +53,7 @@ DWORD WINAPI clientTableThread(LPVOID param)
     return 0;
 }
 
-DWORD WINAPI clientAllTableThread(LPVOID param)
+DWORD WINAPI ClientAllTableThread(LPVOID param)
 {
     const int socket = sockets[(int)param];
     int bytecount;
@@ -83,18 +83,18 @@ void UpdateTable(int _position)
 {
     DWORD threadid;
     HANDLE hdl;
-    hdl = CreateThread(NULL, 0, clientTableThread, (LPVOID)_position, 0, &threadid);
+    hdl = CreateThread(NULL, 0, ClientTableThread, (LPVOID)_position, 0, &threadid);
 }
 
 void UpdateThisTable(int _position)
 {
     DWORD threadid;
     HANDLE hdl;
-    hdl = CreateThread(NULL, 0, clientAllTableThread, (LPVOID)_position, 0, &threadid);
+    hdl = CreateThread(NULL, 0, ClientAllTableThread, (LPVOID)_position, 0, &threadid);
 }
 
 
-DWORD WINAPI clientInitialiseThread(LPVOID param)
+DWORD WINAPI ClientInitialiseThread(LPVOID param)
 {
     PositionBufferHolder* PBH = (PositionBufferHolder*)param;
 	const std::string buffer = PBH->buffer;
@@ -145,7 +145,7 @@ DWORD WINAPI clientInitialiseThread(LPVOID param)
 
 
 
-DWORD WINAPI clientMessageThread(LPVOID param)
+DWORD WINAPI ClientMessageThread(LPVOID param)
 {
     PositionBufferHolder* PBH = (PositionBufferHolder*)param;
     const std::string buffer = PBH->buffer;
@@ -163,7 +163,7 @@ DWORD WINAPI clientMessageThread(LPVOID param)
     return 0;
 }
 
-DWORD WINAPI clientUpdateThread(LPVOID param)
+DWORD WINAPI ClientUpdateThread(LPVOID param)
 {
     PositionBufferHolder* PBH = (PositionBufferHolder*)param;
     const std::string buffer = PBH->buffer;
@@ -201,7 +201,7 @@ DWORD WINAPI clientUpdateThread(LPVOID param)
     return 0;
 }
 
-DWORD WINAPI clientQuitThread(LPVOID param)
+DWORD WINAPI ClientQuitThread(LPVOID param)
 {
     const int position = (int)param;
 
@@ -214,7 +214,7 @@ DWORD WINAPI clientQuitThread(LPVOID param)
     return 0;
 }
 
-DWORD WINAPI clientThreadReceive(LPVOID param)
+DWORD WINAPI ClientThreadReceive(LPVOID param)
 {
     const int pos = (int)param;
     SOCKET currentSocket = sockets[pos];
@@ -246,7 +246,7 @@ DWORD WINAPI clientThreadReceive(LPVOID param)
         allServerText.emplace_back("Request to initialise a user. From socket: " + std::to_string(currentSocket) + ", name: " + currentUser.GetDisplayName() + ", id: " + currentUser.GetId());
         DWORD threadid;
         HANDLE hdl;
-        hdl = CreateThread(NULL, 0, clientInitialiseThread, PBH, 0, &threadid);
+        hdl = CreateThread(NULL, 0, ClientInitialiseThread, PBH, 0, &threadid);
         return 0;
     }
     else if(buffer[0] == 'M')
@@ -255,7 +255,7 @@ DWORD WINAPI clientThreadReceive(LPVOID param)
 
         DWORD threadid;
         HANDLE hdl;
-        hdl = CreateThread(NULL, 0, clientMessageThread, PBH, 0, &threadid);
+        hdl = CreateThread(NULL, 0, ClientMessageThread, PBH, 0, &threadid);
         return 0;
     }
     else if(buffer[0] == 'U')
@@ -263,7 +263,7 @@ DWORD WINAPI clientThreadReceive(LPVOID param)
         allServerText.emplace_back("Request to update a user. From client: " + std::to_string(currentSocket) + ", name: " + currentUser.GetDisplayName() + ", id: " + currentUser.GetId());
         DWORD threadid;
         HANDLE hdl;
-        hdl = CreateThread(NULL, 0, clientUpdateThread, PBH, 0, &threadid);
+        hdl = CreateThread(NULL, 0, ClientUpdateThread, PBH, 0, &threadid);
         return 0;
     }
     else if(buffer[0] == 'Q')
@@ -271,7 +271,7 @@ DWORD WINAPI clientThreadReceive(LPVOID param)
         allServerText.emplace_back("Request to quit a user. From client: " + std::to_string(currentSocket) + ", name: " + currentUser.GetDisplayName() + ", id: " + currentUser.GetId());
         DWORD threadid;
         HANDLE hdl;
-        hdl = CreateThread(NULL, 0, clientQuitThread, (LPVOID)pos, 0, &threadid);
+        hdl = CreateThread(NULL, 0, ClientQuitThread, (LPVOID)pos, 0, &threadid);
         delete PBH;
         allServerText.emplace_back("There is now: " + std::to_string(numOfUsers) + " users.");
         return 0;
@@ -321,7 +321,7 @@ DWORD WINAPI ListenThread(LPVOID param)
         DWORD threadid;
         HANDLE hdl;
         allServerText.emplace_back("Creating thread for socket.");
-        hdl = CreateThread(NULL, 0, clientThreadReceive, (LPVOID)numOfUsers, 0, &threadid);
+        hdl = CreateThread(NULL, 0, ClientThreadReceive, (LPVOID)numOfUsers, 0, &threadid);
         numOfUsers++;
         isListenFinished = true;
     }
@@ -466,7 +466,7 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
                     HANDLE hdl;
                     std::cout << i << std::endl;
                     finished[i] = false;
-                    hdl = CreateThread(NULL, 0, clientThreadReceive, (LPVOID)i, 0, &threadid);
+                    hdl = CreateThread(NULL, 0, ClientThreadReceive, (LPVOID)i, 0, &threadid);
                 }
             }
         }

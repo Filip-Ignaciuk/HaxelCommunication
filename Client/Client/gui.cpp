@@ -243,8 +243,8 @@ void gui::Render() noexcept
 		}
 		if (ImGui::BeginMenu("Chat"))
 		{
-			ImGui::MenuItem("English GB", NULL, &isEnglishGB);
-			ImGui::MenuItem("polski", NULL, &isPolish);
+			ImGui::MenuItem("Enable time of message", NULL, &isEnglishGB);
+			ImGui::MenuItem("Enable", NULL, &isPolish);
 			ImGui::EndMenu();
 		}
 		ImGui::EndMenu();
