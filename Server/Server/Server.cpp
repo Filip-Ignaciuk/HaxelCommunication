@@ -119,13 +119,13 @@ DWORD WINAPI ClientInitialiseThread(LPVOID param)
     std::cout << displayName << std::endl;
 
 
-    std::cout << numOfUsers << std::endl;
-    std::cout << displayName.size() << std::endl;
-    User user(displayName, std::to_string(numOfUsers));
+    allServerText.emplace_back(std::to_string(numOfUsers));
+    allServerText.emplace_back(std::to_string(displayName.size()));
+    User user(displayName, std::to_string(position));
     users[position] = user;
-    std::string sizeOfIdS = std::to_string(numOfUsers);
+    std::string sizeOfIdS = std::to_string(position);
     int sizeOfId = sizeOfIdS.size();
-    std::string sendBuffer = "I" + std::to_string(sizeOfId) + std::to_string(numOfUsers);
+    std::string sendBuffer = "I" + std::to_string(sizeOfId) + std::to_string(position);
     // To Do
     //if(bufferSize < sizeof(buffer))
     //{
@@ -284,6 +284,7 @@ DWORD WINAPI ClientThreadReceive(LPVOID param)
 bool isListenFinished = true;
 
 
+
 DWORD WINAPI ListenThread(LPVOID param)
 {
 
@@ -306,25 +307,30 @@ DWORD WINAPI ListenThread(LPVOID param)
 
 
     allServerText.emplace_back("Successfully accepted client. Socket: " + std::to_string(acceptSocket));
+    User defaultUser;
+    
 
-    if(numOfUsers == 32)
+    for(User user : users)
     {
-        allServerText.emplace_back("Max clients reached!, Declining socket.");
-        int bytecount = send(acceptSocket, "EM", sizeof("EM"), 0);
+	    if ( user.IsTheSame(defaultUser))
+	    {
+            User newUser("PLACEHOLDER", "999");
+            user = newUser;
+            sockets[numOfUsers] = acceptSocket;
+            finished[numOfUsers] = false;
+            DWORD threadid;
+            HANDLE hdl;
+            allServerText.emplace_back("Creating thread for socket.");
+            hdl = CreateThread(NULL, 0, ClientThreadReceive, (LPVOID)numOfUsers, 0, &threadid);
+            numOfUsers++;
+            isListenFinished = true;
+            break;
+	    }
     }
-    else
-    {
-        User user("PLACEHOLDER", "999");
-        users[numOfUsers] = user;
-        sockets[numOfUsers] = acceptSocket;
-        finished[numOfUsers] = false;
-        DWORD threadid;
-        HANDLE hdl;
-        allServerText.emplace_back("Creating thread for socket.");
-        hdl = CreateThread(NULL, 0, ClientThreadReceive, (LPVOID)numOfUsers, 0, &threadid);
-        numOfUsers++;
-        isListenFinished = true;
-    }
+
+    allServerText.emplace_back("Max clients reached!, Declining socket.");
+    int bytecount = send(acceptSocket, "EM", sizeof("EM"), 0);
+
 
     
 }

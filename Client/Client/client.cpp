@@ -786,7 +786,8 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 			}
 			if(isInitialised)
 			{
-				ImGui::SeparatorText(charAllTextsInApplication[17]);
+				// Char doesn't work for some reason. Fix
+				ImGui::SeparatorText(allTextsInApplication[17].c_str());
 				ImGui::BeginChild("Scrolling");
 				const int currentSize = allTextsInChatRoom.size();
 
