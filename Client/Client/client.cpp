@@ -158,8 +158,8 @@ DWORD WINAPI TryToConnectThread(LPVOID param)
 	std::string stringIp = CH->charIp;
 	std::wstring wideIpInput = std::wstring(stringIp.begin(), stringIp.end());
 	PCWSTR ip = wideIpInput.c_str();
-
 	int port = std::stoi(CH->charPort);
+	delete CH;
 
 	sockaddr_in service;
 	service.sin_family = AF_INET;
@@ -171,7 +171,6 @@ DWORD WINAPI TryToConnectThread(LPVOID param)
 		isConnecting = false;
 		currentConnectionStatus = allTextsInApplication[6];
 		currentColourConnection = failedToConnectColour;
-		delete CH;
 	}
 	else
 	{
@@ -179,9 +178,9 @@ DWORD WINAPI TryToConnectThread(LPVOID param)
 		isConnected = true;
 		currentConnectionStatus = allTextsInApplication[4];
 		currentColourConnection = connectedColour;
-		return 0;
-		delete CH;
+		
 	}
+	return 0;
 	
 }
 
@@ -257,7 +256,43 @@ DWORD WINAPI ChangingThread(LPVOID param)
 	return 0;
 }
 
+DWORD WINAPI DomainThread(LPVOID param)
+{
+	ConnectHolder* CH = (ConnectHolder*)param;
+	std::string domainName = CH->charIp;
+	std::string domainPassword = CH->charPort;
 
+
+	PCWSTR ip = L"127.0.0.1";
+	sockaddr_in service;
+	service.sin_family = AF_INET;
+	service.sin_port = htons(4096);
+	InetPtonW(AF_INET, ip, &service.sin_addr.S_un.S_addr);
+
+	if (connect(clientSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
+	{
+
+
+		isConnecting = false;
+		currentConnectionStatus = allTextsInApplication[28];
+		currentColourConnection = failedToConnectColour;
+	}
+	else
+	{
+		std::string bufferMaxSize = "R50B50BXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+		std::string buffer = "R" + std::to_string(domainName.size()) + "B" + std::to_string(domainPassword.size()) + "B" + domainName + domainPassword;
+		int bytecount = sizeof(bufferMaxSize);
+		send(clientSocket, buffer.c_str(), bufferSize, 0);
+
+		isConnecting = false;
+		isConnected = true;
+		currentConnectionStatus = allTextsInApplication[4];
+		currentColourConnection = connectedColour;
+
+	}
+
+	return 0;
+}
 
 
 DWORD WINAPI RecieveThread(LPVOID param)
@@ -453,6 +488,7 @@ void InitLanguageFiles()
 	fileengb << "Max clients within chatroom! Please wait for someone to leave or join another one." << std::endl;
 	fileengb << "Request timed out. Please try to reconnect to the server." << std::endl;
 	fileengb << "The server has been disconnected." << std::endl;
+	fileengb << "Failed to connect to the domain server." << std::endl;
 	fileengb.close();
 
 	std::ofstream filepl(currentDirNormalised + langWord + languages[1]);
@@ -527,6 +563,8 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 	bool isMessageTooLong = false;
 	bool isMessageTooShort = false;
 
+	bool hasDomainNameFailed = false;
+
 
 	int previousSize = 0;
 	int previousLang = 0;
@@ -599,7 +637,7 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 			// Status
 			ImGui::TextColored(currentColourConnection, currentConnectionStatus.c_str());
 
-			if (!isPortOrIPValid)
+			if (!isPortOrIPValid && hasDomainNameFailed)
 			{
 				ImGui::Text(charAllTextsInApplication[24]);
 			}
@@ -618,6 +656,7 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 					else if (!isdigit(IP[i]))
 					{
 						isPortOrIPValid = false;
+						break;
 					}
 
 				}
@@ -638,6 +677,16 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 				if (dotCount != 3)
 				{
 					isPortOrIPValid = false;
+				}
+
+				if(!isPortOrIPValid)
+				{
+					isConnecting = true;
+					DWORD threadid;
+					HANDLE hdl;
+					ConnectHolder* CH = new ConnectHolder{ charIp, charPort };
+					hdl = CreateThread(NULL, 0, DomainThread, CH, 0, &threadid);
+					hdl = CreateThread(NULL, 0, ConnectingThread, 0, 0, &threadid);
 				}
 
 				// Just in case so that it doesn't spam threads.

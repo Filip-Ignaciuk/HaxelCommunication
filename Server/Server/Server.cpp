@@ -119,13 +119,13 @@ DWORD WINAPI ClientInitialiseThread(LPVOID param)
     std::cout << displayName << std::endl;
 
 
-    allServerText.emplace_back(std::to_string(numOfUsers));
-    allServerText.emplace_back(std::to_string(displayName.size()));
-    User user(displayName, std::to_string(position));
+    std::cout << numOfUsers << std::endl;
+    std::cout << displayName.size() << std::endl;
+    User user(displayName, std::to_string(numOfUsers));
     users[position] = user;
-    std::string sizeOfIdS = std::to_string(position);
+    std::string sizeOfIdS = std::to_string(numOfUsers);
     int sizeOfId = sizeOfIdS.size();
-    std::string sendBuffer = "I" + std::to_string(sizeOfId) + std::to_string(position);
+    std::string sendBuffer = "I" + std::to_string(sizeOfId) + std::to_string(numOfUsers);
     // To Do
     //if(bufferSize < sizeof(buffer))
     //{
@@ -284,7 +284,6 @@ DWORD WINAPI ClientThreadReceive(LPVOID param)
 bool isListenFinished = true;
 
 
-
 DWORD WINAPI ListenThread(LPVOID param)
 {
 
@@ -307,38 +306,34 @@ DWORD WINAPI ListenThread(LPVOID param)
 
 
     allServerText.emplace_back("Successfully accepted client. Socket: " + std::to_string(acceptSocket));
-    User defaultUser;
-    
-    bool isInitialised = false;
 
-    for(User user : users)
+    bool isConnected = false;
+
+    for(size_t i = 0; i < 32; i++)
     {
-	    if ( user.IsTheSame(defaultUser))
-	    {
-            User newUser("PLACEHOLDER", "999");
-            user = newUser;
-            sockets[numOfUsers] = acceptSocket;
-            finished[numOfUsers] = false;
+        if(!sockets[i])
+        {
+            User user("PLACEHOLDER", "999");
+            users[i] = user;
+            sockets[i] = acceptSocket;
+            finished[i] = false;
             DWORD threadid;
             HANDLE hdl;
             allServerText.emplace_back("Creating thread for socket.");
             hdl = CreateThread(NULL, 0, ClientThreadReceive, (LPVOID)numOfUsers, 0, &threadid);
             numOfUsers++;
             isListenFinished = true;
-            isInitialised = true;
+            isConnected = true;
             break;
-	    }
+        }
+        
     }
 
-    if(!isInitialised)
+    if(!isConnected)
     {
         allServerText.emplace_back("Max clients reached!, Declining socket.");
         int bytecount = send(acceptSocket, "EM", sizeof("EM"), 0);
     }
-
-    
-
-
     
 }
 
