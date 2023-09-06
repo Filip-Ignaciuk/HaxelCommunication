@@ -425,13 +425,13 @@ DWORD WINAPI RecieveThread(LPVOID param)
 		{
 			displayName.push_back(buffer[startPos]);
 		}
-		User user(id, displayName);
-		users[std::stoi(id) - 1] = user;
+		User user(displayName, id);
+		users[std::stoi(id)] = user;
 		
 	}
 	else if (buffer[0] == 'E')
 	{
-		if(buffer[0] == 'M')
+		if(buffer[1] == 'M')
 		{
 			currentConnectionStatus = allTextsInApplication[25];
 			currentColourChangingUser = notConnectedColour;
@@ -835,6 +835,7 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 			}
 			if(isInitialised)
 			{
+				// Char doesn't work for some reason. Fix
 				ImGui::SeparatorText(charAllTextsInApplication[17]);
 				ImGui::BeginChild("Scrolling");
 				const int currentSize = allTextsInChatRoom.size();

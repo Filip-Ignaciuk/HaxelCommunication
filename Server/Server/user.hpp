@@ -20,6 +20,11 @@ public:
 
 	std::string GetId() const;
 	std::string GetDisplayName() const;
+
 	void SetDisplayName(std::string _displayName);
+
+	bool IsTheSame(User& user) const;
+
+	bool operator==(User& user) const;
 
 };
