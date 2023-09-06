@@ -309,6 +309,7 @@ DWORD WINAPI ListenThread(LPVOID param)
     allServerText.emplace_back("Successfully accepted client. Socket: " + std::to_string(acceptSocket));
     User defaultUser;
     
+    bool isInitialised = false;
 
     for(User user : users)
     {
@@ -324,12 +325,18 @@ DWORD WINAPI ListenThread(LPVOID param)
             hdl = CreateThread(NULL, 0, ClientThreadReceive, (LPVOID)numOfUsers, 0, &threadid);
             numOfUsers++;
             isListenFinished = true;
+            isInitialised = true;
             break;
 	    }
     }
 
-    allServerText.emplace_back("Max clients reached!, Declining socket.");
-    int bytecount = send(acceptSocket, "EM", sizeof("EM"), 0);
+    if(!isInitialised)
+    {
+        allServerText.emplace_back("Max clients reached!, Declining socket.");
+        int bytecount = send(acceptSocket, "EM", sizeof("EM"), 0);
+    }
+
+    
 
 
     
