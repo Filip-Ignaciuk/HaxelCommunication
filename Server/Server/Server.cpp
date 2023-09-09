@@ -281,6 +281,66 @@ DWORD WINAPI ClientThreadReceive(LPVOID param)
     return 0;
 }
 
+struct DomainHolder
+{
+    std::string domainName;
+    std::string domainPassword;
+    std::string domainAdminPassword;
+};
+
+DWORD WINAPI RegisterServerDomain(LPVOID param)
+{
+    DomainHolder* DH = (DomainHolder*)param;
+    std::string domainName = DH->domainName;
+    std::string domainPassword = DH->domainPassword;
+    std::string domainAdminPassword = DH->domainAdminPassword;
+    delete DH;
+
+    SOCKET domainSocket = INVALID_SOCKET;
+
+    domainSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (domainSocket == INVALID_SOCKET)
+    {
+        currentError = "Error creating domain socket.";
+        WSACleanup();
+        return 0;
+    }
+
+    allServerText.emplace_back("Socket for domain server has been successfully created.");
+
+    PCWSTR ip = L"127.0.0.1";
+    sockaddr_in service;
+    service.sin_family = AF_INET;
+    service.sin_port = htons(4096);
+    InetPtonW(AF_INET, ip, &service.sin_addr.S_un.S_addr);
+
+    if (connect(domainSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
+    {
+        allServerText.emplace_back("Connecting to the domain server was unsuccessful.");
+    }
+    else
+    {
+        std::string buffer = "R" + std::to_string(domainName.size()) + "B" + std::to_string(domainPassword.size()) + "B" + std::to_string(domainAdminPassword.size()) + "B" + domainName + domainPassword + domainAdminPassword;
+        char bufferResponse[bufferSize];
+    	send(domainSocket, buffer.c_str(), bufferSize, 0);
+        recv(domainSocket, bufferResponse, bufferSize, 0);
+        int result = std::stoi(bufferResponse);
+        if(!result)
+        {
+            allServerText.emplace_back("Registering domain was successful.");
+        }
+        else if (result == 1)
+        {
+            allServerText.emplace_back("Registering domain was unsuccessful, domain already exists!");
+        }
+        else if (result == 2)
+        {
+            allServerText.emplace_back("Registering domain was unsuccessful, domain, password or the admin password was empty.");
+        }
+
+    }
+}
+
 bool isListenFinished = true;
 
 
@@ -370,6 +430,10 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
     char charIp[bufferSize] = "";
     char charPort[bufferSize] = "";
 
+    char charDomainName[bufferSize] = "";
+    char charPassword[bufferSize] = "";
+    char charAdminPassword[bufferSize] = "";
+
     bool wantsToExit = false;
     bool isServerInitialised = false;
     bool isPortOrIPValid = true;
@@ -447,6 +511,15 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
             
 
             
+        }
+
+        if (ImGui::InputText("Name", charDomainName, IM_ARRAYSIZE(charDomainName), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::InputText("Password", charPassword, IM_ARRAYSIZE(charPassword), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::InputText("Admin Password", charAdminPassword, IM_ARRAYSIZE(charAdminPassword), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::Button("List server domain"))
+        {
+            DomainHolder* DH = new DomainHolder{ charDomainName, charPassword, charAdminPassword };
+            DWORD threadid;
+            HANDLE hdl;
+            hdl = CreateThread(NULL, 0, RegisterServerDomain, (LPVOID)DH, 0, &threadid);
+
         }
 
         if (ImGui::Button("Exit"))
