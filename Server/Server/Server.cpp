@@ -320,7 +320,7 @@ DWORD WINAPI RegisterServerDomain(LPVOID param)
     }
     else
     {
-        std::string buffer = "R" + std::to_string(domainName.size()) + "B" + std::to_string(domainPassword.size()) + "B" + std::to_string(domainAdminPassword.size()) + "B" + domainName + domainPassword + domainAdminPassword;
+        std::string buffer = "I" + std::to_string(domainName.size()) + "B" + std::to_string(domainPassword.size()) + "B" + std::to_string(domainAdminPassword.size()) + "B" + domainName + domainPassword + domainAdminPassword;
         char bufferResponse[bufferSize];
     	send(domainSocket, buffer.c_str(), bufferSize, 0);
         recv(domainSocket, bufferResponse, bufferSize, 0);
@@ -513,14 +513,51 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
             
         }
 
-        if (ImGui::InputText("Name", charDomainName, IM_ARRAYSIZE(charDomainName), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::InputText("Password", charPassword, IM_ARRAYSIZE(charPassword), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::InputText("Admin Password", charAdminPassword, IM_ARRAYSIZE(charAdminPassword), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::Button("List server domain"))
-        {
-            DomainHolder* DH = new DomainHolder{ charDomainName, charPassword, charAdminPassword };
-            DWORD threadid;
-            HANDLE hdl;
-            hdl = CreateThread(NULL, 0, RegisterServerDomain, (LPVOID)DH, 0, &threadid);
+        ImGui::SeparatorText("Domain");
 
+        if(isServerInitialised)
+        {
+            if (ImGui::InputText("Name", charDomainName, IM_ARRAYSIZE(charDomainName), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::InputText("Password", charPassword, IM_ARRAYSIZE(charPassword), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::InputText("Admin Password", charAdminPassword, IM_ARRAYSIZE(charAdminPassword), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::Button("List server domain"))
+            {
+                std::string nameS = charDomainName;
+                std::string passwordS = charPassword;
+                std::string adminPasswordS = charAdminPassword;
+
+                if (nameS.empty())
+                {
+                    currentError = "Domain name field is empty";
+                }
+                else if(passwordS.empty())
+                {
+                    currentError = "Domain password field is empty";
+                }
+                else if(adminPasswordS.empty())
+                {
+                    currentError = "Domain admin password field is empty";
+                }
+                else if (nameS.size() > 50)
+                {
+                    currentError = "Domain name cannot exceed 50 characters.";
+                }
+                else if (passwordS.size() > 50)
+                {
+                    currentError = "Domain password cannot exceed 50 characters.";
+                }
+                else if (adminPasswordS.size() > 50)
+                {
+                    currentError = "Domain admin password cannot exceed 50 characters.";
+                }
+                else
+                {
+                    DomainHolder* DH = new DomainHolder{ charDomainName, charPassword, charAdminPassword };
+                    DWORD threadid;
+                    HANDLE hdl;
+                    hdl = CreateThread(NULL, 0, RegisterServerDomain, (LPVOID)DH, 0, &threadid);
+                }
+            }
         }
+
+        
 
         if (ImGui::Button("Exit"))
         {
