@@ -16,6 +16,9 @@ std::vector<std::string> allServerText;
 
 std::string currentError;
 
+std::string currentPort;
+std::string currentIp;
+
 struct PositionBufferHolder
 {
     std::string buffer;
@@ -320,10 +323,10 @@ DWORD WINAPI RegisterServerDomain(LPVOID param)
     }
     else
     {
-        std::string buffer = "I" + std::to_string(domainName.size()) + "B" + std::to_string(domainPassword.size()) + "B" + std::to_string(domainAdminPassword.size()) + "B" + domainName + domainPassword + domainAdminPassword;
+        std::string buffer = "I" + std::to_string(domainName.size()) + "B" + std::to_string(domainPassword.size()) + "B" + std::to_string(domainAdminPassword.size()) + "B" + domainName + domainPassword + domainAdminPassword + "B" + currentIp + "B" + currentPort;
         char bufferResponse[bufferSize];
     	send(domainSocket, buffer.c_str(), bufferSize, 0);
-        recv(domainSocket, bufferResponse, bufferSize, 0);
+        recv(domainSocket, bufferResponse, 1, 0);
         int result = std::stoi(bufferResponse);
         if(!result)
         {
@@ -485,7 +488,8 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 
             if(isPortOrIPValid)
             {
-                
+                currentIp = IP;
+                currentPort = port;
                 // converting ip input to const wchar_t
                 std::wstring wideIpInput = std::wstring(IP.begin(), IP.end());
                 PCWSTR ip = wideIpInput.c_str();
