@@ -279,16 +279,32 @@ DWORD WINAPI DomainThread(LPVOID param)
 	}
 	else
 	{
-		std::string bufferMaxSize = "R50B50BXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+		// Testing
+		//std::string bufferMaxSize = "R50B50BXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+		// int bytecount = sizeof(bufferMaxSize);
 		std::string buffer = "R" + std::to_string(domainName.size()) + "B" + std::to_string(domainPassword.size()) + "B" + domainName + domainPassword;
-		int bytecount = sizeof(bufferMaxSize);
+		std::string resultBuffer = "";
 		send(clientSocket, buffer.c_str(), bufferSize, 0);
-
-		isConnecting = false;
-		isConnected = true;
-		currentConnectionStatus = allTextsInApplication[4];
-		currentColourConnection = connectedColour;
-
+		recv(clientSocket, resultBuffer.c_str(), bufferSize, 0);
+		if(resultBuffer[0] = 'D')
+		{
+			isConnecting = false;
+			isConnected = true;
+			currentConnectionStatus = allTextsInApplication[4];
+			currentColourConnection = connectedColour;
+		}
+		else if (resultBuffer[0] == '2')
+		{
+			isConnecting = false;
+			currentConnectionStatus = allTextsInApplication[29];
+			currentColourConnection = failedToConnectColour;
+		}
+		//else if(resultBuffer[0] == '1')
+		//{
+		//	isConnecting = false;
+		//	currentConnectionStatus = allTextsInApplication[4];
+		//	currentColourConnection = failedToConnectColour;
+		//}
 	}
 
 	return 0;
@@ -489,6 +505,7 @@ void InitLanguageFiles()
 	fileengb << "Request timed out. Please try to reconnect to the server." << std::endl;
 	fileengb << "The server has been disconnected." << std::endl;
 	fileengb << "Failed to connect to the domain server." << std::endl;
+	fileengb << "Chatroom doesn't exist with chosen name." << std::endl;
 	fileengb.close();
 
 	std::ofstream filepl(currentDirNormalised + langWord + languages[1]);
