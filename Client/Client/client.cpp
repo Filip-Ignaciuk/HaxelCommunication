@@ -256,6 +256,12 @@ DWORD WINAPI ChangingThread(LPVOID param)
 	return 0;
 }
 
+struct ConnectHolderString
+{
+	std::string ip;
+	std::string port;
+};
+
 DWORD WINAPI DomainThread(LPVOID param)
 {
 	ConnectHolder* CH = (ConnectHolder*)param;
@@ -285,19 +291,22 @@ DWORD WINAPI DomainThread(LPVOID param)
 		std::string buffer = "R" + std::to_string(domainName.size()) + "B" + std::to_string(domainPassword.size()) + "B" + domainName + domainPassword;
 		std::string resultBuffer = "";
 		send(clientSocket, buffer.c_str(), bufferSize, 0);
-		recv(clientSocket, resultBuffer.c_str(), bufferSize, 0);
-		if(resultBuffer[0] = 'D')
-		{
-			isConnecting = false;
-			isConnected = true;
-			currentConnectionStatus = allTextsInApplication[4];
-			currentColourConnection = connectedColour;
-		}
-		else if (resultBuffer[0] == '2')
+		ConnectHolderString CHS;
+		recv(clientSocket, (char*)&CHS, sizeof(ConnectHolderString), 0);
+		if (CHS.port == "2")
 		{
 			isConnecting = false;
 			currentConnectionStatus = allTextsInApplication[29];
 			currentColourConnection = failedToConnectColour;
+		}
+		else
+		{
+			DWORD threadid;
+			HANDLE hdl;
+			ConnectHolder* CH2 = new ConnectHolder{ CHS.ip.data(), CHS.port.data() };
+			hdl = CreateThread(NULL, 0, TryToConnectThread, CH2, 0, &threadid);
+
+			
 		}
 		//else if(resultBuffer[0] == '1')
 		//{
