@@ -65,11 +65,13 @@ int CreateSocket()
 		return 0;
 	}
 
+	return 0;
+
 }
 
 
 
-const unsigned char numOfSentences = 28;
+const unsigned char numOfSentences = 30;
 
 std::string allTextsInApplication[numOfSentences];
 const char* charAllTextsInApplication[numOfSentences];
@@ -80,9 +82,9 @@ User users[32];
 
 HANDLE recieveThread;
 
-const ImVec4 notConnectedColour = ImVec4(0.1, 0.8, 0.9, 1);
-const ImVec4 tryingToConnectColour = ImVec4(0.90, 0.8, 0.12, 1);
-const ImVec4 connectedColour = ImVec4(0.16, 0.9, 0.1, 1);
+const ImVec4 notConnectedColour = ImVec4(0.1f, 0.8f, 0.9f, 1);
+const ImVec4 tryingToConnectColour = ImVec4(0.90f, 0.8f, 0.12f, 1);
+const ImVec4 connectedColour = ImVec4(0.16f, 0.9f, 0.1f, 1);
 const ImVec4 failedToConnectColour = ImVec4(1, 0, 0, 1);
 
 std::string currentConnectionStatus = "";
@@ -267,7 +269,7 @@ DWORD WINAPI DomainThread(LPVOID param)
 	ConnectHolder* CH = (ConnectHolder*)param;
 	std::string domainName = CH->charIp;
 	std::string domainPassword = CH->charPort;
-
+	delete CH;
 
 	PCWSTR ip = L"127.0.0.1";
 	sockaddr_in service;
@@ -283,40 +285,41 @@ DWORD WINAPI DomainThread(LPVOID param)
 		currentConnectionStatus = allTextsInApplication[28];
 		currentColourConnection = failedToConnectColour;
 	}
+	std::string buffer = "R" + std::to_string(domainName.size()) + "B" + std::to_string(domainPassword.size()) + "B" + domainName + domainPassword;
+	send(clientSocket, buffer.c_str(), bufferSize, 0);
+	ConnectHolderString CHS;
+	
+	// ConnectHolderString produces error upon deletion
+	recv(clientSocket, (char*)&CHS, sizeof(ConnectHolderString), 0);
+	std::string resultIp = CHS.ip;
+	std::string resultPort = CHS.port;
+
+	
+	
+	if (CHS.port == "2" && CHS.ip == "2")
+	{
+		isConnecting = false;
+		currentConnectionStatus = allTextsInApplication[29];
+		currentColourConnection = failedToConnectColour;
+	}
 	else
 	{
-		// Testing
-		//std::string bufferMaxSize = "R50B50BXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
-		// int bytecount = sizeof(bufferMaxSize);
-		std::string buffer = "R" + std::to_string(domainName.size()) + "B" + std::to_string(domainPassword.size()) + "B" + domainName + domainPassword;
-		std::string resultBuffer = "";
-		send(clientSocket, buffer.c_str(), bufferSize, 0);
-		ConnectHolderString CHS;
-		recv(clientSocket, (char*)&CHS, sizeof(ConnectHolderString), 0);
-		if (CHS.port == "2")
-		{
-			isConnecting = false;
-			currentConnectionStatus = allTextsInApplication[29];
-			currentColourConnection = failedToConnectColour;
-		}
-		else
-		{
-			DWORD threadid;
-			HANDLE hdl;
-			ConnectHolder* CH2 = new ConnectHolder{ CHS.ip.data(), CHS.port.data() };
-			hdl = CreateThread(NULL, 0, TryToConnectThread, CH2, 0, &threadid);
-
-			
-		}
-		//else if(resultBuffer[0] == '1')
-		//{
-		//	isConnecting = false;
-		//	currentConnectionStatus = allTextsInApplication[4];
-		//	currentColourConnection = failedToConnectColour;
-		//}
+		DWORD threadid;
+		HANDLE hdl;
+		ConnectHolder* CH2 = new ConnectHolder{ resultIp.data(), resultPort.data() };
+		hdl = CreateThread(NULL, 0, TryToConnectThread, CH2, 0, &threadid);
+	
+	
 	}
 
+	CHS.ip = "";
+	CHS.port = "";
+
+	closesocket(clientSocket);
+	WSACleanup();
 	return 0;
+
+
 }
 
 
