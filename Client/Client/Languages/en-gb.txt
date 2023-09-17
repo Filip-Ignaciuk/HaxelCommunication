@@ -26,3 +26,5 @@ Invalid port or IP
 Max clients within chatroom! Please wait for someone to leave or join another one.
 Request timed out. Please try to reconnect to the server.
 The server has been disconnected.
+Failed to connect to the domain server.
+Chatroom doesn't exist with chosen name.
