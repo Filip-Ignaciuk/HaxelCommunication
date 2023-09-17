@@ -98,8 +98,8 @@ std::string wantedDisplayName;
 
 struct ConnectHolder
 {
-	char* charIp;
-	char* charPort;
+	std::string ip;
+	std::string port;
 };
 
 struct DisplayNameHolder
@@ -157,10 +157,10 @@ DWORD WINAPI TryToConnectThread(LPVOID param)
 {
 	ConnectHolder* CH = (ConnectHolder*)param;
 	// Converting ip input to const wchar_t
-	std::string stringIp = CH->charIp;
+	std::string stringIp = CH->ip;
 	std::wstring wideIpInput = std::wstring(stringIp.begin(), stringIp.end());
 	PCWSTR ip = wideIpInput.c_str();
-	int port = std::stoi(CH->charPort);
+	int port = std::stoi(CH->port);
 	delete CH;
 
 	sockaddr_in service;
@@ -168,7 +168,8 @@ DWORD WINAPI TryToConnectThread(LPVOID param)
 	service.sin_port = htons(port);
 	InetPtonW(AF_INET, ip, &service.sin_addr.S_un.S_addr);
 
-	if (connect(clientSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
+	int result = connect(clientSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service));
+	if (result)
 	{
 		isConnecting = false;
 		currentConnectionStatus = allTextsInApplication[6];
@@ -185,6 +186,8 @@ DWORD WINAPI TryToConnectThread(LPVOID param)
 	return 0;
 	
 }
+
+
 
 DWORD WINAPI ConnectingThread(LPVOID param)
 {
@@ -258,17 +261,12 @@ DWORD WINAPI ChangingThread(LPVOID param)
 	return 0;
 }
 
-struct ConnectHolderString
-{
-	std::string ip;
-	std::string port;
-};
 
 DWORD WINAPI DomainThread(LPVOID param)
 {
 	ConnectHolder* CH = (ConnectHolder*)param;
-	std::string domainName = CH->charIp;
-	std::string domainPassword = CH->charPort;
+	std::string domainName = CH->ip;
+	std::string domainPassword = CH->port;
 	delete CH;
 
 	PCWSTR ip = L"127.0.0.1";
@@ -284,40 +282,62 @@ DWORD WINAPI DomainThread(LPVOID param)
 		isConnecting = false;
 		currentConnectionStatus = allTextsInApplication[28];
 		currentColourConnection = failedToConnectColour;
-	}
-	std::string buffer = "R" + std::to_string(domainName.size()) + "B" + std::to_string(domainPassword.size()) + "B" + domainName + domainPassword;
-	send(clientSocket, buffer.c_str(), bufferSize, 0);
-	ConnectHolderString CHS;
-	
-	// ConnectHolderString produces error upon deletion
-	recv(clientSocket, (char*)&CHS, sizeof(ConnectHolderString), 0);
-	std::string resultIp = CHS.ip;
-	std::string resultPort = CHS.port;
-
-	
-	
-	if (CHS.port == "2" && CHS.ip == "2")
-	{
-		isConnecting = false;
-		currentConnectionStatus = allTextsInApplication[29];
-		currentColourConnection = failedToConnectColour;
+		closesocket(clientSocket);
+		WSACleanup();
+		CreateSocket();
+		return 0;
 	}
 	else
 	{
-		DWORD threadid;
-		HANDLE hdl;
-		ConnectHolder* CH2 = new ConnectHolder{ resultIp.data(), resultPort.data() };
-		hdl = CreateThread(NULL, 0, TryToConnectThread, CH2, 0, &threadid);
-	
-	
+		std::string buffer = "R" + std::to_string(domainName.size()) + "B" + std::to_string(domainPassword.size()) + "B" + domainName + domainPassword;
+		char resultBuffer[22];
+		send(clientSocket, buffer.c_str(), bufferSize, 0);
+		recv(clientSocket, resultBuffer, 22, 0);
+
+		std::string result = resultBuffer;
+
+		std::string resultIp;
+		std::string resultPort;
+		
+		int i = 1;
+		const int end = result.size() - 1;
+		while (result[i] != 'B')
+		{
+			resultIp.push_back(result[i]);
+			i++;
+		}
+		i++;
+		while (i != end)
+		{
+			resultPort.push_back(result[i]);
+			i++;
+		}
+		resultPort.push_back(result[i]);
+
+
+		if (resultIp == "2" && resultPort == "2")
+		{
+			isConnecting = false;
+			currentConnectionStatus = allTextsInApplication[29];
+			currentColourConnection = failedToConnectColour;
+			closesocket(clientSocket);
+			WSACleanup();
+			CreateSocket();
+			return 0;
+		}
+		else
+		{
+			DWORD threadid;
+			HANDLE hdl;
+			ConnectHolder* CH2 = new ConnectHolder{ resultIp , resultPort };
+			closesocket(clientSocket);
+			WSACleanup();
+			CreateSocket();
+			hdl = CreateThread(NULL, 0, TryToConnectThread, CH2, 0, &threadid);
+			return 0;
+		
+		}
 	}
-
-	CHS.ip = "";
-	CHS.port = "";
-
-	closesocket(clientSocket);
-	WSACleanup();
-	return 0;
 
 
 }
