@@ -30,6 +30,7 @@ int numOfUsers = 0;
 User users[32];
 SOCKET sockets[32];
 bool finished[32];
+bool hasDomain = false;
 
 DWORD WINAPI ClientTableThread(LPVOID param)
 {
@@ -320,6 +321,7 @@ DWORD WINAPI RegisterServerDomain(LPVOID param)
     if (connect(domainSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
     {
         allServerText.emplace_back("Connecting to the domain server was unsuccessful.");
+        hasDomain = false;
     }
     else
     {
@@ -331,14 +333,17 @@ DWORD WINAPI RegisterServerDomain(LPVOID param)
         if(!result)
         {
             allServerText.emplace_back("Registering domain was successful.");
+            hasDomain = true;
         }
         else if (result == 1)
         {
             allServerText.emplace_back("Registering domain was unsuccessful, domain already exists!");
+            hasDomain = false;
         }
         else if (result == 2)
         {
             allServerText.emplace_back("Registering domain was unsuccessful, domain, password or the admin password was empty.");
+            hasDomain = false;
         }
 
     }
@@ -443,6 +448,10 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 
     int previousSize = 0;
 
+    static bool isDiscoverable = false;
+    bool isPasswordEmpty = false;
+    bool isReady = false;
+
     while (gui::exit && !wantsToExit)
     {
         isPortOrIPValid = true;
@@ -453,6 +462,7 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 
         
         ImGui::SeparatorText("Server Configuration");
+        
         if (ImGui::InputText("IP", charIp, IM_ARRAYSIZE(charIp), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::InputText("Port", charPort, IM_ARRAYSIZE(charPort), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::Button("Create Server"))
         {
             std::string IP = charIp;
@@ -518,24 +528,86 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
         }
 
         ImGui::SeparatorText("Domain");
-
         if(isServerInitialised)
         {
-            if (ImGui::InputText("Name", charDomainName, IM_ARRAYSIZE(charDomainName), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::InputText("Password", charPassword, IM_ARRAYSIZE(charPassword), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::InputText("Admin Password", charAdminPassword, IM_ARRAYSIZE(charAdminPassword), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::Button("List server domain"))
+            ImGui::InputText("Name", charDomainName, IM_ARRAYSIZE(charDomainName), ImGuiInputTextFlags_EnterReturnsTrue);
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip("Name that people will use to access your chatroom.");
+            }
+            ImGui::InputText("Password", charPassword, IM_ARRAYSIZE(charPassword), ImGuiInputTextFlags_EnterReturnsTrue);
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip("Optional, allows protection against random people.");
+            }
+            ImGui::InputText("Admin Password", charAdminPassword, IM_ARRAYSIZE(charAdminPassword), ImGuiInputTextFlags_EnterReturnsTrue);
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip("Used to verify user, in the case of modify chatrooms.");
+            }
+            ImGui::Checkbox("Is discoverable", &isDiscoverable);
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip("Allows people to know that your server exists, by typing the name of your chatroom name.");
+            }
+                
+
+            if (ImGui::Button("List server domain"))
+            {
+                std::string passwordS = charPassword;
+            	if(passwordS.empty())
+                {
+
+                    isReady = false;
+                    isPasswordEmpty = true;
+                }
+                else
+                {
+                    isReady = true;
+                }
+            }
+
+            if(isPasswordEmpty)
+            {
+                ImGui::OpenPopup("Password");
+
+                if (ImGui::BeginPopupModal("Password", NULL, ImGuiWindowFlags_MenuBar))
+                {
+                    ImGui::Text("WARNING!");
+                    ImGui::TextWrapped("You are creating a chatroom without a password. There is a chance of unwanted people from joining your chatroom.");
+                    ImGui::Text("Do you wish to continue?");
+                    if (ImGui::Button("Yes"))
+                    {
+                        isPasswordEmpty = false;
+                        ImGui::CloseCurrentPopup();
+                        isReady = true;
+                    }
+                    if (ImGui::Button("No"))
+                    {
+                        isPasswordEmpty = false;
+                        isReady = false;
+                        ImGui::CloseCurrentPopup();
+                    }
+
+                    ImGui::EndPopup();
+                }
+            }
+
+            if (isReady && !hasDomain)
             {
                 std::string nameS = charDomainName;
                 std::string passwordS = charPassword;
                 std::string adminPasswordS = charAdminPassword;
 
+                isPasswordEmpty = false;
+                hasDomain = true;
+                isReady = false;
+
                 if (nameS.empty())
                 {
                     currentError = "Domain name field is empty";
                 }
-                else if(passwordS.empty())
-                {
-                    currentError = "Domain password field is empty";
-                }
-                else if(adminPasswordS.empty())
+                else if (adminPasswordS.empty())
                 {
                     currentError = "Domain admin password field is empty";
                 }
@@ -558,7 +630,9 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
                     HANDLE hdl;
                     hdl = CreateThread(NULL, 0, RegisterServerDomain, (LPVOID)DH, 0, &threadid);
                 }
+                
             }
+            
         }
 
         
