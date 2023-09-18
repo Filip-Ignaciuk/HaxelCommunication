@@ -33,8 +33,6 @@ namespace gui
 	void EndRender() noexcept;
 	void Render() noexcept;
 
-	inline int currentLanguage;
-
-	inline bool isTimeFormatOn;
+	
 
 }
