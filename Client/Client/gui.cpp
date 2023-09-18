@@ -1,5 +1,6 @@
 #include "gui.h"
 
+#include "config.hpp"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_dx9.h"
 #include "ImGui/imgui_impl_win32.h"
@@ -250,8 +251,8 @@ void gui::Render() noexcept
 		ImGui::EndMenu();
 	}
 
-	if (isEnglishGB) { gui::currentLanguage = 0; }
-	else if (isPolish){ gui::currentLanguage = 1; }
+	if (isEnglishGB) { config::currentLanguage = 0; }
+	else if (isPolish){ config::currentLanguage = 1; }
 	
 
 	
