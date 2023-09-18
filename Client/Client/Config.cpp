@@ -48,6 +48,8 @@ bool config::StartConfigs()
 		file << "1" << std::endl; // Is Application initialised
 		file << "0" << std::endl; // Language
 		file << "1" << std::endl; // TimeFormat
+		file << "127.0.0.1" << std::endl; // Domain Ip
+		file << "4096" << std::endl; // Domain Port
 
 		currentLanguage = 0;
 		isTimeFormatOn = true;
@@ -69,9 +71,11 @@ bool config::StartConfigs()
 		int i = 0;
 		while (std::getline(initFile, line))
 		{
-			if (i == 0) {  isInitialised = std::stoi(line); }
-			else if (i == 1) { currentLanguage = std::stoi(line); }
-			else if (i == 2) { isTimeFormatOn = std::stoi(line); }
+			if (i == 0) {  isInitialised = std::stoi(line); } // Is Application initialised
+			else if (i == 1) { currentLanguage = std::stoi(line); } // Language
+			else if (i == 2) { isTimeFormatOn = std::stoi(line); } // TimeFormat
+			else if (i == 3) { DSC.SetIp(line); } // Domain Ip
+			else if (i == 4) { DSC.SetPort(line); } // Domain Port
 			
 
 			i++;
