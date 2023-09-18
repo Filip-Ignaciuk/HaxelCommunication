@@ -20,8 +20,9 @@ bool LanguageFileInitialiser::GenerateLanguageFile(const int _language)
 
 bool LanguageFileInitialiser::GenerateEnGb()
 {
+	const std::string languagePath = config::currentDirNormalised + "/Languages";
 	bool isSuccessful = true;
-	std::ofstream fileengb(languagePath + languages[0])
+	std::ofstream fileengb(languagePath + languagesExtention[0]);
 	if(fileengb.is_open())
 	{
 		fileengb << "IP" << std::endl;
@@ -68,38 +69,46 @@ bool LanguageFileInitialiser::GenerateEnGb()
 bool LanguageFileInitialiser::GeneratePl()
 {
 
+
+	return true;
 }
 
 bool LanguageFileInitialiser::CheckInstalledLanguages()
 {
+	const std::string languagePath = config::currentDirNormalised + "/Languages";
 	for (const auto& entry : std::filesystem::directory_iterator(languagePath))
 	{
-		std::string entryReversed = entry.path().string();
-		std::reverse(entryReversed.begin(), entryReversed.end());
+		std::string entryReversedNormalised = entry.path().string();
+		entryReversedNormalised = config::NormaliseDir(entryReversedNormalised);
+		std::reverse(entryReversedNormalised.begin(), entryReversedNormalised.end());
 		std::string fileName;
 		int i = 0;
-		while(fileName[i] != '/')
+		while(entryReversedNormalised[i] != '/')
 		{
-			fileName.push_back(fileName[i]);
+			fileName.push_back(entryReversedNormalised[i]);
 			i++;
 		}
-		fileName.push_back(fileName[i]);
+		fileName.push_back(entryReversedNormalised[i]);
 
 		for (i = 0; i < numberOfLanguages; i++)
 		{
-			if(fileName == languages[i])
+			if(fileName == reversedLanguagesExtention[i])
 			{
 				initialisedLanguages[i] = true;
+				break;
 			}
 		}
 	}
+
+	return true;
 }
 
 bool LanguageFileInitialiser::PopulateAllTextsInApplication()
 {
+	const std::string languagePath = config::currentDirNormalised + "/Languages";
 	if(initialisedLanguages[config::currentLanguage])
 	{
-		const std::string path = languagePath + languages[config::currentLanguage];
+		const std::string path = languagePath + languagesExtention[config::currentLanguage];
 		std::ifstream languageFile(path);
 		if(languageFile.is_open())
 		{
@@ -108,6 +117,7 @@ bool LanguageFileInitialiser::PopulateAllTextsInApplication()
 			while(std::getline(languageFile, line))
 			{
 				allTextsInApplication[i] = line;
+				charAllTextsInApplication[i] = _strdup(line.c_str());
 				i++;
 			}
 		}
@@ -123,3 +133,8 @@ bool LanguageFileInitialiser::PopulateAllTextsInApplication()
 
 	return true;
 }
+
+
+bool LanguageFileInitialiser::initialisedLanguages[numberOfLanguages];
+char* LanguageFileInitialiser::charAllTextsInApplication[numberOfSentences];
+std::string LanguageFileInitialiser::allTextsInApplication[numberOfSentences];

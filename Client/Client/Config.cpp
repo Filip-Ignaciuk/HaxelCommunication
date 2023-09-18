@@ -34,14 +34,10 @@ bool config::InitFolders()
 }
 
 
+
 bool config::StartConfigs()
 {
 	bool isSuccessful = true;
-
-	// Obtaining file path.
-	currentDirNormalised = std::filesystem::current_path().string();
-	currentDirNormalised = NormaliseDir(currentDirNormalised);
-
 	
 	const std::string initialisedTxt = currentDirNormalised + "/initialised.txt";
 	std::ifstream initFile(initialisedTxt);
@@ -73,9 +69,9 @@ bool config::StartConfigs()
 		int i = 0;
 		while (std::getline(initFile, line))
 		{
-			if (i == 1) { currentLanguage = std::stoi(line); }
-			else if (i == 2) { currentLanguage = std::stoi(line); }
-			else if (i == 3) { isTimeFormatOn = std::stoi(line); }
+			if (i == 0) {  isInitialised = std::stoi(line); }
+			else if (i == 1) { currentLanguage = std::stoi(line); }
+			else if (i == 2) { isTimeFormatOn = std::stoi(line); }
 			
 
 			i++;
@@ -101,7 +97,14 @@ bool config::StartConfigs()
 
 }
 
+std::string config::currentDirUnNormalised = std::filesystem::current_path().string();
+std::string config::currentDirNormalised = NormaliseDir(currentDirUnNormalised);
 
+bool config::isInitialised = false;
+
+int config::currentLanguage = 0;
+
+bool config::isTimeFormatOn = false;
 
 
 
