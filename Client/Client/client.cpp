@@ -100,8 +100,8 @@ DWORD WINAPI TryToConnectThread(LPVOID param)
 	ConnectHolder* CH = (ConnectHolder*)param;
 	// Converting ip input to const wchar_t
 	std::string stringIp = CH->ip;
-	std::wstring wideIpInput = std::wstring(stringIp.begin(), stringIp.end());
-	PCWSTR ip = wideIpInput.c_str();
+	std::wstring wideIp = std::wstring(stringIp.begin(), stringIp.end());
+	PCWSTR ip = wideIp.c_str();
 	int port = std::stoi(CH->port);
 	delete CH;
 
@@ -211,10 +211,13 @@ DWORD WINAPI DomainThread(LPVOID param)
 	std::string domainPassword = CH->port;
 	delete CH;
 
-	PCWSTR ip = L"127.0.0.1";
+	const std::string sIp = config::domainIp;
+	const std::wstring wIp(sIp.begin(), sIp.end());
+	PCWSTR ip = wIp.c_str();
 	sockaddr_in service;
 	service.sin_family = AF_INET;
-	service.sin_port = htons(4096);
+	// Potentially can change if user was fast enough, if a problem, import the object at once to prevent change.
+	service.sin_port = htons(std::stoi(config::domainPort));
 	InetPtonW(AF_INET, ip, &service.sin_addr.S_un.S_addr);
 
 	if (connect(clientSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
@@ -452,7 +455,7 @@ void AddHelpText()
 
 int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _arguments, int commandShow)
 {
-	gui::CreateHWindow("Haxel Communication", "haxelClass");
+	gui::CreateHWindow("Hello", "HaxelClass");
 	gui::CreateDevice();
 	gui::CreateImGui();
 
