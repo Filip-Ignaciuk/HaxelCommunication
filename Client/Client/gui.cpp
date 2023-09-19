@@ -100,6 +100,7 @@ void gui::DestroyHWindow() noexcept
 	DestroyWindow(window);
 	UnregisterClass(windowClass.lpszClassName, windowClass.hInstance);
 
+
 }
 
 bool gui::CreateDevice() noexcept

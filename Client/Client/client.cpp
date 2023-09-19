@@ -211,13 +211,13 @@ DWORD WINAPI DomainThread(LPVOID param)
 	std::string domainPassword = CH->port;
 	delete CH;
 
-	const std::string sIp = config::DSC.GetIp();
+	const std::string sIp = config::domainIp;
 	const std::wstring wIp(sIp.begin(), sIp.end());
 	PCWSTR ip = wIp.c_str();
 	sockaddr_in service;
 	service.sin_family = AF_INET;
 	// Potentially can change if user was fast enough, if a problem, import the object at once to prevent change.
-	service.sin_port = htons(std::stoi(config::DSC.GetPort()));
+	service.sin_port = htons(std::stoi(config::domainPort));
 	InetPtonW(AF_INET, ip, &service.sin_addr.S_un.S_addr);
 
 	if (connect(clientSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
@@ -455,7 +455,7 @@ void AddHelpText()
 
 int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _arguments, int commandShow)
 {
-	gui::CreateHWindow("Haxel Communication", "haxelClass");
+	gui::CreateHWindow("Hello", "HaxelClass");
 	gui::CreateDevice();
 	gui::CreateImGui();
 

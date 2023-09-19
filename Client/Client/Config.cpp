@@ -74,8 +74,8 @@ bool config::StartConfigs()
 			if (i == 0) {  isInitialised = std::stoi(line); } // Is Application initialised
 			else if (i == 1) { currentLanguage = std::stoi(line); } // Language
 			else if (i == 2) { isTimeFormatOn = std::stoi(line); } // TimeFormat
-			else if (i == 3) { DSC.SetIp(line); } // Domain Ip
-			else if (i == 4) { DSC.SetPort(line); } // Domain Port
+			else if (i == 3) { domainIp = std::stoi(line); } // Domain Ip
+			else if (i == 4) { domainPort = std::stoi(line); } // Domain Port
 			
 
 			i++;
@@ -100,6 +100,10 @@ bool config::StartConfigs()
 
 
 }
+
+// Domain Config
+std::string config::domainIp = "127.0.0.1";
+std::string config::domainPort = "4096";
 
 std::string config::currentDirUnNormalised = std::filesystem::current_path().string();
 std::string config::currentDirNormalised = NormaliseDir(currentDirUnNormalised);
