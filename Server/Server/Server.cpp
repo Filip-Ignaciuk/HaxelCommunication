@@ -15,7 +15,6 @@ const int bufferSize = 200;
 std::vector<std::string> allServerText;
 
 std::string currentError;
-
 std::string currentPort;
 std::string currentIp;
 
@@ -24,6 +23,9 @@ struct PositionBufferHolder
     std::string buffer;
     int position;
 };
+
+std::string currentAdminPassword;
+std::string currentDomain;
 
 std::vector<std::string> texts;
 int numOfUsers = 0;
@@ -333,6 +335,8 @@ DWORD WINAPI RegisterServerDomain(LPVOID param)
         if(!result)
         {
             allServerText.emplace_back("Registering domain was successful.");
+            currentDomain = domainName;
+            currentAdminPassword = domainAdminPassword;
             hasDomain = true;
         }
         else if (result == 1)
@@ -706,6 +710,40 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
     for (SOCKET socket : sockets)
     {
         int byteCount = send(socket, "QS", bufferSize, 0);
+    }
+
+    if(hasDomain)
+    {
+        SOCKET domainSocket = INVALID_SOCKET;
+
+        domainSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+        if (domainSocket == INVALID_SOCKET)
+        {
+            currentError = "Error creating domain socket.";
+            WSACleanup();
+            return 0;
+        }
+
+        PCWSTR ip = L"127.0.0.1";
+        sockaddr_in service;
+        service.sin_family = AF_INET;
+        service.sin_port = htons(4096);
+        InetPtonW(AF_INET, ip, &service.sin_addr.S_un.S_addr);
+
+        if (connect(domainSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
+        {
+            allServerText.emplace_back("Connecting to the domain server was unsuccessful.");
+            hasDomain = false;
+        }
+        else
+        {
+            int lengthOfPassword = currentAdminPassword.size();
+            int lengthOfDomain = currentDomain.size();
+            std::string buffer = "D" + std::to_string(lengthOfPassword) + "B" + std::to_string(lengthOfDomain) + "B" + currentAdminPassword + currentDomain;
+            std::string resultBuffer;
+            send(domainSocket, buffer.c_str(), bufferSize, 0);
+
+        }
     }
 
 

@@ -6,7 +6,7 @@ class LanguageFileInitialiser
 {
 private:
 	// Consts
-	static const unsigned int numberOfSentences = 30;
+	static const unsigned int numberOfSentences = 31;
 	inline static const unsigned int numberOfLanguages = 2;
 	inline static const std::string languagesExtention[numberOfLanguages] = { "/en-gb.txt", "/pl.txt" };
 	inline static const std::string reversedLanguagesExtention[numberOfLanguages] = { "txt.bg-ne/", "txt.lp/" };
