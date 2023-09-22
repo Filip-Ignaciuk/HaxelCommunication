@@ -34,6 +34,7 @@ struct BufferResponseInitialiseServer
 
 struct BufferRequestDeleteServer
 {
+	std::string requestedDomainName;
 	std::string requestedDomainAdminPassword;
 };
 
