@@ -55,6 +55,7 @@ bool LanguageFileInitialiser::GenerateEnGb()
 		fileengb << "The server has been disconnected." << std::endl;
 		fileengb << "Failed to connect to the domain server." << std::endl;
 		fileengb << "Chatroom doesn't exist with chosen name." << std::endl;
+		fileengb << "Password incorrect for the requested chatroom." << std::endl;
 		fileengb.close();
 	}
 	else

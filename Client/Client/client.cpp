@@ -9,22 +9,15 @@
 #include <thread>
 #include <ctime>
 
+#include "BufferStandard.hpp"
 #include "Languages.hpp"
 #include "config.hpp"
 #include "user.hpp"
 #include "gui.h"	
 #include "ImGui/imgui.h"
 
-
-
-const int bufferSize = 200;
 SOCKET clientSocket;
 User clientUser("PLACEHOLDER", "999");
-
-
-
-
-
 
 int CreateSocket()
 {
@@ -203,8 +196,15 @@ DWORD WINAPI ChangingThread(LPVOID param)
 	return 0;
 }
 
+void CleanupSocket()
+{
+	shutdown(clientSocket, SD_BOTH);
+	closesocket(clientSocket);
+	WSACleanup();
+	CreateSocket();
+}
 
-DWORD WINAPI DomainThread(LPVOID param)
+DWORD WINAPI RequestDomainThread(LPVOID param)
 {
 	ConnectHolder* CH = (ConnectHolder*)param;
 	std::string domainName = CH->ip;
@@ -216,14 +216,11 @@ DWORD WINAPI DomainThread(LPVOID param)
 	PCWSTR ip = wIp.c_str();
 	sockaddr_in service;
 	service.sin_family = AF_INET;
-	// Potentially can change if user was fast enough, if a problem, import the object at once to prevent change.
 	service.sin_port = htons(std::stoi(config::domainPort));
 	InetPtonW(AF_INET, ip, &service.sin_addr.S_un.S_addr);
 
 	if (connect(clientSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
 	{
-
-
 		isConnecting = false;
 		currentConnectionStatus = LanguageFileInitialiser::allTextsInApplication[28];
 		currentColourConnection = failedToConnectColour;
@@ -234,53 +231,51 @@ DWORD WINAPI DomainThread(LPVOID param)
 	}
 	else
 	{
-		std::string buffer = "R" + std::to_string(domainName.size()) + "B" + std::to_string(domainPassword.size()) + "B" + domainName + domainPassword;
-		char resultBuffer[22];
-		send(clientSocket, buffer.c_str(), bufferSize, 0);
-		recv(clientSocket, resultBuffer, 22, 0);
-
-		std::string result = resultBuffer;
-
-		std::string resultIp;
-		std::string resultPort;
-		
-		int i = 1;
-		const int end = result.size() - 1;
-		while (result[i] != 'B')
+		BufferReady BR;
+		send(clientSocket, (char*)'R', 1, 0);
+		recv(clientSocket, (char*)&BR, sizeof(BufferReady), 0);
+		if(BR.isReady)
 		{
-			resultIp.push_back(result[i]);
-			i++;
-		}
-		i++;
-		while (i != end)
-		{
-			resultPort.push_back(result[i]);
-			i++;
-		}
-		resultPort.push_back(result[i]);
+			BufferRequestIp BRI;
+			BRI.requestedDomain = domainName;
+			BRI.requestedDomainPassword = domainPassword;
+			BufferResponseIp BRI2;
+			send(clientSocket, (char*)&BRI, sizeof(BufferRequestIp), 0);
+			recv(clientSocket, (char*)&BRI2, sizeof(BufferResponseIp), 0);
 
-
-		if (resultIp == "2" && resultPort == "2")
+			if(BRI.requestedDomain == "2" && BRI2.responsePort == 2)
+			{
+				isConnecting = false;
+				currentConnectionStatus = LanguageFileInitialiser::allTextsInApplication[29];
+				currentColourConnection = failedToConnectColour;
+				CleanupSocket();
+				return 0;
+			}
+			else if (BRI.requestedDomain == "1" && BRI2.responsePort == 1)
+			{
+				isConnecting = false;
+				currentConnectionStatus = LanguageFileInitialiser::allTextsInApplication[30];
+				currentColourConnection = failedToConnectColour;
+				CleanupSocket();
+				return 0;
+			}
+			else
+			{
+				DWORD threadid;
+				HANDLE hdl;
+				ConnectHolder* CH2 = new ConnectHolder{ BRI.requestedDomain , std::to_string(BRI2.responsePort) };
+				CleanupSocket();
+				hdl = CreateThread(NULL, 0, TryToConnectThread, CH2, 0, &threadid);
+				return 0;
+			}
+		}
+		else
 		{
 			isConnecting = false;
 			currentConnectionStatus = LanguageFileInitialiser::allTextsInApplication[29];
 			currentColourConnection = failedToConnectColour;
-			closesocket(clientSocket);
-			WSACleanup();
-			CreateSocket();
+			CleanupSocket();
 			return 0;
-		}
-		else
-		{
-			DWORD threadid;
-			HANDLE hdl;
-			ConnectHolder* CH2 = new ConnectHolder{ resultIp , resultPort };
-			closesocket(clientSocket);
-			WSACleanup();
-			CreateSocket();
-			hdl = CreateThread(NULL, 0, TryToConnectThread, CH2, 0, &threadid);
-			return 0;
-		
 		}
 	}
 
@@ -558,7 +553,7 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 					DWORD threadid;
 					HANDLE hdl;
 					ConnectHolder* CH = new ConnectHolder{ charIp, charPort };
-					hdl = CreateThread(NULL, 0, DomainThread, CH, 0, &threadid);
+					hdl = CreateThread(NULL, 0, RequestDomainThread, CH, 0, &threadid);
 					hdl = CreateThread(NULL, 0, ConnectingThread, 0, 0, &threadid);
 				}
 
