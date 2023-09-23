@@ -3,6 +3,12 @@
 
 constexpr int bufferSize = 200;
 
+struct BufferReady
+{
+	bool isReady;
+};
+
+
 struct BufferRequestIp
 {
 	std::string requestedDomain;
