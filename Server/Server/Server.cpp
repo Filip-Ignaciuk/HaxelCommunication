@@ -285,26 +285,9 @@ DWORD WINAPI ClientThreadReceive(LPVOID param)
     return 0;
 }
 
-struct DomainHolder
-{
-    // Essential
-    std::string domainName;
-    std::string domainPassword;
-    std::string domainAdminPassword;
-    std::string domainExternalIp;
-    // Settings
-    bool isDiscoverable = false;
-};
-
 DWORD WINAPI RegisterServerDomain(LPVOID param)
 {
-    DomainHolder* DH = (DomainHolder*)param;
-    std::string domainName = DH->domainName;
-    std::string domainPassword = DH->domainPassword;
-    std::string domainAdminPassword = DH->domainAdminPassword;
-    std::string domainExternalIp = DH->domainExternalIp;
-    bool domainIsDiscoverable = DH->isDiscoverable;
-    delete DH;
+    BufferRequestInitialiseServer* WantedServer = (BufferRequestInitialiseServer*)param;
 
     SOCKET domainSocket = INVALID_SOCKET;
 
@@ -331,21 +314,15 @@ DWORD WINAPI RegisterServerDomain(LPVOID param)
     }
     else
     {
+        char sendBuffer[1];
+        sendBuffer[0] = 'I';
         BufferReady BR;
-        send(domainSocket, (char*)'I', 1, 0);
+        send(domainSocket, sendBuffer, 1, 0);
         recv(domainSocket, (char*)&BR, sizeof(BR), 0);
         if(BR.isReady)
         {
-            BufferRequestInitialiseServer BRIS{
-                domainName,
-                domainPassword,
-                domainAdminPassword,
-                domainExternalIp,
-                std::stoi(currentPort),
-                domainIsDiscoverable
-            };
             BufferResponseInitialiseServer BRIS2;
-            send(domainSocket, (char*)&BRIS, sizeof(BufferRequestInitialiseServer), 0);
+            send(domainSocket, (char*)WantedServer, sizeof(BufferRequestInitialiseServer), 0);
             recv(domainSocket, (char*)&BRIS2, sizeof(BufferResponseInitialiseServer), 0);
             if(BRIS2.response == 0)
             {
@@ -355,6 +332,8 @@ DWORD WINAPI RegisterServerDomain(LPVOID param)
         }
 
     }
+
+    delete WantedServer;
 }
 
 bool isListenFinished = true;
@@ -449,6 +428,7 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
     char charDomainName[bufferSize] = "";
     char charPassword[bufferSize] = "";
     char charAdminPassword[bufferSize] = "";
+    char charExternalIp[bufferSize] = "";
 
     bool wantsToExit = false;
     bool isServerInitialised = false;
@@ -458,6 +438,7 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 
     static bool isDiscoverable = false;
     bool isPasswordEmpty = false;
+    bool isExternalIpEmpty = false;
     bool isReady = false;
 
     while (gui::exit && !wantsToExit)
@@ -553,6 +534,11 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
             {
                 ImGui::SetTooltip("Used to verify user, in the case of modify chatrooms.");
             }
+            ImGui::InputText("External Ip", charExternalIp, IM_ARRAYSIZE(charExternalIp), ImGuiInputTextFlags_EnterReturnsTrue);
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip("Required for others to access your chatroom. Refer to help.txt on more guidance on how to obtain your external ip.");
+            }
             ImGui::Checkbox("Is discoverable", &isDiscoverable);
             if (ImGui::IsItemHovered())
             {
@@ -563,7 +549,13 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
             if (ImGui::Button("List server domain"))
             {
                 std::string passwordS = charPassword;
-            	if(passwordS.empty())
+                std::string SExternalIp = charExternalIp;
+                if (SExternalIp.empty())
+                {
+                    isReady = false;
+                    isExternalIpEmpty = true;
+                }
+                else if (passwordS.empty())
                 {
 
                     isReady = false;
@@ -572,6 +564,23 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
                 else
                 {
                     isReady = true;
+                }
+            }
+
+            if(isExternalIpEmpty)
+            {
+                ImGui::OpenPopup("External Ip");
+
+                if (ImGui::BeginPopupModal("External Ip", NULL, ImGuiWindowFlags_MenuBar))
+                {
+                    ImGui::Text("Missing information!");
+                    ImGui::TextWrapped("You need to input your external ip, refer to help.txt on more guidance on how to obtain your external ip.");
+                    if (ImGui::Button("Okay"))
+                    {
+                        isExternalIpEmpty = false;
+                        ImGui::CloseCurrentPopup();
+                    }
+                    ImGui::EndPopup();
                 }
             }
 
@@ -633,7 +642,7 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
                 }
                 else
                 {
-                    DomainHolder* DH = new DomainHolder{ charDomainName, charPassword, charAdminPassword };
+                    BufferRequestInitialiseServer* DH = new BufferRequestInitialiseServer{ charDomainName, charPassword, charAdminPassword, charExternalIp, std::stoi(currentPort), isDiscoverable};
                     DWORD threadid;
                     HANDLE hdl;
                     hdl = CreateThread(NULL, 0, RegisterServerDomain, (LPVOID)DH, 0, &threadid);
