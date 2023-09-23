@@ -5,12 +5,10 @@
 #include <vector>
 #include <thread>
 
+#include "BufferStandard.hpp"
 #include "user.hpp"
 #include "gui.h"	
 #include "ImGui/imgui.h"
-
-const int port = 8192;
-const int bufferSize = 200;
 
 std::vector<std::string> allServerText;
 
@@ -289,9 +287,13 @@ DWORD WINAPI ClientThreadReceive(LPVOID param)
 
 struct DomainHolder
 {
+    // Essential
     std::string domainName;
     std::string domainPassword;
     std::string domainAdminPassword;
+    std::string domainExternalIp;
+    // Settings
+    bool isDiscoverable = false;
 };
 
 DWORD WINAPI RegisterServerDomain(LPVOID param)
@@ -300,6 +302,8 @@ DWORD WINAPI RegisterServerDomain(LPVOID param)
     std::string domainName = DH->domainName;
     std::string domainPassword = DH->domainPassword;
     std::string domainAdminPassword = DH->domainAdminPassword;
+    std::string domainExternalIp = DH->domainExternalIp;
+    bool domainIsDiscoverable = DH->isDiscoverable;
     delete DH;
 
     SOCKET domainSocket = INVALID_SOCKET;
@@ -327,27 +331,27 @@ DWORD WINAPI RegisterServerDomain(LPVOID param)
     }
     else
     {
-        std::string buffer = "I" + std::to_string(domainName.size()) + "B" + std::to_string(domainPassword.size()) + "B" + std::to_string(domainAdminPassword.size()) + "B" + domainName + domainPassword + domainAdminPassword + "B" + currentIp + "B" + currentPort;
-        char bufferResponse[bufferSize];
-    	send(domainSocket, buffer.c_str(), bufferSize, 0);
-        recv(domainSocket, bufferResponse, 1, 0);
-        int result = std::stoi(bufferResponse);
-        if(!result)
+        BufferReady BR;
+        send(domainSocket, (char*)'I', 1, 0);
+        recv(domainSocket, (char*)&BR, sizeof(BR), 0);
+        if(BR.isReady)
         {
-            allServerText.emplace_back("Registering domain was successful.");
-            currentDomain = domainName;
-            currentAdminPassword = domainAdminPassword;
-            hasDomain = true;
-        }
-        else if (result == 1)
-        {
-            allServerText.emplace_back("Registering domain was unsuccessful, domain already exists!");
-            hasDomain = false;
-        }
-        else if (result == 2)
-        {
-            allServerText.emplace_back("Registering domain was unsuccessful, domain, password or the admin password was empty.");
-            hasDomain = false;
+            BufferRequestInitialiseServer BRIS{
+                domainName,
+                domainPassword,
+                domainAdminPassword,
+                domainExternalIp,
+                std::stoi(currentPort),
+                domainIsDiscoverable
+            };
+            BufferResponseInitialiseServer BRIS2;
+            send(domainSocket, (char*)&BRIS, sizeof(BufferRequestInitialiseServer), 0);
+            recv(domainSocket, (char*)&BRIS2, sizeof(BufferResponseInitialiseServer), 0);
+            if(BRIS2.response == 0)
+            {
+	            
+            }
+
         }
 
     }
@@ -367,7 +371,7 @@ DWORD WINAPI ListenThread(LPVOID param)
         WSACleanup();
         return 0;
     }
-    allServerText.emplace_back("Listening for clients on port: " + std::to_string(port));
+    allServerText.emplace_back("Listening for clients on port: " + currentPort);
     SOCKET acceptSocket = accept(serverSocket, NULL, NULL);
     if (acceptSocket == INVALID_SOCKET)
     {
