@@ -80,7 +80,7 @@ bool config::StartConfigs()
 			else if (i == 3) { SetIp(line); } // Domain Ip
 			else if (i == 4) { SetPort(line); } // Domain Port
 			
-
+ 
 			i++;
 		}
 		initFile.close();

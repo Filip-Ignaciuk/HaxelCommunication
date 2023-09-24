@@ -1,9 +1,14 @@
+#include <codecvt>
+
 #include "stdafx.h"
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 #include <iostream>
 #include <vector>
 #include <thread>
+#include <filesystem>
+#include <fstream>
+#include <ShObjIdl_core.h>
 
 #include "config.hpp"
 #include "BufferStandard.hpp"
@@ -308,10 +313,11 @@ DWORD WINAPI RegisterServerDomain(LPVOID param)
 
     allServerText.emplace_back("Socket for domain server has been successfully created.");
 
-    PCWSTR ip = config::GetWIp().c_str();
+    
+    PCWSTR ip = config::WDomainIp.c_str();
     sockaddr_in service;
     service.sin_family = AF_INET;
-    service.sin_port = htons(config::GetIPort());
+    service.sin_port = htons(config::IDomainPort);
     InetPtonW(AF_INET, ip, &service.sin_addr.S_un.S_addr);
 
     if (connect(domainSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
@@ -344,6 +350,63 @@ DWORD WINAPI RegisterServerDomain(LPVOID param)
 }
 
 bool isListenFinished = true;
+
+DWORD WINAPI SaveServerThread(LPVOID param)
+{
+    std::string serverTxt = config::currentDirNormalised + "/Servers/" + currentChatroom.domainName + ".txt";
+    std::ofstream file(serverTxt);
+    if(file.is_open())
+    {
+        // Essential
+        file << currentChatroom.domainName << std::endl;
+        file << currentChatroom.password << std::endl;
+        file << currentChatroom.adminPassword << std::endl;
+        file << currentChatroom.ip << std::endl;
+        file << currentChatroom.port << std::endl;
+        file << currentChatroom.isDiscoverable << std::endl;
+    }
+    file.close();
+}
+
+DWORD WINAPI LoadServerThread(LPVOID param)
+{
+    std::string serverTxt = config::currentDirNormalised + "/Servers/" + currentChatroom.domainName + ".txt";
+    std::wstring WTextPath;
+    std::string STextPath;
+	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+    IFileOpenDialog* IFOD;
+    hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&IFOD));
+    if(SUCCEEDED(hr))
+    {
+        hr = IFOD->Show(NULL);
+
+        // Get the file name from the dialog box.
+        if (SUCCEEDED(hr))
+        {
+            IShellItem* pItem;
+            hr = IFOD->GetResult(&pItem);
+            if (SUCCEEDED(hr))
+            {
+                PWSTR pszFilePath;
+                hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
+                std::wstringstream   ss;
+                ss << pszFilePath;
+                WTextPath = ss.str().c_str();
+                using convert_type = std::codecvt_utf8<wchar_t>;
+                std::wstring_convert<convert_type, wchar_t> converter;
+                STextPath = converter.to_bytes(WTextPath);
+
+                pItem->Release();
+            }
+        }
+        IFOD->Release();
+    }
+    
+    CoUninitialize();
+
+    std::ofstream file(serverTxt);
+
+}
 
 
 DWORD WINAPI ListenThread(LPVOID param)
@@ -410,10 +473,10 @@ DWORD WINAPI DeleteDomainThread(LPVOID param)
         return 0;
     }
 
-    PCWSTR ip = config::GetWIp().c_str();
+    PCWSTR ip = config::WDomainIp.c_str();
     sockaddr_in service;
     service.sin_family = AF_INET;
-    service.sin_port = htons(config::GetIPort());
+    service.sin_port = htons(config::IDomainPort);
     InetPtonW(AF_INET, ip, &service.sin_addr.S_un.S_addr);
 
     if (connect(domainSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))

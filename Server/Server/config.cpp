@@ -41,10 +41,12 @@ void config::Initialise(const std::string& _txt, bool& _isSuccessful)
 	{
 		file << "0" << std::endl; // Is Application initialised
 	}
-	file << GetSPort() << std::endl; // Domain Ip
-	file << GetSIp() << std::endl; // Domain Port
+	file << SDomainPort << std::endl; // Domain Ip
+	file << SDomainIp << std::endl; // Domain Port
 	file.close();
 }
+
+
 
 
 
@@ -88,6 +90,19 @@ bool config::StartConfigs()
 
 
 }
+
+void config::SetIp(std::string& _ip)
+{
+	SDomainIp = _ip;
+	WDomainIp = std::wstring(config::SDomainIp.begin(), SDomainIp.end());
+}
+
+void config::SetPort(std::string& _port)
+{
+	SDomainPort = _port;
+	IDomainPort = std::stoi(SDomainPort);
+}
+
 
 // Domain Config
 std::string config::SDomainIp = "127.0.0.1";

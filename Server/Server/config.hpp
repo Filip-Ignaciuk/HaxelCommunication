@@ -5,11 +5,6 @@
 class config
 {
 private:
-	static std::string SDomainIp;
-	static std::wstring WDomainIp;
-	static std::string SDomainPort;
-	static int IDomainPort;
-
 	static void Initialise(const std::string& _txt, bool& _isSuccessful);
 	static bool InitFolders();
 
@@ -18,37 +13,14 @@ public:
 
 	static bool StartConfigs();
 
-	static void SetIp(std::string& _ip)
-	{
-		SDomainIp = _ip;
-		WDomainIp = std::wstring(config::SDomainIp.begin(), SDomainIp.end());
-	}
+	static void SetIp(std::string& _ip);
 
-	static std::string GetSIp()
-	{
-		return SDomainIp;
-	}
+	static void SetPort(std::string& _port);
 
-	static std::wstring GetWIp()
-	{
-		return WDomainIp;
-	}
-
-	static void SetPort(std::string& _port)
-	{
-		SDomainPort = _port;
-		IDomainPort = std::stoi(SDomainPort);
-	}
-
-	static std::string GetSPort()
-	{
-		return SDomainPort;
-	}
-
-	static int GetIPort()
-	{
-		return IDomainPort;
-	}
+	static std::string SDomainIp;
+	static std::wstring WDomainIp;
+	static std::string SDomainPort;
+	static int IDomainPort;
 
 	static std::string currentDirNormalised;
 	static std::string currentDirUnNormalised;
