@@ -16,10 +16,6 @@
 #include "gui.h"	
 #include "ImGui/imgui.h"
 
-std::vector<std::string> allServerText;
-
-std::string currentError;
-
 struct PositionBufferHolder
 {
     std::string buffer;
@@ -342,6 +338,10 @@ DWORD WINAPI RegisterServerDomain(LPVOID param)
             {
 	            
             }
+            if(BRIS2.response == 2)
+            {
+	            
+            }
 
         }
 
@@ -371,7 +371,6 @@ DWORD WINAPI SaveServerThread(LPVOID param)
 DWORD WINAPI LoadServerThread(LPVOID param)
 {
     std::string serverTxt = config::currentDirNormalised + "/Servers/" + currentChatroom.domainName + ".txt";
-    std::wstring WTextPath;
     std::string STextPath;
 	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
     IFileOpenDialog* IFOD;
@@ -389,12 +388,7 @@ DWORD WINAPI LoadServerThread(LPVOID param)
             {
                 PWSTR pszFilePath;
                 hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
-                std::wstringstream   ss;
-                ss << pszFilePath;
-                WTextPath = ss.str().c_str();
-                using convert_type = std::codecvt_utf8<wchar_t>;
-                std::wstring_convert<convert_type, wchar_t> converter;
-                STextPath = converter.to_bytes(WTextPath);
+                
 
                 pItem->Release();
             }
@@ -412,25 +406,24 @@ DWORD WINAPI LoadServerThread(LPVOID param)
 DWORD WINAPI ListenThread(LPVOID param)
 {
 
-    SOCKET serverSocket = (SOCKET)param;
-    if (listen(serverSocket, 1) == SOCKET_ERROR)
+    if (listen(config::serverSocket, 1) == SOCKET_ERROR)
     {
-        currentError = "Setting up listening failed.";
-        closesocket(serverSocket);
+	    config::currentError = "Setting up listening failed.";
+        closesocket(config::serverSocket);
         WSACleanup();
         return 0;
     }
-    allServerText.emplace_back("Listening for clients on port: " + currentChatroom.port);
-    SOCKET acceptSocket = accept(serverSocket, NULL, NULL);
+    config::allServerText.emplace_back("Listening for clients on port: " + currentChatroom.port);
+    SOCKET acceptSocket = accept(config::serverSocket, NULL, NULL);
     if (acceptSocket == INVALID_SOCKET)
     {
-        currentError = "Accepting failed.";
+	    config::currentError = "Accepting failed.";
         WSACleanup();
         return 0;
     }
 
 
-    allServerText.emplace_back("Successfully accepted client. Socket: " + std::to_string(acceptSocket));
+    config::allServerText.emplace_back("Successfully accepted client. Socket: " + std::to_string(acceptSocket));
 
     bool isConnected = false;
 
@@ -444,7 +437,7 @@ DWORD WINAPI ListenThread(LPVOID param)
             finished[i] = false;
             DWORD threadid;
             HANDLE hdl;
-            allServerText.emplace_back("Creating thread for socket.");
+            config::allServerText.emplace_back("Creating thread for socket.");
             hdl = CreateThread(NULL, 0, ClientThreadReceive, (LPVOID)numOfUsers, 0, &threadid);
             numOfUsers++;
             isListenFinished = true;
@@ -456,7 +449,7 @@ DWORD WINAPI ListenThread(LPVOID param)
 
     if(!isConnected)
     {
-        allServerText.emplace_back("Max clients reached!, Declining socket.");
+	    config::allServerText.emplace_back("Max clients reached!, Declining socket.");
         int bytecount = send(acceptSocket, "EM", sizeof("EM"), 0);
     }
     
@@ -468,7 +461,7 @@ DWORD WINAPI DeleteDomainThread(LPVOID param)
     domainSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (domainSocket == INVALID_SOCKET)
     {
-        currentError = "Error creating domain socket.";
+	    config::currentError = "Error creating domain socket.";
         WSACleanup();
         return 0;
     }
@@ -481,7 +474,7 @@ DWORD WINAPI DeleteDomainThread(LPVOID param)
 
     if (connect(domainSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
     {
-        allServerText.emplace_back("Connecting to the domain server was unsuccessful.");
+	    config::allServerText.emplace_back("Connecting to the domain server was unsuccessful.");
         hasDomain = false;
     }
     else
@@ -509,35 +502,23 @@ DWORD WINAPI DeleteDomainThread(LPVOID param)
     }
 }
 
+bool wantsToExit = false;
+
+bool isPasswordEmpty = false;
+bool isExternalIpEmpty = false;
+bool isReady = false;
+
+int previousSize = 0;
+
 int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _arguments, int commandShow)
 {
     gui::CreateHWindow("Haxel Communication Server", "haxelClass");
     gui::CreateDevice();
     gui::CreateImGui();
 
-    if(config::StartConfigs())
+    if(config::StartConfigs() && config::StartWinsock())
     {
-        SOCKET serverSocket = INVALID_SOCKET;
-        WSADATA wsaData;
-        WORD version = MAKEWORD(2, 2);
-        if (WSAStartup(version, &wsaData))
-        {
-            currentError = "Winsock DLL failed to be found/loaded.";
-            std::cout << WSAGetLastError() << std::endl;
-            return 0;
-        }
-
-        allServerText.emplace_back("DLL has been successfully found/loaded.");
-
-        serverSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-        if (serverSocket == INVALID_SOCKET)
-        {
-            currentError = "Error creating server socket.";
-            WSACleanup();
-            return 0;
-        }
-
-        allServerText.emplace_back("Server socket has been successfully created.");
+        
 
         char charIp[bufferSize] = "";
         char charPort[bufferSize] = "";
@@ -547,25 +528,16 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
         char charAdminPassword[bufferSize] = "";
         char charExternalIp[bufferSize] = "";
 
-        bool wantsToExit = false;
-        bool isServerInitialised = false;
-        bool isPortOrIPValid = true;
-
-        int previousSize = 0;
+        
 
         static bool isDiscoverable = false;
-        bool isPasswordEmpty = false;
-        bool isExternalIpEmpty = false;
-        bool isReady = false;
-
 
         while (gui::exit && !wantsToExit)
         {
-            isPortOrIPValid = true;
             gui::BeginRender();
             gui::Render();
             ImGui::SeparatorText("Current Error");
-            ImGui::Text(currentError.c_str());
+            ImGui::Text(config::currentError.c_str());
 
 
             ImGui::SeparatorText("Server Configuration");
@@ -573,69 +545,21 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
             if (ImGui::InputText("IP", charIp, IM_ARRAYSIZE(charIp), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::InputText("Port", charPort, IM_ARRAYSIZE(charPort), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::Button("Create Server"))
             {
                 std::string IP = charIp;
-                int dotCount = 0;
-                for (unsigned char i = 0; i < IP.size(); i++)
-                {
-                    if (IP[i] == '.')
-                    {
-                        dotCount++;
-                    }
-                    else if (!isdigit(IP[i]))
-                    {
-                        isPortOrIPValid = false;
-                    }
-
-                }
-
                 std::string port = charPort;
-                for (unsigned char j = 0; j < port.size(); j++)
+
+                if (config::IsIpValid(IP) && config::IsPortValid(port))
                 {
-                    if (!isdigit(port[j]))
-                    {
-                        isPortOrIPValid = false;
-                        break;
-                    }
-
-                }
-                if (dotCount != 3)
-                {
-                    isPortOrIPValid = false;
-                }
-
-
-                if (isPortOrIPValid)
-                {
-                    currentChatroom.ip = IP;
-                    currentChatroom.port = std::stoi(port);
-                    // converting ip input to const wchar_t
-                    std::wstring wideIpInput = std::wstring(IP.begin(), IP.end());
-                    PCWSTR ip = wideIpInput.c_str();
-                    sockaddr_in service;
-                    service.sin_family = AF_INET;
-                    service.sin_port = htons(std::stoi(port));
-                    InetPtonW(AF_INET, ip, &service.sin_addr.S_un.S_addr);
-                    if (bind(serverSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
-                    {
-                        currentError = "Binding failed, perhaps an invalid or non-existent ip";
-                    }
-                    else
-                    {
-                        isServerInitialised = true;
-                        allServerText.emplace_back("Server socket bind has been successfully done.");
-                    }
-
+                    config::StartServer();
                 }
                 else
                 {
-                    currentError = "Ip or port format inputted is invalid.";
+	                config::currentError = "Ip or port format inputted is invalid.";
                 }
-
-
 
             }
 
             ImGui::SeparatorText("Domain");
-            if (isServerInitialised)
+            if (config::isServerInitialised)
             {
                 ImGui::InputText("Name", charDomainName, IM_ARRAYSIZE(charDomainName), ImGuiInputTextFlags_EnterReturnsTrue);
                 if (ImGui::IsItemHovered())
@@ -685,91 +609,7 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
                     }
                 }
 
-                if (isExternalIpEmpty)
-                {
-                    ImGui::OpenPopup("External Ip");
-
-                    if (ImGui::BeginPopupModal("External Ip", NULL, ImGuiWindowFlags_MenuBar))
-                    {
-                        ImGui::Text("Missing information!");
-                        ImGui::TextWrapped("You need to input your external ip, refer to help.txt on more guidance on how to obtain your external ip.");
-                        if (ImGui::Button("Okay"))
-                        {
-                            isExternalIpEmpty = false;
-                            ImGui::CloseCurrentPopup();
-                        }
-                        ImGui::EndPopup();
-                    }
-                }
-
-                if (isPasswordEmpty)
-                {
-                    ImGui::OpenPopup("Password");
-
-                    if (ImGui::BeginPopupModal("Password", NULL, ImGuiWindowFlags_MenuBar))
-                    {
-                        ImGui::Text("WARNING!");
-                        ImGui::TextWrapped("You are creating a chatroom without a password. There is a chance of unwanted people from joining your chatroom.");
-                        ImGui::Text("Do you wish to continue?");
-                        if (ImGui::Button("Yes"))
-                        {
-                            isPasswordEmpty = false;
-                            ImGui::CloseCurrentPopup();
-                            isReady = true;
-                        }
-                        if (ImGui::Button("No"))
-                        {
-                            isPasswordEmpty = false;
-                            isReady = false;
-                            ImGui::CloseCurrentPopup();
-                        }
-
-                        ImGui::EndPopup();
-                    }
-                }
-
-                if (isReady && !hasDomain)
-                {
-                    std::string SName = charDomainName;
-                    std::string SPassword = charPassword;
-                    std::string SAdminPassword = charAdminPassword;
-
-                    isPasswordEmpty = false;
-                    hasDomain = true;
-                    isReady = false;
-
-                    if (SName.empty())
-                    {
-                        currentError = "Domain name field is empty";
-                    }
-                    else if (SAdminPassword.empty())
-                    {
-                        currentError = "Domain admin password field is empty";
-                    }
-                    else if (SName.size() > 50)
-                    {
-                        currentError = "Domain name cannot exceed 50 characters.";
-                    }
-                    else if (SPassword.size() > 50)
-                    {
-                        currentError = "Domain password cannot exceed 50 characters.";
-                    }
-                    else if (SAdminPassword.size() > 50)
-                    {
-                        currentError = "Domain admin password cannot exceed 50 characters.";
-                    }
-                    else
-                    {
-                        currentChatroom.domainName = SName;
-                        currentChatroom.password = SPassword;
-                    	currentChatroom.adminPassword = SAdminPassword;
-                        currentChatroom.isDiscoverable = isDiscoverable;
-                        DWORD threadid;
-                        HANDLE hdl;
-                        hdl = CreateThread(NULL, 0, RegisterServerDomain, 0, 0, &threadid);
-                    }
-
-                }
+                
 
             }
 
@@ -780,30 +620,7 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
                 wantsToExit = true;
             }
 
-            if (isServerInitialised)
-            {
-                if (isListenFinished)
-                {
-                    isListenFinished = false;
-                    DWORD threadid;
-                    HANDLE hdl;
-                    Sleep(250);
-                    hdl = CreateThread(NULL, 0, ListenThread, (LPVOID)serverSocket, 0, &threadid);
-
-                }
-
-                for (int i = 0; i < numOfUsers; i++)
-                {
-                    if (finished[i])
-                    {
-                        DWORD threadid;
-                        HANDLE hdl;
-                        std::cout << i << std::endl;
-                        finished[i] = false;
-                        hdl = CreateThread(NULL, 0, ClientThreadReceive, (LPVOID)i, 0, &threadid);
-                    }
-                }
-            }
+            
 
             ImGui::SeparatorText("Server information");
             std::string infoUsers = "Number of connected users: " + std::to_string(numOfUsers);
@@ -811,13 +628,13 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 
             ImGui::SeparatorText("Activity");
             ImGui::BeginChild("Scrolling");
-            const int currentSize = allServerText.size();
+            const int currentSize = config::allServerText.size();
 
             if (previousSize == currentSize)
             {
                 for (int i = 0; i < currentSize; i++)
                 {
-                    ImGui::TextWrapped(allServerText[i].c_str());
+                    ImGui::TextWrapped(config::allServerText[i].c_str());
                 }
             }
             else
@@ -825,7 +642,7 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
                 for (int i = 0; i < currentSize; i++)
                 {
                     // Wont work when a new message comes.
-                    ImGui::TextWrapped(allServerText[i].c_str());
+                    ImGui::TextWrapped(config::allServerText[i].c_str());
                     previousSize = currentSize;
                     ImGui::SetScrollHereY(1.0f);
                 }
@@ -856,4 +673,119 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
     gui::DestroyDevice();
     gui::DestroyHWindow();
     return EXIT_SUCCESS;
+}
+
+
+void CheckConditions()
+{
+    if (config::isServerInitialised)
+    {
+        if (isExternalIpEmpty)
+        {
+            ImGui::OpenPopup("External Ip");
+
+            if (ImGui::BeginPopupModal("External Ip", nullptr, ImGuiWindowFlags_MenuBar))
+            {
+                ImGui::Text("Missing information!");
+                ImGui::TextWrapped("You need to input your external ip, refer to help.txt on more guidance on how to obtain your external ip.");
+                if (ImGui::Button("Okay"))
+                {
+                    isExternalIpEmpty = false;
+                    ImGui::CloseCurrentPopup();
+                }
+                ImGui::EndPopup();
+            }
+        }
+
+        if (isPasswordEmpty)
+        {
+            ImGui::OpenPopup("Password");
+
+            if (ImGui::BeginPopupModal("Password", nullptr, ImGuiWindowFlags_MenuBar))
+            {
+                ImGui::Text("WARNING!");
+                ImGui::TextWrapped("You are creating a chatroom without a password. There is a chance of unwanted people from joining your chatroom.");
+                ImGui::Text("Do you wish to continue?");
+                if (ImGui::Button("Yes"))
+                {
+                    isPasswordEmpty = false;
+                    ImGui::CloseCurrentPopup();
+                    isReady = true;
+                }
+                if (ImGui::Button("No"))
+                {
+                    isPasswordEmpty = false;
+                    isReady = false;
+                    ImGui::CloseCurrentPopup();
+                }
+
+                ImGui::EndPopup();
+            }
+        }
+
+        if (isReady && !hasDomain)
+        {
+            std::string SName = charDomainName;
+            std::string SPassword = charPassword;
+            std::string SAdminPassword = charAdminPassword;
+
+            isPasswordEmpty = false;
+            hasDomain = true;
+            isReady = false;
+
+            if (SName.empty())
+            {
+	            config::currentError = "Domain name field is empty";
+            }
+            else if (SAdminPassword.empty())
+            {
+	            config::currentError = "Domain admin password field is empty";
+            }
+            else if (SName.size() > 50)
+            {
+	            config::currentError = "Domain name cannot exceed 50 characters.";
+            }
+            else if (SPassword.size() > 50)
+            {
+	            config::currentError = "Domain password cannot exceed 50 characters.";
+            }
+            else if (SAdminPassword.size() > 50)
+            {
+	            config::currentError = "Domain admin password cannot exceed 50 characters.";
+            }
+            else
+            {
+                currentChatroom.domainName = SName;
+                currentChatroom.password = SPassword;
+                currentChatroom.adminPassword = SAdminPassword;
+                currentChatroom.isDiscoverable = isDiscoverable;
+                DWORD threadid;
+                HANDLE hdl;
+                hdl = CreateThread(nullptr, 0, RegisterServerDomain, nullptr, 0, &threadid);
+            }
+
+        }
+
+        if (isListenFinished)
+        {
+            isListenFinished = false;
+            DWORD threadid;
+            HANDLE hdl;
+            Sleep(250);
+            hdl = CreateThread(nullptr, 0, ListenThread, nullptr, 0, &threadid);
+
+        }
+
+        for (int i = 0; i < numOfUsers; i++)
+        {
+            if (finished[i])
+            {
+                DWORD threadid;
+                HANDLE hdl;
+                std::cout << i << std::endl;
+                finished[i] = false;
+                hdl = CreateThread(nullptr, 0, ClientThreadReceive, (LPVOID)i, 0, &threadid);
+            }
+        }
+    }
 }
