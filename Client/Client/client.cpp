@@ -211,12 +211,10 @@ DWORD WINAPI RequestDomainThread(LPVOID param)
 	std::string domainPassword = CH->port;
 	delete CH;
 
-	const std::string sIp = config::domainIp;
-	const std::wstring wIp(sIp.begin(), sIp.end());
-	PCWSTR ip = wIp.c_str();
+	PCWSTR ip = config::GetWIp().c_str();
 	sockaddr_in service;
 	service.sin_family = AF_INET;
-	service.sin_port = htons(std::stoi(config::domainPort));
+	service.sin_port = htons(config::GetIPort());
 	InetPtonW(AF_INET, ip, &service.sin_addr.S_un.S_addr);
 
 	if (connect(clientSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
