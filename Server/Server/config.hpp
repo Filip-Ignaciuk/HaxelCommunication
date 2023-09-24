@@ -18,8 +18,6 @@ public:
 
 	static bool StartConfigs();
 
-	static bool UpdateLanguage(const int _language);
-
 	static void SetIp(std::string& _ip)
 	{
 		SDomainIp = _ip;
@@ -57,8 +55,5 @@ public:
 
 	static bool isInitialised;
 
-	static int currentLanguage;
-
-	static bool isTimeFormatOn;
 };
 

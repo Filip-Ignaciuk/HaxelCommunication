@@ -46,5 +46,5 @@ struct BufferRequestDeleteServer
 
 struct BufferResponseDeleteServer
 {
-	std::string response;
+	int response;
 };
