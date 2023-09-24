@@ -186,7 +186,7 @@ DWORD WINAPI ClientUpdateThread(LPVOID param)
     std::string id;
     if(buffer[1] == 'D')
     {
-        allServerText.emplace_back("Updating Display name...");
+	    config::allServerText.emplace_back("Updating Display name...");
         std::string displayNameLengthS = "";
         int j = 2;
         while(isdigit(buffer[j]))
@@ -234,29 +234,29 @@ DWORD WINAPI ClientThreadReceive(LPVOID param)
     User currentUser = users[pos];
     
     char buffer[bufferSize];
-    allServerText.emplace_back("Detecting messages.");
-    allServerText.emplace_back("Socket: " + std::to_string(sockets[pos]));
-    allServerText.emplace_back("User: " + currentUser.GetDisplayName() + ", ID: " + currentUser.GetId());
+    config::allServerText.emplace_back("Detecting messages.");
+    config::allServerText.emplace_back("Socket: " + std::to_string(sockets[pos]));
+    config::allServerText.emplace_back("User: " + currentUser.GetDisplayName() + ", ID: " + currentUser.GetId());
     int bytecount = recv(currentSocket, buffer, bufferSize, 0);
 
 
     if (!bytecount || bytecount == SOCKET_ERROR)
     {
-        allServerText.emplace_back("Client is lost.");
+	    config::allServerText.emplace_back("Client is lost.");
         sockets[pos] = 0;
         User user;
         users[pos] = user;
         finished[pos] = false;
         numOfUsers--;
-        allServerText.emplace_back("There is now: " + std::to_string(numOfUsers) + " users.");
+	    config::allServerText.emplace_back("There is now: " + std::to_string(numOfUsers) + " users.");
         return 0;
     }
 
-    allServerText.emplace_back("Received message. From client: " + std::to_string(currentSocket));
+    config::allServerText.emplace_back("Received message. From client: " + std::to_string(currentSocket));
     PositionBufferHolder* PBH = new PositionBufferHolder{ buffer, pos };
     if(buffer[0] == 'I')
     {
-        allServerText.emplace_back("Request to initialise a user. From socket: " + std::to_string(currentSocket) + ", name: " + currentUser.GetDisplayName() + ", id: " + currentUser.GetId());
+	    config::allServerText.emplace_back("Request to initialise a user. From socket: " + std::to_string(currentSocket) + ", name: " + currentUser.GetDisplayName() + ", id: " + currentUser.GetId());
         DWORD threadid;
         HANDLE hdl;
         hdl = CreateThread(NULL, 0, ClientInitialiseThread, PBH, 0, &threadid);
@@ -264,7 +264,7 @@ DWORD WINAPI ClientThreadReceive(LPVOID param)
     }
     else if(buffer[0] == 'M')
     {
-        allServerText.emplace_back("Request to send a message. From client: " + std::to_string(currentSocket) + ", name: " + currentUser.GetDisplayName() + ", id: " + currentUser.GetId());
+	    config::allServerText.emplace_back("Request to send a message. From client: " + std::to_string(currentSocket) + ", name: " + currentUser.GetDisplayName() + ", id: " + currentUser.GetId());
 
         DWORD threadid;
         HANDLE hdl;
@@ -273,7 +273,7 @@ DWORD WINAPI ClientThreadReceive(LPVOID param)
     }
     else if(buffer[0] == 'U')
     {
-        allServerText.emplace_back("Request to update a user. From client: " + std::to_string(currentSocket) + ", name: " + currentUser.GetDisplayName() + ", id: " + currentUser.GetId());
+	    config::allServerText.emplace_back("Request to update a user. From client: " + std::to_string(currentSocket) + ", name: " + currentUser.GetDisplayName() + ", id: " + currentUser.GetId());
         DWORD threadid;
         HANDLE hdl;
         hdl = CreateThread(NULL, 0, ClientUpdateThread, PBH, 0, &threadid);
@@ -281,12 +281,12 @@ DWORD WINAPI ClientThreadReceive(LPVOID param)
     }
     else if(buffer[0] == 'Q')
     {
-        allServerText.emplace_back("Request to quit a user. From client: " + std::to_string(currentSocket) + ", name: " + currentUser.GetDisplayName() + ", id: " + currentUser.GetId());
+	    config::allServerText.emplace_back("Request to quit a user. From client: " + std::to_string(currentSocket) + ", name: " + currentUser.GetDisplayName() + ", id: " + currentUser.GetId());
         DWORD threadid;
         HANDLE hdl;
         hdl = CreateThread(NULL, 0, ClientQuitThread, (LPVOID)pos, 0, &threadid);
         delete PBH;
-        allServerText.emplace_back("There is now: " + std::to_string(numOfUsers) + " users.");
+	    config::allServerText.emplace_back("There is now: " + std::to_string(numOfUsers) + " users.");
         return 0;
     }
 
@@ -302,12 +302,12 @@ DWORD WINAPI RegisterServerDomain(LPVOID param)
     domainSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (domainSocket == INVALID_SOCKET)
     {
-        currentError = "Error creating domain socket.";
+	    config::currentError = "Error creating domain socket.";
         WSACleanup();
         return 0;
     }
 
-    allServerText.emplace_back("Socket for domain server has been successfully created.");
+    config::allServerText.emplace_back("Socket for domain server has been successfully created.");
 
     
     PCWSTR ip = config::WDomainIp.c_str();
@@ -318,7 +318,7 @@ DWORD WINAPI RegisterServerDomain(LPVOID param)
 
     if (connect(domainSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
     {
-        allServerText.emplace_back("Connecting to the domain server was unsuccessful.");
+	    config::allServerText.emplace_back("Connecting to the domain server was unsuccessful.");
         hasDomain = false;
     }
     else
@@ -346,6 +346,7 @@ DWORD WINAPI RegisterServerDomain(LPVOID param)
         }
 
     }
+    return 0;
 
 }
 
@@ -366,40 +367,41 @@ DWORD WINAPI SaveServerThread(LPVOID param)
         file << currentChatroom.isDiscoverable << std::endl;
     }
     file.close();
+    return 0;
 }
 
 DWORD WINAPI LoadServerThread(LPVOID param)
 {
-    std::string serverTxt = config::currentDirNormalised + "/Servers/" + currentChatroom.domainName + ".txt";
-    std::string STextPath;
-	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
-    IFileOpenDialog* IFOD;
-    hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&IFOD));
-    if(SUCCEEDED(hr))
-    {
-        hr = IFOD->Show(NULL);
-
-        // Get the file name from the dialog box.
-        if (SUCCEEDED(hr))
-        {
-            IShellItem* pItem;
-            hr = IFOD->GetResult(&pItem);
-            if (SUCCEEDED(hr))
-            {
-                PWSTR pszFilePath;
-                hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
-                
-
-                pItem->Release();
-            }
-        }
-        IFOD->Release();
-    }
-    
-    CoUninitialize();
-
-    std::ofstream file(serverTxt);
-
+    //std::string serverTxt = config::currentDirNormalised + "/Servers/" + currentChatroom.domainName + ".txt";
+    //std::string STextPath;
+	//HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+    //IFileOpenDialog* IFOD;
+    //hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&IFOD));
+    //if(SUCCEEDED(hr))
+    //{
+    //    hr = IFOD->Show(NULL);
+    //
+    //    // Get the file name from the dialog box.
+    //    if (SUCCEEDED(hr))
+    //    {
+    //        IShellItem* pItem;
+    //        hr = IFOD->GetResult(&pItem);
+    //        if (SUCCEEDED(hr))
+    //        {
+    //            PWSTR pszFilePath;
+    //            hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
+    //            
+    //
+    //            pItem->Release();
+    //        }
+    //    }
+    //    IFOD->Release();
+    //}
+    //
+    //CoUninitialize();
+    //
+    //std::ofstream file(serverTxt);
+    return 0;
 }
 
 
@@ -510,6 +512,16 @@ bool isReady = false;
 
 int previousSize = 0;
 
+char charIp[bufferSize] = "";
+char charPort[bufferSize] = "";
+
+// Wanted Chatroom
+char charDomainName[bufferSize] = "";
+char charPassword[bufferSize] = "";
+char charAdminPassword[bufferSize] = "";
+char charExternalIp[bufferSize] = "";
+static bool isDiscoverable = false;
+
 int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _arguments, int commandShow)
 {
     gui::CreateHWindow("Haxel Communication Server", "haxelClass");
@@ -520,25 +532,13 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
     {
         
 
-        char charIp[bufferSize] = "";
-        char charPort[bufferSize] = "";
-
-        char charDomainName[bufferSize] = "";
-        char charPassword[bufferSize] = "";
-        char charAdminPassword[bufferSize] = "";
-        char charExternalIp[bufferSize] = "";
-
-        
-
-        static bool isDiscoverable = false;
-
         while (gui::exit && !wantsToExit)
         {
             gui::BeginRender();
             gui::Render();
             ImGui::SeparatorText("Current Error");
-            ImGui::Text(config::currentError.c_str());
-
+            std::string currentError = config::currentError;
+            ImGui::Text(currentError.c_str());
 
             ImGui::SeparatorText("Server Configuration");
 
@@ -549,6 +549,8 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 
                 if (config::IsIpValid(IP) && config::IsPortValid(port))
                 {
+                    config::serverIp = IP;
+                    config::serverPort = port;
                     config::StartServer();
                 }
                 else

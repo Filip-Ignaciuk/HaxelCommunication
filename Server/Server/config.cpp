@@ -158,12 +158,12 @@ bool config::IsPortValid(std::string& _port)
 
 bool config::StartWinsock()
 {
-	SOCKET serverSocket = INVALID_SOCKET;
 	WSADATA wsaData;
 	WORD version = MAKEWORD(2, 2);
 	if (WSAStartup(version, &wsaData))
 	{
 		currentError = "Winsock DLL failed to be found/loaded. Error: " + WSAGetLastError();
+		WSACleanup();
 		return false;
 	}
 
@@ -174,9 +174,11 @@ bool config::StartWinsock()
 	{
 		currentError = "Error creating server socket.";
 		WSACleanup();
+		return false;
 	}
 
 	allServerText.emplace_back("Server socket has been successfully created.");
+	return true;
 }
 
 void config::StartServer()
@@ -199,6 +201,11 @@ void config::StartServer()
 	}
 }
 
+void config::AddToErrorLog(std::string& _message)
+{
+
+}
+
 std::string config::currentError = "None";
 
 std::vector<std::string> config::allServerText;
@@ -210,9 +217,9 @@ std::string config::SDomainPort = "4096";
 int config::IDomainPort = 4096;
 
 // Server Config
-SOCKET config::serverSocket = SOCKET_ERROR;
+SOCKET config::serverSocket = INVALID_SOCKET;
 std::string config::serverIp = "127.0.0.1";
-std::string config::serverPort = "8102";
+std::string config::serverPort = "8192";
 
 std::string config::currentDirUnNormalised = std::filesystem::current_path().string();
 std::string config::currentDirNormalised = NormaliseDir(currentDirUnNormalised);

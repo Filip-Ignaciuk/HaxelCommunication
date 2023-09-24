@@ -29,6 +29,7 @@ public:
 	static void AddToErrorLog(std::string& _message);
 
 
+
 	static std::string currentError;
 
 	static std::vector<std::string> allServerText;
