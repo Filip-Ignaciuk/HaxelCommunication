@@ -22,18 +22,6 @@ struct PositionBufferHolder
     int position;
 };
 
-struct Chatroom
-{
-    std::string domainName;
-    std::string password;
-    std::string ip;
-    int port;
-    std::string adminPassword;
-
-    bool isDiscoverable;
-};
-
-Chatroom currentChatroom;
 
 int numOfUsers = 0;
 User users[32];
@@ -330,7 +318,7 @@ DWORD WINAPI RegisterServerDomain(LPVOID param)
         recv(domainSocket, (char*)&BR, sizeof(BR), 0);
         if(BR.isReady)
         {
-            BufferRequestInitialiseServer BRIS{ currentChatroom.domainName, currentChatroom.password, currentChatroom.adminPassword, currentChatroom.ip, currentChatroom.port, currentChatroom.isDiscoverable };
+            BufferRequestInitialiseServer BRIS{ config::serverDomainName, config::serverDomainPassword, config::serverDomainPassword, config::ServerDomainIp, config::serverPort, config::serverIsDiscoverable };
             BufferResponseInitialiseServer BRIS2;
             send(domainSocket, (char*)&BRIS, sizeof(BufferRequestInitialiseServer), 0);
             recv(domainSocket, (char*)&BRIS2, sizeof(BufferResponseInitialiseServer), 0);
@@ -354,17 +342,17 @@ bool isListenFinished = true;
 
 DWORD WINAPI SaveServerThread(LPVOID param)
 {
-    std::string serverTxt = config::currentDirNormalised + "/Servers/" + currentChatroom.domainName + ".txt";
+    std::string serverTxt = config::currentDirNormalised + "/Servers/" + config::serverDomainName + ".txt";
     std::ofstream file(serverTxt);
     if(file.is_open())
     {
         // Essential
-        file << currentChatroom.domainName << std::endl;
-        file << currentChatroom.password << std::endl;
-        file << currentChatroom.adminPassword << std::endl;
-        file << currentChatroom.ip << std::endl;
-        file << currentChatroom.port << std::endl;
-        file << currentChatroom.isDiscoverable << std::endl;
+        file << config::serverDomainName << std::endl;
+        file << config::serverDomainPassword << std::endl;
+        file << config::serverDomainAdminPassword << std::endl;
+        file << config::ServerDomainIp << std::endl;
+        file << config::serverPort << std::endl;
+        file << config::serverIsDiscoverable << std::endl;
     }
     file.close();
     return 0;
@@ -415,7 +403,7 @@ DWORD WINAPI ListenThread(LPVOID param)
         WSACleanup();
         return 0;
     }
-    config::allServerText.emplace_back("Listening for clients on port: " + currentChatroom.port);
+    config::allServerText.emplace_back("Listening for clients on port: " + config::serverPort);
     SOCKET acceptSocket = accept(config::serverSocket, NULL, NULL);
     if (acceptSocket == INVALID_SOCKET)
     {
@@ -487,7 +475,7 @@ DWORD WINAPI DeleteDomainThread(LPVOID param)
 
         if (BR.isReady)
         {
-            BufferRequestDeleteServer BRDS{ currentChatroom.domainName, currentChatroom.adminPassword };
+            BufferRequestDeleteServer BRDS{ config::serverDomainName, config::serverDomainAdminPassword };
             BufferResponseDeleteServer BRDS2;
             send(domainSocket, (char*)&BRDS, sizeof(BufferRequestDeleteServer), 0);
             recv(domainSocket, (char*)&BRDS2, sizeof(BufferResponseDeleteServer), 0);
@@ -522,6 +510,122 @@ char charAdminPassword[bufferSize] = "";
 char charExternalIp[bufferSize] = "";
 static bool isDiscoverable = false;
 
+void CheckConditions()
+{
+    if (config::isServerInitialised)
+    {
+        if (isExternalIpEmpty)
+        {
+            ImGui::OpenPopup("External Ip");
+
+            if (ImGui::BeginPopupModal("External Ip", nullptr, ImGuiWindowFlags_MenuBar))
+            {
+                ImGui::Text("Missing information!");
+                ImGui::TextWrapped("You need to input your external ip, refer to help.txt on more guidance on how to obtain your external ip.");
+                if (ImGui::Button("Okay"))
+                {
+                    isExternalIpEmpty = false;
+                    ImGui::CloseCurrentPopup();
+                }
+                ImGui::EndPopup();
+            }
+        }
+
+        if (isPasswordEmpty)
+        {
+            ImGui::OpenPopup("Password");
+
+            if (ImGui::BeginPopupModal("Password", nullptr, ImGuiWindowFlags_MenuBar))
+            {
+                ImGui::Text("WARNING!");
+                ImGui::TextWrapped("You are creating a chatroom without a password. There is a chance of unwanted people from joining your chatroom.");
+                ImGui::Text("Do you wish to continue?");
+                if (ImGui::Button("Yes"))
+                {
+                    isPasswordEmpty = false;
+                    ImGui::CloseCurrentPopup();
+                    isReady = true;
+                }
+                if (ImGui::Button("No"))
+                {
+                    isPasswordEmpty = false;
+                    isReady = false;
+                    ImGui::CloseCurrentPopup();
+                }
+
+                ImGui::EndPopup();
+            }
+        }
+
+        if (isReady && !hasDomain)
+        {
+            std::string SName = charDomainName;
+            std::string SPassword = charPassword;
+            std::string SAdminPassword = charAdminPassword;
+            std::string SExternalIp = charExternalIp;
+
+            isPasswordEmpty = false;
+            hasDomain = true;
+            isReady = false;
+
+            if (SName.empty())
+            {
+                config::currentError = "Domain name field is empty";
+            }
+            else if (SAdminPassword.empty())
+            {
+                config::currentError = "Domain admin password field is empty";
+            }
+            else if (SName.size() > 50)
+            {
+                config::currentError = "Domain name cannot exceed 50 characters.";
+            }
+            else if (SPassword.size() > 50)
+            {
+                config::currentError = "Domain password cannot exceed 50 characters.";
+            }
+            else if (SAdminPassword.size() > 50)
+            {
+                config::currentError = "Domain admin password cannot exceed 50 characters.";
+            }
+            else
+            {
+                config::serverDomainName = SName;
+                config::serverDomainPassword = SPassword;
+                config::serverDomainAdminPassword = SAdminPassword;
+                config::ServerDomainIp = SExternalIp;
+                config::serverIsDiscoverable = isDiscoverable;
+                DWORD threadid;
+                HANDLE hdl;
+                hdl = CreateThread(nullptr, 0, RegisterServerDomain, nullptr, 0, &threadid);
+            }
+
+        }
+
+        if (isListenFinished)
+        {
+            isListenFinished = false;
+            DWORD threadid;
+            HANDLE hdl;
+            Sleep(250);
+            hdl = CreateThread(nullptr, 0, ListenThread, nullptr, 0, &threadid);
+
+        }
+
+        for (int i = 0; i < numOfUsers; i++)
+        {
+            if (finished[i])
+            {
+                DWORD threadid;
+                HANDLE hdl;
+                std::cout << i << std::endl;
+                finished[i] = false;
+                hdl = CreateThread(nullptr, 0, ClientThreadReceive, (LPVOID)i, 0, &threadid);
+            }
+        }
+    }
+}
+
 int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _arguments, int commandShow)
 {
     gui::CreateHWindow("Haxel Communication Server", "haxelClass");
@@ -550,7 +654,7 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
                 if (config::IsIpValid(IP) && config::IsPortValid(port))
                 {
                     config::serverIp = IP;
-                    config::serverPort = port;
+                    config::serverPort = std::stoi(port);
                     config::StartServer();
                 }
                 else
@@ -650,7 +754,7 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
                 }
             }
 
-
+            CheckConditions();
 
 
             ImGui::EndChild();
@@ -678,116 +782,3 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 }
 
 
-void CheckConditions()
-{
-    if (config::isServerInitialised)
-    {
-        if (isExternalIpEmpty)
-        {
-            ImGui::OpenPopup("External Ip");
-
-            if (ImGui::BeginPopupModal("External Ip", nullptr, ImGuiWindowFlags_MenuBar))
-            {
-                ImGui::Text("Missing information!");
-                ImGui::TextWrapped("You need to input your external ip, refer to help.txt on more guidance on how to obtain your external ip.");
-                if (ImGui::Button("Okay"))
-                {
-                    isExternalIpEmpty = false;
-                    ImGui::CloseCurrentPopup();
-                }
-                ImGui::EndPopup();
-            }
-        }
-
-        if (isPasswordEmpty)
-        {
-            ImGui::OpenPopup("Password");
-
-            if (ImGui::BeginPopupModal("Password", nullptr, ImGuiWindowFlags_MenuBar))
-            {
-                ImGui::Text("WARNING!");
-                ImGui::TextWrapped("You are creating a chatroom without a password. There is a chance of unwanted people from joining your chatroom.");
-                ImGui::Text("Do you wish to continue?");
-                if (ImGui::Button("Yes"))
-                {
-                    isPasswordEmpty = false;
-                    ImGui::CloseCurrentPopup();
-                    isReady = true;
-                }
-                if (ImGui::Button("No"))
-                {
-                    isPasswordEmpty = false;
-                    isReady = false;
-                    ImGui::CloseCurrentPopup();
-                }
-
-                ImGui::EndPopup();
-            }
-        }
-
-        if (isReady && !hasDomain)
-        {
-            std::string SName = charDomainName;
-            std::string SPassword = charPassword;
-            std::string SAdminPassword = charAdminPassword;
-
-            isPasswordEmpty = false;
-            hasDomain = true;
-            isReady = false;
-
-            if (SName.empty())
-            {
-	            config::currentError = "Domain name field is empty";
-            }
-            else if (SAdminPassword.empty())
-            {
-	            config::currentError = "Domain admin password field is empty";
-            }
-            else if (SName.size() > 50)
-            {
-	            config::currentError = "Domain name cannot exceed 50 characters.";
-            }
-            else if (SPassword.size() > 50)
-            {
-	            config::currentError = "Domain password cannot exceed 50 characters.";
-            }
-            else if (SAdminPassword.size() > 50)
-            {
-	            config::currentError = "Domain admin password cannot exceed 50 characters.";
-            }
-            else
-            {
-                currentChatroom.domainName = SName;
-                currentChatroom.password = SPassword;
-                currentChatroom.adminPassword = SAdminPassword;
-                currentChatroom.isDiscoverable = isDiscoverable;
-                DWORD threadid;
-                HANDLE hdl;
-                hdl = CreateThread(nullptr, 0, RegisterServerDomain, nullptr, 0, &threadid);
-            }
-
-        }
-
-        if (isListenFinished)
-        {
-            isListenFinished = false;
-            DWORD threadid;
-            HANDLE hdl;
-            Sleep(250);
-            hdl = CreateThread(nullptr, 0, ListenThread, nullptr, 0, &threadid);
-
-        }
-
-        for (int i = 0; i < numOfUsers; i++)
-        {
-            if (finished[i])
-            {
-                DWORD threadid;
-                HANDLE hdl;
-                std::cout << i << std::endl;
-                finished[i] = false;
-                hdl = CreateThread(nullptr, 0, ClientThreadReceive, (LPVOID)i, 0, &threadid);
-            }
-        }
-    }
-}

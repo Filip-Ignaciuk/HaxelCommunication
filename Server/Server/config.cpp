@@ -188,7 +188,7 @@ void config::StartServer()
 	PCWSTR ip = wideIpInput.c_str();
 	sockaddr_in service;
 	service.sin_family = AF_INET;
-	service.sin_port = htons(std::stoi(serverPort));
+	service.sin_port = htons(serverPort);
 	InetPtonW(AF_INET, ip, &service.sin_addr.S_un.S_addr);
 	if (bind(serverSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
 	{
@@ -219,7 +219,12 @@ int config::IDomainPort = 4096;
 // Server Config
 SOCKET config::serverSocket = INVALID_SOCKET;
 std::string config::serverIp = "127.0.0.1";
-std::string config::serverPort = "8192";
+int config::serverPort = 8192;
+std::string config::serverDomainName;
+std::string config::serverDomainPassword;
+std::string config::serverDomainAdminPassword;
+std::string config::ServerDomainIp;
+bool config::serverIsDiscoverable = false;
 
 std::string config::currentDirUnNormalised = std::filesystem::current_path().string();
 std::string config::currentDirNormalised = NormaliseDir(currentDirUnNormalised);

@@ -43,8 +43,13 @@ public:
 
 	// Actual server
 	static SOCKET serverSocket;
-	static std::string serverIp;
-	static std::string serverPort;
+	static std::string serverIp; // Internal IP
+	static int serverPort;
+	static std::string serverDomainName;
+	static std::string serverDomainPassword;
+	static std::string serverDomainAdminPassword;
+	static std::string ServerDomainIp; // External Ip
+	static bool serverIsDiscoverable;
 
 	static std::string currentDirNormalised;
 	static std::string currentDirUnNormalised;
