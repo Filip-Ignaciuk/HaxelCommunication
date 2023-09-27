@@ -39,8 +39,8 @@ void config::Initialise(const std::string& _txt, bool& _isSuccessful)
 	file << "1" << std::endl; // Is Application initialised
 	file << "0" << std::endl; // Language
 	file << "1" << std::endl; // TimeFormat
-	file << GetSIp() << std::endl; // Domain Ip
-	file << GetSPort() << std::endl; // Domain Port
+	file << SDomainIp << std::endl; // Domain Ip
+	file << SDomainPort << std::endl; // Domain Port
 
 	currentLanguage = 0;
 	isTimeFormatOn = true;
@@ -112,6 +112,19 @@ bool config::StartConfigs()
 
 
 }
+
+void config::SetIp(std::string& _ip)
+{
+	SDomainIp = _ip;
+	WDomainIp = std::wstring(SDomainIp.begin(), SDomainIp.end());
+}
+
+void config::SetPort(std::string& _port)
+{
+	SDomainPort = _port;
+	IDomainPort = std::stoi(SDomainPort);
+}
+
 
 // Domain Config
 std::string config::SDomainIp = "127.0.0.1";

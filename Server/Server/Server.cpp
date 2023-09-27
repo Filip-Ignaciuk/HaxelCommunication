@@ -318,7 +318,7 @@ DWORD WINAPI RegisterServerDomain(LPVOID param)
         recv(domainSocket, (char*)&BR, sizeof(BR), 0);
         if(BR.isReady)
         {
-            BufferRequestInitialiseServer BRIS{ config::serverDomainName, config::serverDomainPassword, config::serverDomainPassword, config::ServerDomainIp, config::serverPort, config::serverIsDiscoverable };
+            BufferRequestInitialiseServer BRIS{ config::serverDomainName, config::serverDomainPassword, config::serverDomainAdminPassword, config::ServerDomainIp, config::serverPort, config::serverIsDiscoverable };
             BufferResponseInitialiseServer BRIS2;
             send(domainSocket, (char*)&BRIS, sizeof(BufferRequestInitialiseServer), 0);
             recv(domainSocket, (char*)&BRIS2, sizeof(BufferResponseInitialiseServer), 0);
@@ -343,18 +343,26 @@ bool isListenFinished = true;
 DWORD WINAPI SaveServerThread(LPVOID param)
 {
     std::string serverTxt = config::currentDirNormalised + "/Servers/" + config::serverDomainName + ".txt";
-    std::ofstream file(serverTxt);
-    if(file.is_open())
+    std::ifstream fileRead(serverTxt);
+    if(fileRead.is_open())
     {
-        // Essential
-        file << config::serverDomainName << std::endl;
-        file << config::serverDomainPassword << std::endl;
-        file << config::serverDomainAdminPassword << std::endl;
-        file << config::ServerDomainIp << std::endl;
-        file << config::serverPort << std::endl;
-        file << config::serverIsDiscoverable << std::endl;
+	    // Do popup saying are you sure.
     }
-    file.close();
+    else
+    {
+        std::ofstream file(serverTxt);
+        if (file.is_open())
+        {
+            // Essential
+            file << config::serverDomainName << std::endl;
+            file << config::serverDomainPassword << std::endl;
+            file << config::serverDomainAdminPassword << std::endl;
+            file << config::ServerDomainIp << std::endl;
+            file << config::serverPort << std::endl;
+            file << config::serverIsDiscoverable << std::endl;
+        }
+        file.close();
+    }
     return 0;
 }
 
@@ -713,6 +721,13 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
                     {
                         isReady = true;
                     }
+                }
+
+                if(ImGui::Button("Save Server Configuration"))
+                {
+                    DWORD threadid;
+                    HANDLE hdl;
+                    hdl = CreateThread(nullptr, 0, SaveServerThread, nullptr, 0, &threadid);
                 }
 
                 

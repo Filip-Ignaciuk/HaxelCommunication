@@ -211,13 +211,24 @@ DWORD WINAPI RequestDomainThread(LPVOID param)
 	std::string domainPassword = CH->port;
 	delete CH;
 
-	PCWSTR ip = config::GetWIp().c_str();
+	SOCKET domainSocket = INVALID_SOCKET;
+
+	domainSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	if (domainSocket == INVALID_SOCKET)
+	{
+		WSACleanup();
+		return 0;
+	}
+
+	
+
+	PCWSTR ip = config::WDomainIp.c_str();
 	sockaddr_in service;
 	service.sin_family = AF_INET;
-	service.sin_port = htons(config::GetIPort());
+	service.sin_port = htons(config::IDomainPort);
 	InetPtonW(AF_INET, ip, &service.sin_addr.S_un.S_addr);
 
-	if (connect(clientSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
+	if (connect(domainSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
 	{
 		isConnecting = false;
 		currentConnectionStatus = LanguageFileInitialiser::allTextsInApplication[28];
@@ -241,7 +252,7 @@ DWORD WINAPI RequestDomainThread(LPVOID param)
 			send(clientSocket, (char*)&BRI, sizeof(BufferRequestIp), 0);
 			recv(clientSocket, (char*)&BRI2, sizeof(BufferResponseIp), 0);
 
-			if(BRI.requestedDomain == "2" && BRI2.responsePort == 2)
+			if(BRI2.responseIp == "2" && BRI2.responsePort == 2)
 			{
 				isConnecting = false;
 				currentConnectionStatus = LanguageFileInitialiser::allTextsInApplication[29];
@@ -249,7 +260,7 @@ DWORD WINAPI RequestDomainThread(LPVOID param)
 				CleanupSocket();
 				return 0;
 			}
-			else if (BRI.requestedDomain == "1" && BRI2.responsePort == 1)
+			else if (BRI2.responseIp == "1" && BRI2.responsePort == 1)
 			{
 				isConnecting = false;
 				currentConnectionStatus = LanguageFileInitialiser::allTextsInApplication[30];
@@ -261,7 +272,7 @@ DWORD WINAPI RequestDomainThread(LPVOID param)
 			{
 				DWORD threadid;
 				HANDLE hdl;
-				ConnectHolder* CH2 = new ConnectHolder{ BRI.requestedDomain , std::to_string(BRI2.responsePort) };
+				ConnectHolder* CH2 = new ConnectHolder{ BRI2.responseIp , std::to_string(BRI2.responsePort) };
 				CleanupSocket();
 				hdl = CreateThread(NULL, 0, TryToConnectThread, CH2, 0, &threadid);
 				return 0;

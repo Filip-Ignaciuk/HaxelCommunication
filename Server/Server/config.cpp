@@ -98,7 +98,7 @@ bool config::StartConfigs()
 void config::SetIp(std::string& _ip)
 {
 	SDomainIp = _ip;
-	WDomainIp = std::wstring(config::SDomainIp.begin(), SDomainIp.end());
+	WDomainIp = std::wstring(SDomainIp.begin(), SDomainIp.end());
 }
 
 void config::SetPort(std::string& _port)
