@@ -220,8 +220,11 @@ DWORD WINAPI RequestDomainThread(LPVOID param)
 		return 0;
 	}
 
+<<<<<<< Updated upstream
 	
 
+=======
+>>>>>>> Stashed changes
 	PCWSTR ip = config::WDomainIp.c_str();
 	sockaddr_in service;
 	service.sin_family = AF_INET;
@@ -233,52 +236,90 @@ DWORD WINAPI RequestDomainThread(LPVOID param)
 		isConnecting = false;
 		currentConnectionStatus = LanguageFileInitialiser::allTextsInApplication[28];
 		currentColourConnection = failedToConnectColour;
-		closesocket(clientSocket);
+		closesocket(domainSocket);
 		WSACleanup();
 		CreateSocket();
 		return 0;
 	}
 	else
 	{
+<<<<<<< Updated upstream
 		char sendBuffer[1];
 		sendBuffer[0] = 'R';
 		BufferReady BR{false};
 		send(domainSocket, sendBuffer, 1, 0);
 		recv(domainSocket, (char*)&BR, sizeof(BufferReady), 0);
 		if(BR.isReady)
+=======
+		BufferReady* BR = new BufferReady{};
+		char sendBuffer[1];
+		sendBuffer[0] = 'R';
+		send(domainSocket, sendBuffer, 1, 0);
+		recv(domainSocket, (char*)BR, sizeof(BufferReady), 0);
+		if(BR->isReady)
+>>>>>>> Stashed changes
 		{
 			BufferRequestIp BRI;
 			BRI.requestedDomain = domainName;
 			BRI.requestedDomainPassword = domainPassword;
+<<<<<<< Updated upstream
 			BufferResponseIp BRI2;
 			send(domainSocket, (char*)&BRI, sizeof(BufferRequestIp), 0);
 			recv(domainSocket, (char*)&BRI2, sizeof(BufferResponseIp), 0);
 
 			if(BRI2.responseIp == "2" && BRI2.responsePort == 2)
+=======
+			BufferResponseIp* BRI2 = new BufferResponseIp{};
+			send(domainSocket, (char*)&BRI, sizeof(BufferRequestIp), 0);
+			recv(domainSocket, (char*)BRI2, sizeof(BufferResponseIp), 0);
+
+			if(BRI2->responseIp == "2" && BRI2->responsePort == 2)
+>>>>>>> Stashed changes
 			{
 				isConnecting = false;
 				currentConnectionStatus = LanguageFileInitialiser::allTextsInApplication[29];
 				currentColourConnection = failedToConnectColour;
 				CleanupSocket();
+				BR = new BufferReady{};
+				delete BR;
+				BRI2 = new BufferResponseIp{};
+				delete BRI2;
 				return 0;
 			}
+<<<<<<< Updated upstream
 			else if (BRI2.responseIp == "1" && BRI2.responsePort == 1)
+=======
+			else if (BRI2->responseIp == "1" && BRI2->responsePort == 1)
+>>>>>>> Stashed changes
 			{
 				isConnecting = false;
 				currentConnectionStatus = LanguageFileInitialiser::allTextsInApplication[30];
 				currentColourConnection = failedToConnectColour;
 				CleanupSocket();
+				BR = new BufferReady{};
+				delete BR;
+				BRI2 = new BufferResponseIp{};
+				delete BRI2;
 				return 0;
 			}
 			else
 			{
 				DWORD threadid;
 				HANDLE hdl;
+<<<<<<< Updated upstream
 				ConnectHolder* CH2 = new ConnectHolder{ BRI2.responseIp , std::to_string(BRI2.responsePort) };
+=======
+				ConnectHolder* CH2 = new ConnectHolder{ BRI2->responseIp , std::to_string(BRI2->responsePort) };
+>>>>>>> Stashed changes
 				CleanupSocket();
 				hdl = CreateThread(NULL, 0, TryToConnectThread, CH2, 0, &threadid);
+				BR = new BufferReady{};
+				delete BR;
+				BRI2 = new BufferResponseIp{};
+				delete BRI2;
 				return 0;
 			}
+			
 		}
 		else
 		{
