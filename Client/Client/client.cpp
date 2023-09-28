@@ -240,17 +240,19 @@ DWORD WINAPI RequestDomainThread(LPVOID param)
 	}
 	else
 	{
-		BufferReady BR;
-		send(clientSocket, (char*)'R', 1, 0);
-		recv(clientSocket, (char*)&BR, sizeof(BufferReady), 0);
+		char sendBuffer[1];
+		sendBuffer[0] = 'R';
+		BufferReady BR{false};
+		send(domainSocket, sendBuffer, 1, 0);
+		recv(domainSocket, (char*)&BR, sizeof(BufferReady), 0);
 		if(BR.isReady)
 		{
 			BufferRequestIp BRI;
 			BRI.requestedDomain = domainName;
 			BRI.requestedDomainPassword = domainPassword;
 			BufferResponseIp BRI2;
-			send(clientSocket, (char*)&BRI, sizeof(BufferRequestIp), 0);
-			recv(clientSocket, (char*)&BRI2, sizeof(BufferResponseIp), 0);
+			send(domainSocket, (char*)&BRI, sizeof(BufferRequestIp), 0);
+			recv(domainSocket, (char*)&BRI2, sizeof(BufferResponseIp), 0);
 
 			if(BRI2.responseIp == "2" && BRI2.responsePort == 2)
 			{
