@@ -5,10 +5,6 @@
 class config
 {
 private:
-<<<<<<< Updated upstream
-=======
-	
->>>>>>> Stashed changes
 
 	static void Initialise(const std::string& _txt, bool& _isSuccessful);
 	static bool InitFolders();
@@ -20,20 +16,12 @@ public:
 
 	static bool UpdateLanguage(const int _language);
 
+
 	static void SetIp(std::string& _ip);
 
-<<<<<<< Updated upstream
 	static void SetPort(std::string& _port);
 
 	// For requesting a chatroom with a specific domain. Not to be confused with the actual domain server ip/port
-=======
-	static void SetPort(std::string& _port)
-	{
-		SDomainPort = _port;
-		IDomainPort = std::stoi(SDomainPort);
-	}
-
->>>>>>> Stashed changes
 	static std::string SDomainIp;
 	static std::wstring WDomainIp;
 	static std::string SDomainPort;

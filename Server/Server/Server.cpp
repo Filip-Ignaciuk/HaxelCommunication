@@ -348,7 +348,6 @@ DWORD WINAPI SaveServerThread(LPVOID param)
     {
 	    // Do popup saying are you sure.
     }
-<<<<<<< Updated upstream
     else
     {
         std::ofstream file(serverTxt);
@@ -364,20 +363,15 @@ DWORD WINAPI SaveServerThread(LPVOID param)
         }
         file.close();
     }
-=======
-    file.close();
+    fileRead.close();
 
->>>>>>> Stashed changes
     return 0;
 }
 
 DWORD WINAPI LoadServerThread(LPVOID param)
 {
     //std::string serverTxt = config::currentDirNormalised + "/Servers/" + currentChatroom.domainName + ".txt";
-<<<<<<< Updated upstream
-=======
-    //std::wstring WTextPath;
->>>>>>> Stashed changes
+    ////std::wstring WTextPath;
     //std::string STextPath;
 	//HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
     //IFileOpenDialog* IFOD;
@@ -395,16 +389,13 @@ DWORD WINAPI LoadServerThread(LPVOID param)
     //        {
     //            PWSTR pszFilePath;
     //            hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
-<<<<<<< Updated upstream
     //            
-=======
     //            std::wstringstream   ss;
     //            ss << pszFilePath;
     //            WTextPath = ss.str().c_str();
     //            using convert_type = std::codecvt_utf8<wchar_t>;
     //            std::wstring_convert<convert_type, wchar_t> converter;
     //            STextPath = converter.to_bytes(WTextPath);
->>>>>>> Stashed changes
     //
     //            pItem->Release();
     //        }
@@ -416,10 +407,6 @@ DWORD WINAPI LoadServerThread(LPVOID param)
     //
     //std::ofstream file(serverTxt);
     return 0;
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 }
 
 
