@@ -74,8 +74,8 @@ bool config::StartConfigs()
 		while (std::getline(initFile, line))
 		{
 			if (i == 0) { isInitialised = std::stoi(line); } // Is Application initialised
-			else if (i == 3) { SetDomainPort(line); } // Domain Ip
-			else if (i == 4) { SetDomainPort(line); } // Domain Port
+			else if (i == 1) { SetDomainPort(line); } // Domain Ip
+			else if (i == 2) { SetDomainIp(line); } // Domain Ip
 
 
 			i++;
@@ -109,6 +109,11 @@ void config::SetDomainPort(std::string& _port)
 
 bool config::IsIpValid(std::string& _ip)
 {
+	if (_ip.empty())
+	{
+		return false;
+	}
+
 	int dotCount = 0;
 	for (unsigned char i = 0; i < _ip.size(); i++)
 	{
@@ -131,6 +136,11 @@ bool config::IsIpValid(std::string& _ip)
 
 bool config::IsPortValid(std::string& _port)
 {
+	if(_port.empty())
+	{
+		return false;
+	}
+
 	const int port = std::stoi(_port);
 	const int portSize = _port.size();
 	if (port < 1024)
