@@ -462,7 +462,7 @@ DWORD WINAPI ListenThread(LPVOID param)
     
 }
 
-DWORD WINAPI DeleteDomainThread(LPVOID param)
+void DeleteDomain()
 {
     SOCKET domainSocket = INVALID_SOCKET;
     domainSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -470,7 +470,6 @@ DWORD WINAPI DeleteDomainThread(LPVOID param)
     {
 	    config::currentError = "Error creating domain socket.";
         WSACleanup();
-        return 0;
     }
 
     PCWSTR ip = config::WDomainIp.c_str();
@@ -486,8 +485,10 @@ DWORD WINAPI DeleteDomainThread(LPVOID param)
     }
     else
     {
+        char sendBuffer[1];
+        sendBuffer[0] = 'D';
         BufferReady BR;
-        send(domainSocket, (char*)'D', 1, 0);
+        send(domainSocket, sendBuffer, 1, 0);
         recv(domainSocket, (char*)&BR, sizeof(BufferReady), 0);
 
         if (BR.isReady)
@@ -496,7 +497,7 @@ DWORD WINAPI DeleteDomainThread(LPVOID param)
             BufferResponseDeleteServer BRDS2;
             send(domainSocket, (char*)&BRDS, sizeof(BufferRequestDeleteServer), 0);
             recv(domainSocket, (char*)&BRDS2, sizeof(BufferResponseDeleteServer), 0);
-            if (BRDS2.response == 2)
+            if (BRDS2.response == 2) // Server doesnt exist
             {
 
             }
@@ -651,8 +652,6 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 
     if(config::StartConfigs() && config::StartWinsock())
     {
-        
-
         while (gui::exit && !wantsToExit)
         {
             gui::BeginRender();
@@ -794,10 +793,7 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
         }
     }
 
-    
-
-
-
+    DeleteDomain();
     WSACleanup();
     gui::DestroyImGui();
     gui::DestroyDevice();

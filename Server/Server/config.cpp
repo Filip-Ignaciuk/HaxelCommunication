@@ -74,8 +74,8 @@ bool config::StartConfigs()
 		while (std::getline(initFile, line))
 		{
 			if (i == 0) { isInitialised = std::stoi(line); } // Is Application initialised
-			else if (i == 3) { SetIp(line); } // Domain Ip
-			else if (i == 4) { SetPort(line); } // Domain Port
+			else if (i == 3) { SetDomainPort(line); } // Domain Ip
+			else if (i == 4) { SetDomainPort(line); } // Domain Port
 
 
 			i++;
@@ -95,13 +95,13 @@ bool config::StartConfigs()
 
 }
 
-void config::SetIp(std::string& _ip)
+void config::SetDomainIp(std::string& _ip)
 {
 	SDomainIp = _ip;
 	WDomainIp = std::wstring(SDomainIp.begin(), SDomainIp.end());
 }
 
-void config::SetPort(std::string& _port)
+void config::SetDomainPort(std::string& _port)
 {
 	SDomainPort = _port;
 	IDomainPort = std::stoi(SDomainPort);

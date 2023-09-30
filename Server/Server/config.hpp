@@ -14,9 +14,9 @@ public:
 
 	static bool StartConfigs();
 
-	static void SetIp(std::string& _ip);
+	static void SetDomainIp(std::string& _ip);
 
-	static void SetPort(std::string& _port);
+	static void SetDomainPort(std::string& _port);
 
 	static bool IsIpValid(std::string& _ip);
 
