@@ -511,12 +511,6 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 			gui::BeginRender();
 			gui::Render();
 
-			if (languageChanged)
-			{
-
-			}
-
-
 			ImGui::SeparatorText("Server");
 			if (!isConnected)
 			{
