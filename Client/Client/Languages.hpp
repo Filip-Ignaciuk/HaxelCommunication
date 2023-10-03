@@ -23,6 +23,7 @@ public:
 	static std::string allTextsInApplication[numberOfSentences];
 
 	static bool GenerateLanguageFile(const int _language);
+	static bool ChangeLanguage(int _language);
 
 	static bool CheckInstalledLanguages();
 

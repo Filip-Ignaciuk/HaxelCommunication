@@ -1,3 +1,6 @@
 D:\Projects\HaxelCommunication\Client\Bin\intermediates\Win32\Release\Client.vcxproj.MdMergeInputs.cache
 D:\Projects\HaxelCommunication\Client\Bin\intermediates\Win32\Release\Client.vcxproj.cppwinrt_plat.cache
 D:\Projects\HaxelCommunication\Client\Bin\intermediates\Win32\Release\Client.vcxproj.cppwinrt_comp.cache
+D:\Projects\HaxelCommunication\HaxelCommunication\Client\Bin\intermediates\Win32\Release\Client.vcxproj.MdMergeInputs.cache
+D:\Projects\HaxelCommunication\HaxelCommunication\Client\Bin\intermediates\Win32\Release\Client.vcxproj.cppwinrt_plat.cache
+D:\Projects\HaxelCommunication\HaxelCommunication\Client\Bin\intermediates\Win32\Release\Client.vcxproj.cppwinrt_comp.cache

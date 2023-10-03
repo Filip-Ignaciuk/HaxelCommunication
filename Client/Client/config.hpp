@@ -7,6 +7,7 @@ class config
 private:
 
 	static void Initialise(const std::string& _txt, bool& _isSuccessful);
+	bool ChangeLanguage(int _language);
 	static bool InitFolders();
 
 public:

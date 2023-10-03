@@ -54,6 +54,11 @@ void config::Initialise(const std::string& _txt, bool& _isSuccessful)
 	LanguageFileInitialiser::PopulateAllTextsInApplication();
 }
 
+bool config::UpdateLanguage(const int _language)
+{
+	return LanguageFileInitialiser::ChangeLanguage(_language);
+}
+
 bool config::StartConfigs()
 {
 	bool isSuccessful = true;
@@ -64,8 +69,6 @@ bool config::StartConfigs()
 	{
 		initFile.close();
 		Initialise(initialisedTxt, isSuccessful);
-
-
 	}
 	else
 	{

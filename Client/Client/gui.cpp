@@ -239,8 +239,8 @@ void gui::Render() noexcept
 	{
 		if (ImGui::BeginMenu("Languages"))
 		{
-			ImGui::MenuItem("English GB", NULL, &isEnglishGB);
-			ImGui::MenuItem("polski", NULL, &isPolish);
+			ImGui::MenuItem("English GB", "", &isEnglishGB);
+			ImGui::MenuItem("polski", "", &isPolish);
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Chat"))
@@ -252,8 +252,8 @@ void gui::Render() noexcept
 		ImGui::EndMenu();
 	}
 
-	if (isEnglishGB) { config::currentLanguage = 0; }
-	else if (isPolish){ config::currentLanguage = 1; }
+	if (isEnglishGB) { config::UpdateLanguage(0); }
+	else if (isPolish){ config::UpdateLanguage(1); }
 	
 
 	

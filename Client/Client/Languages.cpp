@@ -11,10 +11,22 @@ bool LanguageFileInitialiser::GenerateLanguageFile(const int _language)
 
 	bool isSuccessful = true;
 
-	if (!_language) { isSuccessful = GenerateEnGb(); }
-	else if (_language == 1) { isSuccessful = GeneratePl(); }
+	if (!_language && !initialisedLanguages[_language]) { isSuccessful = GenerateEnGb(); }
+	else if (_language == 1 && !initialisedLanguages[_language]) { isSuccessful = GeneratePl(); }
 	else { isSuccessful = false; }
 
+	return isSuccessful;
+}
+
+bool LanguageFileInitialiser::ChangeLanguage(const int _language)
+{
+	bool isSuccessful = true;
+	config::currentLanguage = _language;
+	if(initialisedLanguages[_language] == false)
+	{
+		isSuccessful = GenerateLanguageFile(_language);
+		isSuccessful = PopulateAllTextsInApplication();
+	}
 	return isSuccessful;
 }
 
