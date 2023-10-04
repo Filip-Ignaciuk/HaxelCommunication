@@ -144,5 +144,5 @@ int config::currentLanguage = 0;
 
 bool config::isTimeFormatOn = false;
 
-
+bool config::selectedLanguages[2] = {true, false};
 

@@ -28,3 +28,4 @@ Request timed out. Please try to reconnect to the server.
 The server has been disconnected.
 Failed to connect to the domain server.
 Chatroom doesn't exist with chosen name.
+Password incorrect for the requested chatroom.

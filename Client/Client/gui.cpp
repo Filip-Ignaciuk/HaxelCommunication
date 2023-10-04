@@ -214,6 +214,11 @@ void gui::EndRender() noexcept
 	}
 
 }
+
+// Languages
+static bool isEnglishGB = false;
+static bool isPolish = false;
+
 void gui::Render() noexcept
 {
 
@@ -228,32 +233,38 @@ void gui::Render() noexcept
 		return;
 	}
 
-	//if (ImGui::BeginMenuBar())
-	//{
-	//	ImGui::EndMenuBar();
-	//}
-	static bool isEnglishGB = false;
-	static bool isPolish = false;
+	
 
 	if (ImGui::BeginMenu("Settings"))
 	{
 		if (ImGui::BeginMenu("Languages"))
 		{
-			ImGui::MenuItem("English GB", "", &isEnglishGB);
-			ImGui::MenuItem("polski", "", &isPolish);
+			if(ImGui::MenuItem("English GB", "", &isEnglishGB))
+			{
+				// Activate current one
+				isEnglishGB = true;
+				// Deactivate others
+				isPolish = false;
+				config::UpdateLanguage(0);
+			}
+			if(ImGui::MenuItem("polski", "", &isPolish))
+			{
+				// Activate current one
+				isPolish = true;
+				// Deactivate others
+				isEnglishGB = false;
+				config::UpdateLanguage(1);
+			}
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Chat"))
 		{
-			ImGui::MenuItem("Enable time of message", NULL, &isEnglishGB);
-			ImGui::MenuItem("Enable", NULL, &isPolish);
+			ImGui::MenuItem("Enable time of message", NULL, &config::isTimeFormatOn);
 			ImGui::EndMenu();
 		}
 		ImGui::EndMenu();
 	}
 
-	if (isEnglishGB) { config::UpdateLanguage(0); }
-	else if (isPolish){ config::UpdateLanguage(1); }
 	
 
 	

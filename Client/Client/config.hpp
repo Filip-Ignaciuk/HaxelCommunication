@@ -7,7 +7,6 @@ class config
 private:
 
 	static void Initialise(const std::string& _txt, bool& _isSuccessful);
-	bool ChangeLanguage(int _language);
 	static bool InitFolders();
 
 public:
@@ -16,7 +15,6 @@ public:
 	static bool StartConfigs();
 
 	static bool UpdateLanguage(const int _language);
-
 
 	static void SetIp(std::string& _ip);
 
@@ -36,5 +34,7 @@ public:
 	static int currentLanguage;
 
 	static bool isTimeFormatOn;
+
+	static bool selectedLanguages[2];
 };
 
