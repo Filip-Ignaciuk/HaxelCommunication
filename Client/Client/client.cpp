@@ -683,12 +683,11 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 				{
 					ImGui::Text(clientUser.GetDisplayName().c_str());
 				}
+
 				ImGui::InputText(LanguageFileInitialiser::charAllTextsInApplication[11], charDisplayName, IM_ARRAYSIZE(charDisplayName));
+
 				ImGui::TextColored(currentColourChangingUser, currentStatusChangingUser.c_str());
-				if (isDisplayNameTooLarge)
-				{
-					ImGui::Text(LanguageFileInitialiser::charAllTextsInApplication[23]);
-				}
+
 				if (ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[16]))
 				{
 					std::string name = charDisplayName;
@@ -717,6 +716,11 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 						}
 						hdl = CreateThread(NULL, 0, ChangingThread, 0, 0, &threadid);
 
+					}
+					else if (isDisplayNameTooLarge)
+					{
+						currentStatusChangingUser = LanguageFileInitialiser::charAllTextsInApplication[23];
+						currentColourChangingUser = tryingToConnectColour;
 					}
 				}
 				if (isInitialised)

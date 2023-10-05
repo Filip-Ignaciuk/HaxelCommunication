@@ -265,6 +265,11 @@ void gui::Render() noexcept
 			}
 			ImGui::EndMenu();
 		}
+		if (ImGui::BeginMenu("Users"))
+		{
+			// Load Users
+			ImGui::EndMenu();
+		}
 		ImGui::EndMenuBar();
 	}
 	
