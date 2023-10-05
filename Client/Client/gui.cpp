@@ -227,44 +227,48 @@ void gui::Render() noexcept
 
 	
 
-	if(!ImGui::Begin("Haxel Communication Client", &exit, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings))
+	if(!ImGui::Begin("Haxel Communication Client", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoResize |  ImGuiWindowFlags_NoSavedSettings))
 	{
+
 		ImGui::End();
 		return;
 	}
 
-	
-
-	if (ImGui::BeginMenu("Settings"))
+	if (ImGui::BeginMenuBar())
 	{
-		if (ImGui::BeginMenu("Languages"))
+		if (ImGui::BeginMenu("Settings"))
 		{
-			if(ImGui::MenuItem("English GB", "", &isEnglishGB))
+			if (ImGui::BeginMenu("Languages"))
 			{
-				// Activate current one
-				isEnglishGB = true;
-				// Deactivate others
-				isPolish = false;
-				config::UpdateLanguage(0);
+				if (ImGui::MenuItem("English GB", "", &isEnglishGB))
+				{
+					// Activate current one
+					isEnglishGB = true;
+					// Deactivate others
+					isPolish = false;
+					config::UpdateLanguage(0);
+				}
+				if (ImGui::MenuItem("polski", "", &isPolish))
+				{
+					// Activate current one
+					isPolish = true;
+					// Deactivate others
+					isEnglishGB = false;
+					config::UpdateLanguage(1);
+				}
+				ImGui::EndMenu();
 			}
-			if(ImGui::MenuItem("polski", "", &isPolish))
+			if (ImGui::BeginMenu("Chat"))
 			{
-				// Activate current one
-				isPolish = true;
-				// Deactivate others
-				isEnglishGB = false;
-				config::UpdateLanguage(1);
+				ImGui::MenuItem("Enable time of message", NULL, &config::isTimeFormatOn);
+				ImGui::EndMenu();
 			}
 			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu("Chat"))
-		{
-			ImGui::MenuItem("Enable time of message", NULL, &config::isTimeFormatOn);
-			ImGui::EndMenu();
-		}
-		ImGui::EndMenu();
+		ImGui::EndMenuBar();
 	}
-
+	
+	
 	
 
 	
