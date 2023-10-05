@@ -227,7 +227,7 @@ void gui::Render() noexcept
 
 	
 
-	if(!ImGui::Begin("Haxel Communication Client", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoResize |  ImGuiWindowFlags_NoSavedSettings))
+	if(!ImGui::Begin("Haxel Communication Client", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoResize |  ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse))
 	{
 
 		ImGui::End();

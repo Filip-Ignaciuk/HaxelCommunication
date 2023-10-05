@@ -496,15 +496,12 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 
 	CreateSocket();
 
-	
-
-	currentConnectionStatus = LanguageFileInitialiser::allTextsInApplication[3];
-	currentStatusChangingUser = LanguageFileInitialiser::allTextsInApplication[3];
-	allTextsInChatRoom.emplace_back(LanguageFileInitialiser::allTextsInApplication[18]);
-	allTextsInChatRoom.emplace_back(LanguageFileInitialiser::allTextsInApplication[19]);
-
 	if(config::StartConfigs())
 	{
+		currentConnectionStatus = LanguageFileInitialiser::allTextsInApplication[3];
+		currentStatusChangingUser = LanguageFileInitialiser::allTextsInApplication[3];
+		allTextsInChatRoom.emplace_back(LanguageFileInitialiser::allTextsInApplication[18]);
+		allTextsInChatRoom.emplace_back(LanguageFileInitialiser::allTextsInApplication[19]);
 		while (gui::exit)
 		{
 			char messageText[bufferSize] = "";
