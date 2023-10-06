@@ -21,6 +21,10 @@ bool LanguageFileInitialiser::GenerateLanguageFile(const int _language)
 bool LanguageFileInitialiser::ChangeLanguage(const int _language)
 {
 	bool isSuccessful = true;
+	if(_language < 0 || _language > numberOfLanguages  )
+	{
+		return false;
+	}
 	config::currentLanguage = _language;
 	if(initialisedLanguages[_language] == false)
 	{

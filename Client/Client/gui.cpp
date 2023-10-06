@@ -157,6 +157,10 @@ void gui::DestroyDevice() noexcept
 	}
 }
 
+// Languages
+static bool isEnglishGB = false;
+static bool isPolish = false;
+
 void gui::CreateImGui() noexcept
 {
 	IMGUI_CHECKVERSION();
@@ -169,6 +173,17 @@ void gui::CreateImGui() noexcept
 
 	ImGui_ImplWin32_Init(window);
 	ImGui_ImplDX9_Init(device);
+
+	// Run change currently selected language here as this method only runs once.
+	if (!config::currentLanguage)
+	{
+		isEnglishGB = true;
+	}
+	else if (config::currentLanguage == 1)
+	{
+		isEnglishGB = false;
+	}
+
 }
 void gui::DestroyImGui() noexcept
 {
@@ -215,9 +230,8 @@ void gui::EndRender() noexcept
 
 }
 
-// Languages
-static bool isEnglishGB = false;
-static bool isPolish = false;
+
+
 
 void gui::Render() noexcept
 {
