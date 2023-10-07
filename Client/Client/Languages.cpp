@@ -41,7 +41,7 @@ bool LanguageFileInitialiser::GenerateEnGb()
 		fileengb << "Changing.." << std::endl;
 		fileengb << "Changing..." << std::endl;
 		fileengb << "Successfully initialised user" << std::endl;
-		fileengb << "Update user" << std::endl;
+		fileengb << "Save Changes" << std::endl;
 		fileengb << "Chat room" << std::endl;
 		fileengb << "In chat room" << std::endl;
 		fileengb << "Type /h for help" << std::endl;
@@ -56,6 +56,8 @@ bool LanguageFileInitialiser::GenerateEnGb()
 		fileengb << "Failed to connect to the domain server." << std::endl;
 		fileengb << "Chatroom doesn't exist with chosen name." << std::endl;
 		fileengb << "Password incorrect for the requested chatroom." << std::endl;
+		fileengb << "User Information" << std::endl;
+		fileengb << "User Customisation" << std::endl;
 		fileengb.close();
 	}
 	else

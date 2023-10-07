@@ -1,4 +1,6 @@
 #include "user.hpp"
+#include "gui.h"	
+#include "ImGui/imgui.h"
 
 User::User() = default;
 

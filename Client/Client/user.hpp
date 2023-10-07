@@ -1,6 +1,7 @@
-
 #pragma once
 #include <string>
+#include "gui.h"	
+#include "ImGui/imgui.h"
 
 class IDGenerator
 {
@@ -12,6 +13,7 @@ class User
 private:
 	std::string id;
 	std::string displayName;
+	
 
 public:
 	User();
