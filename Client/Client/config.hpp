@@ -36,5 +36,8 @@ public:
 	static bool isTimeFormatOn;
 
 	static bool selectedLanguages[2];
+
+	static bool isChatroomSelected;
+	static bool isUserSelected;
 };
 

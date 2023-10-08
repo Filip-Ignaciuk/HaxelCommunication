@@ -211,10 +211,10 @@ DWORD WINAPI RequestDomainThread(LPVOID param)
 	std::string domainPassword = CH->port;
 	delete CH;
 
-	PCWSTR ip = config::GetWIp().c_str();
+	PCWSTR ip = config::WDomainIp.c_str();
 	sockaddr_in service;
 	service.sin_family = AF_INET;
-	service.sin_port = htons(config::GetIPort());
+	service.sin_port = htons(config::IDomainPort);
 	InetPtonW(AF_INET, ip, &service.sin_addr.S_un.S_addr);
 
 	if (connect(clientSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
@@ -460,8 +460,7 @@ int sizeOfMessage = 0;
 
 bool languageChanged = false;
 
-bool isChatroomSelected = true;
-bool isUserSelected = true;
+
 
 void Chatroom()
 {
@@ -789,11 +788,11 @@ int __stdcall wWinMain(HINSTANCE _instace, HINSTANCE _previousInstance, PWSTR _a
 	{
 		gui::BeginRender();
 		gui::Render();
-		if (isChatroomSelected)
+		if (config::isChatroomSelected)
 		{
 			Chatroom();
 		}
-		else if (isUserSelected)
+		else if (config::isUserSelected)
 		{
 			User();
 		}

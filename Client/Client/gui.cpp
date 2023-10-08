@@ -279,9 +279,18 @@ void gui::Render() noexcept
 			}
 			ImGui::EndMenu();
 		}
+		if (ImGui::BeginMenu("Chatroom"))
+		{
+			// Load Chatroom
+			config::isChatroomSelected = true;
+			config::isUserSelected = false;
+			ImGui::EndMenu();
+		}
 		if (ImGui::BeginMenu("Users"))
 		{
 			// Load Users
+			config::isChatroomSelected = false;
+			config::isUserSelected = true;
 			ImGui::EndMenu();
 		}
 		ImGui::EndMenuBar();

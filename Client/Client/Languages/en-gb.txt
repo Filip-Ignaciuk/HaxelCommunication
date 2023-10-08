@@ -29,3 +29,5 @@ The server has been disconnected.
 Failed to connect to the domain server.
 Chatroom doesn't exist with chosen name.
 Password incorrect for the requested chatroom.
+User Information
+User Customisation

@@ -146,3 +146,5 @@ bool config::isTimeFormatOn = false;
 
 bool config::selectedLanguages[2] = {true, false};
 
+bool config::isChatroomSelected = true;
+bool config::isUserSelected = false;

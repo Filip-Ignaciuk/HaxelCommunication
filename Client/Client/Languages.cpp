@@ -11,8 +11,8 @@ bool LanguageFileInitialiser::GenerateLanguageFile(const int _language)
 
 	bool isSuccessful = true;
 
-	if (!_language && !initialisedLanguages[_language]) { isSuccessful = GenerateEnGb(); }
-	else if (_language == 1 && !initialisedLanguages[_language]) { isSuccessful = GeneratePl(); }
+	if (!_language && !initialisedLanguages[_language]) { initialisedLanguages[_language] = GenerateEnGb(); }
+	else if (_language == 1 && !initialisedLanguages[_language]) { initialisedLanguages[_language] = GeneratePl(); }
 	else { isSuccessful = false; }
 
 	return isSuccessful;
@@ -72,6 +72,8 @@ bool LanguageFileInitialiser::GenerateEnGb()
 		fileengb << "Failed to connect to the domain server." << std::endl;
 		fileengb << "Chatroom doesn't exist with chosen name." << std::endl;
 		fileengb << "Password incorrect for the requested chatroom." << std::endl;
+		fileengb << "User Information" << std::endl;
+		fileengb << "User Customisation" << std::endl;
 		fileengb.close();
 	}
 	else
