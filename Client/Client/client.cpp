@@ -744,17 +744,9 @@ void User()
 		if (!isChangingDisplayName && !isDisplayNameTooLarge)
 		{
 			isChangingDisplayName = true;
-			DWORD threadid;
-			HANDLE hdl;
-			DisplayNameHolder* DNH = new DisplayNameHolder{ charDisplayName };
-			if (isInitialised)
-			{
-				hdl = CreateThread(NULL, 0, ChangeDisplayNameThread, DNH, 0, &threadid);
-			}
-			else
-			{
-				hdl = CreateThread(NULL, 0, InitialiseUserThread, DNH, 0, &threadid);
-			}
+			clientUser.SetDisplayName(charDisplayName);
+			clientUser
+			
 			hdl = CreateThread(NULL, 0, ChangingThread, 0, 0, &threadid);
 
 		}

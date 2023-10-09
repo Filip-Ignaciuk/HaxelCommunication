@@ -20,3 +20,8 @@ struct BufferResponseIp
 	int responsePort;
 };
 
+struct BufferUpdateUser
+{
+	std::string displayName;
+	
+};
