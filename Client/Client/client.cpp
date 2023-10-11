@@ -17,7 +17,7 @@
 #include "ImGui/imgui.h"
 
 SOCKET clientSocket;
-User clientUser("PLACEHOLDER", "999");
+User clientUser("DEFAULT", "999", 1.0f, 1.0f, 1.0f);
 
 int CreateSocket()
 {
@@ -147,8 +147,7 @@ DWORD WINAPI ConnectingThread(LPVOID param)
 
 DWORD WINAPI InitialiseUserThread(LPVOID param)
 {
-	DisplayNameHolder* DNH = (DisplayNameHolder*)param;
-	std::string displayName = DNH->charDisplayName;
+	const std::string displayName = clientUser.GetDisplayName();
 	wantedDisplayName = displayName;
 	std::string bufferString = "I";
 	int size = displayName.size();
@@ -163,8 +162,7 @@ DWORD WINAPI InitialiseUserThread(LPVOID param)
 
 DWORD WINAPI ChangeDisplayNameThread(LPVOID param)
 {
-	DisplayNameHolder* DNH = (DisplayNameHolder*)param;
-	std::string displayName = DNH->charDisplayName;
+	const std::string displayName = clientUser.GetDisplayName();
 	wantedDisplayName = displayName;
 	std::string bufferString = "UD";
 	int size = displayName.size();
@@ -342,8 +340,8 @@ DWORD WINAPI ReceiveThread(LPVOID param)
 			id[1] = buffer[3];
 		}
 
-		const User user(wantedDisplayName, id);
-		clientUser = user;
+		clientUser.SetDisplayName(wantedDisplayName);
+		clientUser.SetId(id);
 		isInitialised = true;
 		
 	}
@@ -411,7 +409,7 @@ DWORD WINAPI ReceiveThread(LPVOID param)
 		{
 			displayName.push_back(buffer[startPos]);
 		}
-		User user(displayName, id);
+		User user(displayName, id, 0.0f, 0.0f, 0.0f);
 		users[std::stoi(id)] = user;
 		
 	}
@@ -715,6 +713,8 @@ void Chatroom()
 	}
 }
 
+bool isUserInitialised = false;
+
 void User()
 {
 
@@ -745,8 +745,21 @@ void User()
 		{
 			isChangingDisplayName = true;
 			clientUser.SetDisplayName(charDisplayName);
-			clientUser
-			
+			if(!isUserInitialised)
+			{
+				DWORD threadid;
+				HANDLE hdl;
+				hdl = CreateThread(NULL, 0, InitialiseUserThread, 0, 0, &threadid);
+				isUserInitialised = true;
+			}
+			else
+			{
+				DWORD threadid;
+				HANDLE hdl;
+				hdl = CreateThread(NULL, 0, ChangeDisplayNameThread, 0, 0, &threadid);
+			}
+			DWORD threadid;
+			HANDLE hdl;
 			hdl = CreateThread(NULL, 0, ChangingThread, 0, 0, &threadid);
 
 		}
