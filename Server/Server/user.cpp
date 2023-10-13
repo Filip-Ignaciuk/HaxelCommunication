@@ -1,12 +1,15 @@
 #include "user.hpp"
 
-#include <vector>
-
 User::User() = default;
 
-User::User(std::string _displayName, std::string _id) : displayName(_displayName), id(_id)
+User::User(std::string _displayName, std::string _id, float _userColourX, float _userColourY, float _userColourZ) : displayName(_displayName), id(_id), userColourX(_userColourX), userColourY(_userColourY), userColourZ(_userColourZ)
 {
 
+}
+
+void User::SetId(std::string _id)
+{
+	id = _id;
 }
 
 
@@ -25,21 +28,10 @@ void User::SetDisplayName(std::string _displayName)
 	displayName = std::move(_displayName);
 }
 
-bool User::IsTheSame(User& user) const
+ColourHolder User::GetUserColour() const
 {
-	if (this->displayName == user.displayName && this->id == user.id)
-	{
-		return true;
-	}
-	return false;
+	ColourHolder CH = { userColourX, userColourY, userColourZ };
+	return CH;
 }
 
 
-bool User::operator==(User& user) const
-{
-	if(this->displayName == user.displayName && this->id == user.id)
-	{
-		return true;
-	}
-	return false;
-}
