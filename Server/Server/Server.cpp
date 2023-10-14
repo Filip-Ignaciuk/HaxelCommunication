@@ -122,7 +122,7 @@ DWORD WINAPI ClientInitialiseThread(LPVOID param)
 
     std::cout << numOfUsers << std::endl;
     std::cout << displayName.size() << std::endl;
-    User user(displayName, std::to_string(numOfUsers));
+    User user(displayName, std::to_string(numOfUsers), 0.0f, 0.0f, 0.0f);
     users[position] = user;
     std::string sizeOfIdS = std::to_string(numOfUsers);
     int sizeOfId = sizeOfIdS.size();
@@ -438,7 +438,7 @@ DWORD WINAPI ListenThread(LPVOID param)
     {
         if(!sockets[i])
         {
-            User user("PLACEHOLDER", "999");
+            User user("PLACEHOLDER", "999", 0.0f, 0.0f, 0.0f);
             users[i] = user;
             sockets[i] = acceptSocket;
             finished[i] = false;
