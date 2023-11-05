@@ -4,12 +4,12 @@
 
 struct ColourHolder
 {
-	float userColourX;
-	float userColourY;
-	float userColourZ;
+	float colourR;
+	float colourG;
+	float colourB;
 };
 
-class IDGenerator
+struct IDGenerator
 {
 	static int GenerateID();
 };
@@ -17,21 +17,21 @@ class IDGenerator
 class User
 {
 private:
-	std::string id;
-	std::string displayName;
-	float userColourX;
-	float userColourY;
-	float userColourZ;
+	std::string m_id;
+	std::string m_displayName;
+	float m_userColourR;
+	float m_userColourG;
+	float m_userColourB;
 
 public:
 	User();
-	User(std::string _displayName, std::string _id, float _userColourX, float _userColourY, float _userColourZ);
+	User(const std::string& _displayName, const std::string& _id, const float _userColourR, const float _userColourG, const float _userColourB);
 
-	void SetId(std::string _id);
+	void SetId(const std::string& _id);
 	std::string GetId() const;
 
 	std::string GetDisplayName() const;
-	void SetDisplayName(std::string _displayName);
+	void SetDisplayName(const std::string& _displayName);
 
 	ColourHolder GetUserColour() const;
 
