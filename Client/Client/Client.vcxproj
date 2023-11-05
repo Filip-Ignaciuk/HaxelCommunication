@@ -164,7 +164,11 @@
     <ClCompile Include="ImGui\imgui_tables.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Languages.cpp" />
+    <ClCompile Include="LinuxNetworking.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="user.cpp" />
+    <ClCompile Include="WindowsNetworkCallsCreator.cpp" />
+    <ClCompile Include="WindowsNetworking.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferStandard.hpp" />
@@ -179,7 +183,12 @@
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="Languages.hpp" />
+    <ClInclude Include="LinuxNetworking.hpp" />
+    <ClInclude Include="NerworkCallsCreator.hpp" />
+    <ClInclude Include="NetworkCalls.hpp" />
     <ClInclude Include="user.hpp" />
+    <ClInclude Include="WindowsNetworkCallsCreator.hpp" />
+    <ClInclude Include="WindowsNetworking.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
