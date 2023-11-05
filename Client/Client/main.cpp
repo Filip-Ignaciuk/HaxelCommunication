@@ -148,7 +148,7 @@ int main(int, char**)
             ImGui::Begin("ChatRoom");
             
             
-            ImGui::InputText()
+            //ImGui::InputText()
 
 
             //ImGui::InputText()
