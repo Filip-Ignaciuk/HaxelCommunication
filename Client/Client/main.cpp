@@ -139,13 +139,14 @@ int main(int, char**)
         //static float col1[3] = { 1.0f, 0.0f, 0.2f };
         //ImGui::ColorEdit3("color 1", col1);
 
+        ImGuiIO& io = ImGui::GetIO();
+        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+        ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
         {
-            ImGuiIO& io = ImGui::GetIO();
-            io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
             bool exit = true;
-            ImGui::Begin("ChatRoom", &exit, ImGuiWindowFlags_NoCollapse);
-            // ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize
+            ImGui::Begin("ChatRoom", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize );
             
 
 
@@ -156,10 +157,7 @@ int main(int, char**)
 
         {
             bool exit = true;
-            ImGui::Begin("Users", &exit, ImGuiWindowFlags_NoCollapse);
-            // ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize
-            ImGuiIO& io = ImGui::GetIO();
-            io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+            ImGui::Begin("Users", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
             //ImGui::InputText()
 
 
