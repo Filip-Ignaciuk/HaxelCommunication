@@ -18,9 +18,11 @@ private:
 	SOCKET clientSocket;
 
 	DWORD WINAPI ConnectThread(LPVOID param);
+	DWORD WINAPI TryToConnectThread(LPVOID param);
 	DWORD WINAPI SendTextThread(LPVOID param);
 	DWORD WINAPI UpdateUserThread(LPVOID param);
 	DWORD WINAPI ReceiveThread(LPVOID param);
+	
 	
 public:
 	WindowsNetworking();

@@ -135,20 +135,18 @@ int main(int, char**)
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-        if (show_demo_window)
-            ImGui::ShowDemoWindow(&show_demo_window);
 
-        static float col1[3] = { 1.0f, 0.0f, 0.2f };
-        ImGui::ColorEdit3("color 1", col1);
+        //static float col1[3] = { 1.0f, 0.0f, 0.2f };
+        //ImGui::ColorEdit3("color 1", col1);
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
         {
-
-            ImGui::Begin("ChatRoom");
+            ImGuiIO& io = ImGui::GetIO();
+            io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+            bool exit = true;
+            ImGui::Begin("ChatRoom", &exit, ImGuiWindowFlags_NoCollapse);
+            // ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize
             
-            
-            //ImGui::InputText()
 
 
             //ImGui::InputText()
@@ -156,15 +154,20 @@ int main(int, char**)
             ImGui::End();
         }
 
-        // 3. Show another simple window.
-        if (show_another_window)
         {
-            ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-            ImGui::Text("Hello from another window!");
-            if (ImGui::Button("Close Me"))
-                show_another_window = false;
+            bool exit = true;
+            ImGui::Begin("Users", &exit, ImGuiWindowFlags_NoCollapse);
+            // ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize
+            ImGuiIO& io = ImGui::GetIO();
+            io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+            //ImGui::InputText()
+
+
+            //ImGui::InputText()
+
             ImGui::End();
         }
+
 
         // Rendering
         ImGui::Render();

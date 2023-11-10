@@ -1,5 +1,7 @@
 #include "WindowsNetworking.hpp"
 
+#include "Languages.hpp"
+
 DWORD WINAPI WindowsNetworking::ConnectThread(LPVOID param)
 {
 	ConnectHolder* CH = (ConnectHolder*)param;
@@ -21,6 +23,35 @@ DWORD WINAPI WindowsNetworking::ConnectThread(LPVOID param)
 	}
 	return 0;
 }
+
+DWORD WindowsNetworking::TryToConnectThread(LPVOID param)
+{
+	//ConnectHolder* CH = (ConnectHolder*)param;
+	//// Converting ip input to const wchar_t
+	//std::string stringIp = CH->ip;
+	//std::wstring wideIp = std::wstring(stringIp.begin(), stringIp.end());
+	//PCWSTR ip = wideIp.c_str();
+	//int port = std::stoi(CH->port);
+	//delete CH;
+	//
+	//sockaddr_in service;
+	//service.sin_family = AF_INET;
+	//service.sin_port = htons(port);
+	//InetPtonW(AF_INET, ip, &service.sin_addr.S_un.S_addr);
+	//
+	//int result = connect(clientSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service));
+	//if (result)
+	//{
+	//	currentConnectionStatus = LanguageFileInitialiser::allTextsInApplication[6];
+	//}
+	//else
+	//{
+	//	currentConnectionStatus = LanguageFileInitialiser::allTextsInApplication[4];
+	//
+	//}
+	return 0;
+}
+
 
 DWORD WINAPI WindowsNetworking::SendTextThread(LPVOID param)
 {
