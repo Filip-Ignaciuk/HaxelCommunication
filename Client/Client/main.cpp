@@ -147,10 +147,22 @@ int main(int, char**)
         {
             bool exit = true;
             ImGui::Begin("ChatRoom", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize );
+            {
+                ImGui::SetNextWindowSizeConstraints(ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 1), ImVec2(FLT_MAX, ImGui::GetTextLineHeightWithSpacing() * 37.75f));
+                if (ImGui::BeginChild("ConstrainedChild", ImVec2(0.0f, 0.0f), 0))
+                {
+                    for (int n = 0; n < 100; n++)
+                        ImGui::Text("Line %04d", n);
+                }
+                    
+
+
+                ImGui::EndChild();
+            }
             
 
-
-            //ImGui::InputText()
+            static char str0[128] = "";
+            ImGui::InputText("Message", str0, IM_ARRAYSIZE(str0));
 
             ImGui::End();
         }
