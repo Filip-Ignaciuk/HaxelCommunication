@@ -9,9 +9,29 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Header Files\Networking">
+      <UniqueIdentifier>{b3a1d462-ca1d-4323-8445-d374aa00174a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Networking\LinuxNetworking">
+      <UniqueIdentifier>{42ad9305-bcdf-4a3a-ba86-acf2a6d78e67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Networking\WindowsNetworking">
+      <UniqueIdentifier>{0ae84666-86d3-4270-918e-59ab7442b0cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ImGui">
+      <UniqueIdentifier>{b189d924-adeb-47c4-b0a4-c8d5df4300c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Networking">
+      <UniqueIdentifier>{13b6a2de-c217-4c4d-9bc2-0f6565237606}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Networking\LinuxNetworking">
+      <UniqueIdentifier>{f5b1714d-485b-4c07-a06e-c8433c0337de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Networking\WindowsNetworking">
+      <UniqueIdentifier>{59c0dfc6-1b2b-44f7-ba8f-e8ee8f865d22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ImGui">
+      <UniqueIdentifier>{7168fb05-1c28-4dac-93d2-f563d06fbff7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -24,54 +44,45 @@
     <ClCompile Include="Config.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BufferStandard.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WindowsNetworkCallsCreator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WindowsNetworking.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LinuxNetworking.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="imgui_impl_glfw.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_impl_opengl3.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="imgui_demo.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="imgui_draw.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_glfw.cpp">
+      <Filter>Source Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_opengl3.cpp">
+      <Filter>Source Files\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="imgui_tables.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="imgui_widgets.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui.cpp">
+      <Filter>Source Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowsNetworkCallsCreator.cpp">
+      <Filter>Source Files\Networking\WindowsNetworking</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowsNetworking.cpp">
+      <Filter>Source Files\Networking\WindowsNetworking</Filter>
+    </ClCompile>
+    <ClCompile Include="LinuxNetworking.cpp">
+      <Filter>Source Files\Networking\LinuxNetworking</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferStandard.cpp">
+      <Filter>Source Files\Networking</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="user.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui_impl_win32.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imstb_rectpack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imstb_textedit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Languages.hpp">
@@ -80,50 +91,59 @@
     <ClInclude Include="config.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BufferStandard.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WindowsNetworking.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WindowsNetworkCallsCreator.hpp">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="NerworkCallsCreator.hpp">
+      <Filter>Header Files\Networking</Filter>
     </ClInclude>
     <ClInclude Include="NetworkCalls.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsNetworking.hpp">
+      <Filter>Header Files\Networking\WindowsNetworking</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsNetworkCallsCreator.hpp">
+      <Filter>Header Files\Networking\WindowsNetworking</Filter>
     </ClInclude>
     <ClInclude Include="LinuxNetworking.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Networking\LinuxNetworking</Filter>
     </ClInclude>
-    <ClInclude Include="NerworkCallsCreator.hpp">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="BufferStandard.hpp">
+      <Filter>Header Files\Networking</Filter>
     </ClInclude>
     <ClInclude Include="imgui_impl_glfw.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="imgui_impl_opengl3.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="imgui_impl_opengl3_loader.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="imconfig.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="ImGui\imgui_impl_win32.h">
+      <Filter>Header Files\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="imgui_internal.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="imstb_truetype.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="imstb_textedit.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="ImGui\imstb_rectpack.h">
+      <Filter>Header Files\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="imstb_rectpack.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_textedit.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_textedit.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_truetype.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imconfig.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui.h">
+      <Filter>Header Files\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

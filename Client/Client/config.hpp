@@ -6,6 +6,10 @@ class config
 {
 private:
 
+	static bool m_isInitialised;
+	static int m_currentWindow;
+	static int m_currentLanguage;
+
 	static void Initialise(const std::string& _txt, bool& _isSuccessful);
 	static bool InitFolders();
 
@@ -20,6 +24,10 @@ public:
 
 	static void SetPort(std::string& _port);
 
+	static void ChangeWindow(const int _window);
+
+	
+
 	// For requesting a chatroom with a specific domain. Not to be confused with the actual domain server ip/port
 	static std::string SDomainIp;
 	static std::wstring WDomainIp;
@@ -29,15 +37,5 @@ public:
 	static std::string currentDirNormalised;
 	static std::string currentDirUnNormalised;
 
-	static bool isInitialised;
-
-	static int currentLanguage;
-
-	static bool isTimeFormatOn;
-
-	static bool selectedLanguages[2];
-
-	static bool isChatroomSelected;
-	static bool isUserSelected;
 };
 

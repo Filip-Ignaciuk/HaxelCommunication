@@ -8,6 +8,7 @@
 #endif
 #include <glfw3.h> // Will drag system OpenGL headers
 
+#include "config.hpp"
 #include "User.hpp"
 
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
@@ -144,10 +145,27 @@ int main(int, char**)
         ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
+        if()
         {
             bool exit = true;
             ImGui::Begin("ChatRoom", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize );
             {
+                if(ImGui::BeginMenuBar())
+                {
+	                if(ImGui::BeginMenu("Settings"))
+	                {
+                        
+                        ImGui::EndMenu();
+	                }
+                    if (ImGui::BeginMenu("User"))
+                    {
+
+                        ImGui::EndMenu();
+                    }
+                    ImGui::EndMenuBar();
+                }
+                
+
                 ImGui::SetNextWindowSizeConstraints(ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 1), ImVec2(FLT_MAX, ImGui::GetTextLineHeightWithSpacing() * 37.75f));
                 if (ImGui::BeginChild("ConstrainedChild", ImVec2(0.0f, 0.0f), 0))
                 {

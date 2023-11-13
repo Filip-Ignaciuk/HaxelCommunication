@@ -5,6 +5,11 @@
 #include "config.hpp"
 #include "Languages.hpp"
 
+bool config::m_isInitialised = false;
+int config::m_currentWindow = 0;
+int config::m_currentLanguage = 0;
+
+
 std::string config::NormaliseDir(std::string& _str)
 {
 	// Converting all the \\ slashes into one singular forward slash.
@@ -128,6 +133,11 @@ void config::SetPort(std::string& _port)
 	IDomainPort = std::stoi(SDomainPort);
 }
 
+void config::ChangeWindow(const int _window)
+{
+
+}
+
 
 // Domain Config
 std::string config::SDomainIp = "127.0.0.1";
@@ -137,14 +147,3 @@ int config::IDomainPort = 4096;
 
 std::string config::currentDirUnNormalised = std::filesystem::current_path().string();
 std::string config::currentDirNormalised = NormaliseDir(currentDirUnNormalised);
-
-bool config::isInitialised = false;
-
-int config::currentLanguage = 0;
-
-bool config::isTimeFormatOn = false;
-
-bool config::selectedLanguages[2] = {true, false};
-
-bool config::isChatroomSelected = true;
-bool config::isUserSelected = false;
