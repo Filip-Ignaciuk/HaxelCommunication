@@ -33,6 +33,12 @@
     <Filter Include="Source Files\ImGui">
       <UniqueIdentifier>{7168fb05-1c28-4dac-93d2-f563d06fbff7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\ErrorHandler">
+      <UniqueIdentifier>{a48cbea5-2820-41a9-8cf7-317fc0075850}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ErrorHandler">
+      <UniqueIdentifier>{22b8804b-b01e-46d2-b3a9-b5010614b217}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="user.cpp">
@@ -144,6 +150,12 @@
     </ClInclude>
     <ClInclude Include="imgui.h">
       <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ErrorHandler.hpp">
+      <Filter>Header Files\ErrorHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="Error.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
