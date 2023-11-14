@@ -86,6 +86,9 @@
     <ClCompile Include="BufferStandard.cpp">
       <Filter>Source Files\Networking</Filter>
     </ClCompile>
+    <ClCompile Include="Message.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="user.hpp">
@@ -155,6 +158,9 @@
       <Filter>Header Files\ErrorHandler</Filter>
     </ClInclude>
     <ClInclude Include="Error.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Message.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
