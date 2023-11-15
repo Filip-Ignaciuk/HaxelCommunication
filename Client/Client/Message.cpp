@@ -54,14 +54,15 @@ void MessageBuilder::AddTime()
 
 void MessageBuilder::AddDate()
 {
-	if (hasContent)
-	{
-		this->m_preMessage->AddMessage(" " + _id + " ");
-	}
-	else
-	{
-		this->m_preMessage->AddMessage(_id + " ");
-	}
+	
+	 //if (hasContent)
+	 //{
+	 //	this->m_preMessage->AddMessage(" " + _id + " ");
+	 //}
+	 //else
+	 //{
+	 //	this->m_preMessage->AddMessage(_id + " ");
+	 //}
 }
 void MessageBuilder::AddId(const std::string& _id)
 {

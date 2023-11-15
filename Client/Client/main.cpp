@@ -145,7 +145,16 @@ int main(int, char**)
         ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
+
         if()
+        {
+            if (ImGui::BeginPopupModal("Speed Adjustment")) {
+
+            }
+
+        }
+
+
         {
             bool exit = true;
             ImGui::Begin("ChatRoom", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize );
