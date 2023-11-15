@@ -6,7 +6,26 @@ class Message
 {
 private:
 	std::string m_message;
-	bool m_wantsDate;
-	bool m_wantsId;
+public:
+	Message();
+	Message(const std::string& _message);
+	void AddMessage(const std::string& _message);
+	void HasContent() const;
+};
 
+class MessageBuilder
+{
+private:
+	Message* m_mainMessage;
+	Message* m_preMessage;
+	bool hasContent;
+public:
+	MessageBuilder();
+	~MessageBuilder();
+	void Reset();
+	void AddMessage(const std::string& _message);
+	void AddTime();
+	void AddDate();
+	void AddId(const std::string& _id);
+	const Message* GetMessage() const;
 };
