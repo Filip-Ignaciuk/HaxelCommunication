@@ -92,6 +92,9 @@
     <ClCompile Include="ErrorHandler.cpp">
       <Filter>Source Files\ErrorHandler</Filter>
     </ClCompile>
+    <ClCompile Include="Error.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="user.hpp">

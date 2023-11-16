@@ -10,6 +10,7 @@
 
 #include "config.hpp"
 #include "User.hpp"
+#include "ErrorHandler.hpp"
 
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
@@ -114,6 +115,9 @@ int main(int, char**)
     bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
+    // Client
+    Error latestError;
+
     // Main loop
 #ifdef __EMSCRIPTEN__
     // For an Emscripten build we are disabling file-system access, so let's not attempt to do a fopen() of the imgui.ini file.
@@ -146,9 +150,11 @@ int main(int, char**)
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
 
-        if()
+        if(ErrorHandler::HasError())
         {
-            if (ImGui::BeginPopupModal("Speed Adjustment")) {
+            latestError = ErrorHandler::GetError();
+            const char* popupModalTitle = latestError.GetLevel();
+            if (ImGui::BeginPopupModal()) {
 
             }
 
