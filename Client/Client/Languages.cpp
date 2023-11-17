@@ -25,7 +25,7 @@ bool LanguageFileInitialiser::ChangeLanguage(const int _language)
 	{
 		return false;
 	}
-	config::currentLanguage = _language;
+	config::UpdateLanguage(_language);
 	if(initialisedLanguages[_language] == false)
 	{
 		isSuccessful = GenerateLanguageFile(_language);
@@ -125,9 +125,9 @@ bool LanguageFileInitialiser::CheckInstalledLanguages()
 bool LanguageFileInitialiser::PopulateAllTextsInApplication()
 {
 	const std::string languagePath = config::currentDirNormalised + "/Languages";
-	if(initialisedLanguages[config::currentLanguage])
+	if(initialisedLanguages[config::GetCurrentLanguage()])
 	{
-		const std::string path = languagePath + languagesExtention[config::currentLanguage];
+		const std::string path = languagePath + languagesExtention[config::GetCurrentLanguage()];
 		std::ifstream languageFile(path);
 		if(languageFile.is_open())
 		{

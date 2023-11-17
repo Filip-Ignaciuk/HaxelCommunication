@@ -37,19 +37,19 @@ void MessageBuilder::AddMessage(const std::string& _message)
 void MessageBuilder::AddTime()
 {
 
-	auto currentTime = std::chrono::system_clock::now();
-	std::time_t finalTime = std::chrono::system_clock::to_time_t(currentTime);
-	std::string stringTime = std::string(std::ctime(&finalTime));
-
-	if(hasContent)
-	{
-		
-		this->m_preMessage->AddMessage(" " + stringTime + " ");
-	}
-	else
-	{
-		this->m_preMessage->AddMessage(stringTime + " ");
-	}
+	//auto currentTime = std::chrono::system_clock::now();
+	//std::time_t finalTime = std::chrono::system_clock::to_time_t(currentTime);
+	//std::string stringTime = std::string(std::ctime(&finalTime));
+	//
+	//if(hasContent)
+	//{
+	//	
+	//	this->m_preMessage->AddMessage(" " + stringTime + " ");
+	//}
+	//else
+	//{
+	//	this->m_preMessage->AddMessage(stringTime + " ");
+	//}
 }
 
 void MessageBuilder::AddDate()

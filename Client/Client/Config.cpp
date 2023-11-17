@@ -47,8 +47,8 @@ void config::Initialise(const std::string& _txt, bool& _isSuccessful)
 	file << SDomainIp << std::endl; // Domain Ip
 	file << SDomainPort << std::endl; // Domain Port
 
-	currentLanguage = 0;
-	isTimeFormatOn = true;
+	m_currentLanguage = 0;
+	//isTimeFormatOn = true;
 
 	// Initialising folders.
 	_isSuccessful = InitFolders();
@@ -82,9 +82,9 @@ bool config::StartConfigs()
 		int i = 0;
 		while (std::getline(initFile, line))
 		{
-			if (i == 0) {  isInitialised = std::stoi(line); } // Is Application initialised
-			else if (i == 1) { currentLanguage = std::stoi(line); } // Language
-			else if (i == 2) { isTimeFormatOn = std::stoi(line); } // TimeFormat
+			if (i == 0) { m_isInitialised = std::stoi(line); } // Is Application initialised
+			else if (i == 1) { m_currentLanguage = std::stoi(line); } // Language
+			//else if (i == 2) { isTimeFormatOn = std::stoi(line); } // TimeFormat
 			else if (i == 3) { SetIp(line); } // Domain Ip
 			else if (i == 4) { SetPort(line); } // Domain Port
 			
@@ -93,12 +93,12 @@ bool config::StartConfigs()
 		}
 		initFile.close();
 
-		if(isInitialised)
+		if(m_currentLanguage)
 		{
 
-			if (!LanguageFileInitialiser::initialisedLanguages[currentLanguage])
+			if (!LanguageFileInitialiser::initialisedLanguages[m_currentLanguage])
 			{
-				LanguageFileInitialiser::GenerateLanguageFile(currentLanguage);
+				LanguageFileInitialiser::GenerateLanguageFile(m_currentLanguage);
 			}
 
 			if (!LanguageFileInitialiser::PopulateAllTextsInApplication())
@@ -136,6 +136,21 @@ void config::SetPort(std::string& _port)
 void config::ChangeWindow(const int _window)
 {
 
+}
+
+bool config::GetIsInitialised()
+{
+	return m_isInitialised;
+}
+
+int config::GetCurrentWindow()
+{
+	return m_currentWindow;
+}
+
+int config::GetCurrentLanguage()
+{
+	return m_currentLanguage;
 }
 
 

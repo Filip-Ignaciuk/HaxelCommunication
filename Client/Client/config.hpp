@@ -26,6 +26,9 @@ public:
 
 	static void ChangeWindow(const int _window);
 
+	static bool GetIsInitialised();
+	static int GetCurrentWindow();
+	static int GetCurrentLanguage();
 	
 
 	// For requesting a chatroom with a specific domain. Not to be confused with the actual domain server ip/port

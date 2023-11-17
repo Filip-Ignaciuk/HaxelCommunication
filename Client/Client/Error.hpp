@@ -4,11 +4,12 @@
 class Error
 {
 private:
-	const std::string m_message;
-	const int m_level;
+	std::string m_message;
+	int m_level;
 public:
 	Error();
 	Error(const std::string& _message, const int _level);
-	const std::string GetMessage() const;
-	const int GetLevel() const;
+	Error(const Error& _other);
+	std::string GetMessage() const;
+	int GetLevel() const;
 };

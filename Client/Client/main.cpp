@@ -29,6 +29,99 @@ static void glfw_error_callback(int error, const char* description)
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
 
+// Client
+
+// Error Data
+
+// we store the message and level of the Error here, so that we don't have to call the function every frame.
+Error latestError;
+int latestErrorLevel;
+const char* latestErrorMessage = "";
+bool finishedError = true;
+
+// GUI Constructs
+
+// Menu Bar
+
+void MenuBar()
+{
+    if (ImGui::BeginMenuBar())
+    {
+        if (ImGui::BeginMenu("Settings"))
+        {
+
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("User"))
+        {
+
+            ImGui::EndMenu();
+        }
+        ImGui::EndMenuBar();
+    }
+}
+
+// Modal Gui
+void ModalGui()
+{
+    ImGui::Text(latestErrorMessage);
+    if (ImGui::Button("Cancel", ImVec2(120, 0)))
+    {
+        finishedError = true;
+        ErrorHandler::DeleteError();
+        ImGui::CloseCurrentPopup();
+    }
+    ImGui::EndPopup();
+}
+
+
+// GUI Logic
+
+// Error Logic
+void ErrorChecker()
+{
+    // Seeing if a new error exists and assigning it it. Waits for old error to be finished.
+    if (ErrorHandler::HasError() && finishedError)
+    {
+        latestError = ErrorHandler::GetError();
+        latestErrorLevel = latestError.GetLevel();
+        latestErrorMessage = latestError.GetMessage().c_str();
+        finishedError = false;
+    }
+
+    if (ErrorHandler::HasError() && !finishedError)
+    {
+        if (!latestErrorLevel)
+        {
+            ImGui::OpenPopup("Critical");
+
+            if (ImGui::BeginPopupModal("Critical", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+                ModalGui();
+            }
+        }
+        else if (latestErrorLevel == 1)
+        {
+            ImGui::OpenPopup("Warning");
+
+            if (ImGui::BeginPopupModal("Warning", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+                ModalGui();
+            }
+        }
+        else if (latestErrorLevel == 2)
+        {
+            ImGui::OpenPopup("Information");
+
+            if (ImGui::BeginPopupModal("Information", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+                ModalGui();
+            }
+        }
+
+
+    }
+}
+
+
+
 // Main code
 int main(int, char**)
 {
@@ -115,8 +208,7 @@ int main(int, char**)
     bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-    // Client
-    Error latestError;
+    
 
     // Main loop
 #ifdef __EMSCRIPTEN__
@@ -150,35 +242,17 @@ int main(int, char**)
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
 
-        if(ErrorHandler::HasError())
-        {
-            latestError = ErrorHandler::GetError();
-            const char* popupModalTitle = latestError.GetLevel();
-            if (ImGui::BeginPopupModal()) {
-
-            }
-
-        }
+        
 
 
         {
             bool exit = true;
             ImGui::Begin("ChatRoom", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize );
             {
-                if(ImGui::BeginMenuBar())
-                {
-	                if(ImGui::BeginMenu("Settings"))
-	                {
-                        
-                        ImGui::EndMenu();
-	                }
-                    if (ImGui::BeginMenu("User"))
-                    {
+                ErrorChecker();
+                MenuBar();
 
-                        ImGui::EndMenu();
-                    }
-                    ImGui::EndMenuBar();
-                }
+                
                 
 
                 ImGui::SetNextWindowSizeConstraints(ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 1), ImVec2(FLT_MAX, ImGui::GetTextLineHeightWithSpacing() * 37.75f));
@@ -195,6 +269,7 @@ int main(int, char**)
             
 
             static char str0[128] = "";
+
             ImGui::InputText("Message", str0, IM_ARRAYSIZE(str0));
 
             ImGui::End();

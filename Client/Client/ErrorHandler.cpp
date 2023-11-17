@@ -17,6 +17,10 @@ Error ErrorHandler::GetError()
 void ErrorHandler::DeleteError()
 {
 	m_errors.pop();
+	if(!m_errors.size())
+	{
+		hasErrors = false;
+	}
 }
 
 
