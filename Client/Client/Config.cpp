@@ -3,6 +3,7 @@
 #include <fstream>
 
 #include "config.hpp"
+#include "ErrorHandler.hpp"
 #include "Languages.hpp"
 
 bool config::m_isInitialised = false;
@@ -23,22 +24,23 @@ std::string config::NormaliseDir(std::string& _str)
 	return _str;
 }
 
-bool config::InitFolders()
+void config::InitFolders()
 {
-	if (std::filesystem::create_directory(currentDirNormalised + "/Languages") == 0)
+	if (!std::filesystem::create_directory(currentDirNormalised + "/Languages"))
 	{
-		return false;
+		Error FileSystemError("Failed to create folders for language files.", 0);
+		ErrorHandler::AddError(FileSystemError);
 	}
 
-	if (std::filesystem::create_directory(currentDirNormalised + "/Users") == 0)
+	if (!std::filesystem::create_directory(currentDirNormalised + "/Users"))
 	{
-		return false;
+		Error FileSystemError("Failed to create folders for user files.", 0);
+		ErrorHandler::AddError(FileSystemError);
 	}
 
-	return true;
 }
 
-void config::Initialise(const std::string& _txt, bool& _isSuccessful)
+void config::Initialise(const std::string& _txt)
 {
 	std::ofstream file(_txt);
 	file << "1" << std::endl; // Is Application initialised
@@ -51,7 +53,7 @@ void config::Initialise(const std::string& _txt, bool& _isSuccessful)
 	//isTimeFormatOn = true;
 
 	// Initialising folders.
-	_isSuccessful = InitFolders();
+	InitFolders();
 
 	// Initialising Language File.
 	file.close();
@@ -59,21 +61,20 @@ void config::Initialise(const std::string& _txt, bool& _isSuccessful)
 	LanguageFileInitialiser::PopulateAllTextsInApplication();
 }
 
-bool config::UpdateLanguage(const int _language)
+void config::UpdateLanguage(const int _language)
 {
-	return LanguageFileInitialiser::ChangeLanguage(_language);
+	LanguageFileInitialiser::ChangeLanguage(_language);
 }
 
-bool config::StartConfigs()
+void config::StartConfigs()
 {
-	bool isSuccessful = true;
 	
 	const std::string initialisedTxt = currentDirNormalised + "/initialised.txt";
 	std::ifstream initFile(initialisedTxt);
 	if (!initFile.is_open())
 	{
 		initFile.close();
-		Initialise(initialisedTxt, isSuccessful);
+		Initialise(initialisedTxt);
 	}
 	else
 	{
@@ -101,22 +102,15 @@ bool config::StartConfigs()
 				LanguageFileInitialiser::GenerateLanguageFile(m_currentLanguage);
 			}
 
-			if (!LanguageFileInitialiser::PopulateAllTextsInApplication())
-			{
-				isSuccessful = false;
-			}
+			LanguageFileInitialiser::PopulateAllTextsInApplication();
 		}
 		else
 		{
-			Initialise(initialisedTxt, isSuccessful);
+			Initialise(initialisedTxt);
 		}
 
 		
 	}
-
-	return isSuccessful;
-	
-
 
 
 }
@@ -135,7 +129,7 @@ void config::SetPort(std::string& _port)
 
 void config::ChangeWindow(const int _window)
 {
-
+	m_currentWindow = _window;
 }
 
 bool config::GetIsInitialised()

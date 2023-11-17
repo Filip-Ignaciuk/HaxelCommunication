@@ -3,41 +3,36 @@
 
 #include "Languages.hpp"
 #include "config.hpp"
+#include "Error.hpp"
+#include "ErrorHandler.hpp"
 
 
-bool LanguageFileInitialiser::GenerateLanguageFile(const int _language)
+void LanguageFileInitialiser::GenerateLanguageFile(const int _language)
 {
 	CheckInstalledLanguages();
-
-	bool isSuccessful = true;
-
+	// No need for else as we already checked for maximums and minimums.
 	if (!_language && !initialisedLanguages[_language]) { initialisedLanguages[_language] = GenerateEnGb(); }
 	else if (_language == 1 && !initialisedLanguages[_language]) { initialisedLanguages[_language] = GeneratePl(); }
-	else { isSuccessful = false; }
-
-	return isSuccessful;
 }
 
-bool LanguageFileInitialiser::ChangeLanguage(const int _language)
+void LanguageFileInitialiser::ChangeLanguage(const int _language)
 {
-	bool isSuccessful = true;
 	if(_language < 0 || _language > numberOfLanguages  )
 	{
-		return false;
+		Error invalidLanguage("Tried to change to a language that isn't support.", 1);
+		ErrorHandler::AddError(invalidLanguage);
 	}
 	config::UpdateLanguage(_language);
 	if(initialisedLanguages[_language] == false)
 	{
-		isSuccessful = GenerateLanguageFile(_language);
-		isSuccessful = PopulateAllTextsInApplication();
+		GenerateLanguageFile(_language);
+		PopulateAllTextsInApplication();
 	}
-	return isSuccessful;
 }
 
 bool LanguageFileInitialiser::GenerateEnGb()
 {
 	const std::string languagePath = config::currentDirNormalised + "/Languages";
-	bool isSuccessful = true;
 	std::ofstream fileengb(languagePath + languagesExtention[0]);
 	if(fileengb.is_open())
 	{
@@ -78,10 +73,12 @@ bool LanguageFileInitialiser::GenerateEnGb()
 	}
 	else
 	{
-		isSuccessful = false;
+		Error failedToCreateLanguageFile("Failed to create EnGB text file.", 0);
+		ErrorHandler::AddError(failedToCreateLanguageFile);
+		return false;
 	}
 
-	return isSuccessful;
+	return true;
 	
 }
 
@@ -92,7 +89,7 @@ bool LanguageFileInitialiser::GeneratePl()
 	return true;
 }
 
-bool LanguageFileInitialiser::CheckInstalledLanguages()
+void LanguageFileInitialiser::CheckInstalledLanguages()
 {
 	const std::string languagePath = config::currentDirNormalised + "/Languages";
 	for (const auto& entry : std::filesystem::directory_iterator(languagePath))
@@ -119,38 +116,38 @@ bool LanguageFileInitialiser::CheckInstalledLanguages()
 		}
 	}
 
-	return true;
 }
 
-bool LanguageFileInitialiser::PopulateAllTextsInApplication()
+void LanguageFileInitialiser::PopulateAllTextsInApplication()
 {
 	const std::string languagePath = config::currentDirNormalised + "/Languages";
-	if(initialisedLanguages[config::GetCurrentLanguage()])
+	
+	if(!initialisedLanguages[config::GetCurrentLanguage()])
 	{
-		const std::string path = languagePath + languagesExtention[config::GetCurrentLanguage()];
-		std::ifstream languageFile(path);
-		if(languageFile.is_open())
-		{
-			std::string line;
-			int i = 0;
-			while(std::getline(languageFile, line))
-			{
-				allTextsInApplication[i] = line;
-				charAllTextsInApplication[i] = _strdup(line.c_str());
-				i++;
-			}
-		}
-		else
-		{
-			return false;
-		}
-	}
-	else
-	{
-		return false;
+		Error NoLanguageFile("Tried to read a language File that doesn't exist, regenerating file.", 1);
+		ErrorHandler::AddError(NoLanguageFile);
+		GenerateLanguageFile(config::GetCurrentLanguage());
 	}
 
-	return true;
+	const std::string path = languagePath + languagesExtention[config::GetCurrentLanguage()];
+	std::ifstream languageFile(path);
+	if (!languageFile.is_open())
+	{
+		// System thinks there is a language file and that it is initialised.
+		Error NoLanguageFile("Tried to read a language File that doesn't exist, regenerating file.", 1);
+		ErrorHandler::AddError(NoLanguageFile);
+		GenerateLanguageFile(config::GetCurrentLanguage());
+
+	}
+
+	std::string line;
+	int i = 0;
+	while (std::getline(languageFile, line))
+	{
+		allTextsInApplication[i] = line;
+		charAllTextsInApplication[i] = _strdup(line.c_str());
+		i++;
+	}
 }
 
 

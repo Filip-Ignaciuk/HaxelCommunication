@@ -22,11 +22,11 @@ public:
 	static char* charAllTextsInApplication[numberOfSentences];
 	static std::string allTextsInApplication[numberOfSentences];
 
-	static bool GenerateLanguageFile(const int _language);
-	static bool ChangeLanguage(int _language);
+	static void GenerateLanguageFile(const int _language);
+	static void ChangeLanguage(int _language);
 
-	static bool CheckInstalledLanguages();
+	static void CheckInstalledLanguages();
 
-	static bool PopulateAllTextsInApplication();
+	static void PopulateAllTextsInApplication();
 
 };

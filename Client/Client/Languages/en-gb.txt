@@ -1,0 +1,33 @@
+IP
+Port
+Connection
+Not connected
+Connected
+Connect 
+Failed to connect
+Connecting.
+Connecting..
+Connecting...
+User
+Display Name
+Changing.
+Changing..
+Changing...
+Successfully initialised user
+Update user
+Chat room
+In chat room
+Type /h for help
+Message
+Successfully changed user data
+Languages
+Display Name is too large
+Invalid port or IP
+Max clients within chatroom! Please wait for someone to leave or join another one.
+Request timed out. Please try to reconnect to the server.
+The server has been disconnected.
+Failed to connect to the domain server.
+Chatroom doesn't exist with chosen name.
+Password incorrect for the requested chatroom.
+User Information
+User Customisation

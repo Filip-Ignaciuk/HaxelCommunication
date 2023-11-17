@@ -34,6 +34,7 @@ static void glfw_error_callback(int error, const char* description)
 // Error Data
 
 // we store the message and level of the Error here, so that we don't have to call the function every frame.
+bool criticalError;
 Error latestError;
 int latestErrorLevel;
 const char* latestErrorMessage = "";
@@ -68,6 +69,7 @@ void ModalGui()
     if (ImGui::Button("Cancel", ImVec2(120, 0)))
     {
         finishedError = true;
+        criticalError = true;
         ErrorHandler::DeleteError();
         ImGui::CloseCurrentPopup();
     }
@@ -208,7 +210,11 @@ int main(int, char**)
     bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-    
+
+    // Loading Configs
+    config::StartConfigs();
+
+
 
     // Main loop
 #ifdef __EMSCRIPTEN__
@@ -242,14 +248,24 @@ int main(int, char**)
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
 
-        
 
 
         {
             bool exit = true;
             ImGui::Begin("ChatRoom", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize );
             {
+                // Check for critical error
+                if(criticalError)
+                {
+                    break;
+                }
+
+                
+
+                // Gui Logic
                 ErrorChecker();
+
+                // Gui
                 MenuBar();
 
                 

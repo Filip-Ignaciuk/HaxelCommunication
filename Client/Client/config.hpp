@@ -10,15 +10,15 @@ private:
 	static int m_currentWindow;
 	static int m_currentLanguage;
 
-	static void Initialise(const std::string& _txt, bool& _isSuccessful);
-	static bool InitFolders();
+	static void Initialise(const std::string& _txt);
+	static void InitFolders();
 
 public:
 	static std::string NormaliseDir(std::string& _str);
 
-	static bool StartConfigs();
+	static void StartConfigs();
 
-	static bool UpdateLanguage(const int _language);
+	static void UpdateLanguage(const int _language);
 
 	static void SetIp(std::string& _ip);
 
