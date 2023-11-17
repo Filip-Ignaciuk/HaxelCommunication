@@ -59,6 +59,7 @@ void config::Initialise(const std::string& _txt)
 	file.close();
 	LanguageFileInitialiser::GenerateLanguageFile(0);
 	LanguageFileInitialiser::PopulateAllTextsInApplication();
+	m_isInitialised = 1;
 }
 
 void config::UpdateLanguage(const int _language)
@@ -94,20 +95,12 @@ void config::StartConfigs()
 		}
 		initFile.close();
 
-		if(m_currentLanguage)
+		if (!LanguageFileInitialiser::initialisedLanguages[m_currentLanguage])
 		{
-
-			if (!LanguageFileInitialiser::initialisedLanguages[m_currentLanguage])
-			{
-				LanguageFileInitialiser::GenerateLanguageFile(m_currentLanguage);
-			}
-
-			LanguageFileInitialiser::PopulateAllTextsInApplication();
+			LanguageFileInitialiser::GenerateLanguageFile(m_currentLanguage);
 		}
-		else
-		{
-			Initialise(initialisedTxt);
-		}
+
+		LanguageFileInitialiser::PopulateAllTextsInApplication();
 
 		
 	}
