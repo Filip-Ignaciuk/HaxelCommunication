@@ -11,6 +11,7 @@
 #include "config.hpp"
 #include "User.hpp"
 #include "ErrorHandler.hpp"
+#include "GuiLanguage.hpp"
 
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
@@ -29,6 +30,8 @@ static void glfw_error_callback(int error, const char* description)
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
 
+#define IMGUI_ENABLE_FREETYPE
+
 // Client
 
 // Error Data
@@ -40,41 +43,9 @@ int latestErrorLevel;
 const char* latestErrorMessage = "";
 bool finishedError = true;
 
-// GUI Constructs
+// Chatroom Info
+bool inChatroom = false;
 
-// Menu Bar
-
-void MenuBar()
-{
-    if (ImGui::BeginMenuBar())
-    {
-        if (ImGui::BeginMenu("Settings"))
-        {
-
-            ImGui::EndMenu();
-        }
-        if (ImGui::BeginMenu("User"))
-        {
-
-            ImGui::EndMenu();
-        }
-        ImGui::EndMenuBar();
-    }
-}
-
-// Modal Gui
-void ModalGui()
-{
-    ImGui::Text(latestErrorMessage);
-    if (ImGui::Button("Cancel", ImVec2(120, 0)))
-    {
-        finishedError = true;
-        criticalError = true;
-        ErrorHandler::DeleteError();
-        ImGui::CloseCurrentPopup();
-    }
-    ImGui::EndPopup();
-}
 
 
 // GUI Logic
@@ -98,7 +69,15 @@ void ErrorChecker()
             ImGui::OpenPopup("Critical");
 
             if (ImGui::BeginPopupModal("Critical", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
-                ModalGui();
+                ImGui::Text(latestErrorMessage);
+                if (ImGui::Button("Cancel", ImVec2(120, 0)))
+                {
+                    finishedError = true;
+                    criticalError = true;
+                    ErrorHandler::DeleteError();
+                    ImGui::CloseCurrentPopup();
+                }
+                ImGui::EndPopup();
             }
         }
         else if (latestErrorLevel == 1)
@@ -106,7 +85,14 @@ void ErrorChecker()
             ImGui::OpenPopup("Warning");
 
             if (ImGui::BeginPopupModal("Warning", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
-                ModalGui();
+                ImGui::Text(latestErrorMessage);
+                if (ImGui::Button("Cancel", ImVec2(120, 0)))
+                {
+                    finishedError = true;
+                    ErrorHandler::DeleteError();
+                    ImGui::CloseCurrentPopup();
+                }
+                ImGui::EndPopup();
             }
         }
         else if (latestErrorLevel == 2)
@@ -114,13 +100,155 @@ void ErrorChecker()
             ImGui::OpenPopup("Information");
 
             if (ImGui::BeginPopupModal("Information", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
-                ModalGui();
+                ImGui::Text(latestErrorMessage);
+                if (ImGui::Button("Cancel", ImVec2(120, 0)))
+                {
+                    finishedError = true;
+                    ErrorHandler::DeleteError();
+                    ImGui::CloseCurrentPopup();
+                }
+                ImGui::EndPopup();
             }
         }
 
 
     }
 }
+
+// Checks if Ip is valid
+bool IpChecker(std::string& _ip)
+{
+    int i = 0;
+    for (char character : _ip)
+    {
+        if(!isdigit(character) || (character == '.' && i != 3))
+        {
+            return false;
+        }
+        i++;
+    }
+    return true;
+}
+
+// Checks if Port is valid
+bool PortChecker(std::string& _port)
+{
+    for (char character : _port)
+    {
+        if (!isdigit(character))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+void JoinChatroom(std::string& _ip, std::string& _port)
+{
+    const bool isIpValid = IpChecker(_ip);
+    const bool isPortValid = PortChecker(_port);
+    if(isIpValid && isPortValid)
+    {
+	    
+    }
+    else
+    {
+	    if(!isIpValid)
+	    {
+            Error invalidIpError("Invalid Ip", 1);
+            ErrorHandler::AddError(invalidIpError);
+	    }
+        else if(!isPortValid)
+        {
+            Error invalidPortError("Invalid Port", 1);
+            ErrorHandler::AddError(invalidPortError);
+        }
+    }
+}
+
+
+// GUI Constructs
+
+// Menu Bar
+
+void MenuBar()
+{
+    if (ImGui::BeginMenuBar())
+    {
+        if (ImGui::BeginMenu("Settings"))
+        {
+            if (ImGui::BeginMenu("Language"))
+            {
+                const char* englishLabel = "English";
+                const char* frenchLabel = "français";
+                const char* polishLabel = "Polski";
+                const char* netherlandsLabel = "Nederlands";
+                const char* spanishLabel = "español";
+;               ImGui::MenuItem(englishLabel, "", &GuiLanguage::english);
+                ImGui::MenuItem(frenchLabel, "", &GuiLanguage::french);
+                ImGui::MenuItem(polishLabel, "", &GuiLanguage::polish);
+                ImGui::MenuItem(netherlandsLabel, "", &GuiLanguage::dutch);
+                ImGui::MenuItem(spanishLabel, "", &GuiLanguage::spanish);
+                ImGui::EndMenu();
+            }
+            if (ImGui::MenuItem("Apperance"))
+            {
+
+            }
+            if (ImGui::MenuItem("Credit"))
+            {
+
+            }
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("Chatroom"))
+        {
+            if(ImGui::MenuItem("Leave Chatroom"))
+            {
+	            
+            }
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("User"))
+        {
+            if (ImGui::MenuItem("Edit User"))
+            {
+
+            }
+            ImGui::EndMenu();
+        }
+        ImGui::EndMenuBar();
+    }
+}
+
+void ModalLeaveChatroomGui()
+{
+    ImGui::Text("Are you sure you would like to leave the chatroom");
+    if (ImGui::Button("Cancel", ImVec2(120, 0)))
+    {
+        inChatroom = false;
+        ImGui::CloseCurrentPopup();
+    }
+    ImGui::EndPopup();
+}
+
+void ModalJoinChatroomGui()
+{
+    ImGui::Text("Chatroom");
+    char ip[15];
+    char port[5];
+    ImGui::InputText("IP", ip, IM_ARRAYSIZE(ip));
+    ImGui::InputText("Port", port, IM_ARRAYSIZE(port));
+    if (ImGui::Button("Join", ImVec2(120, 0)))
+    {
+        JoinChatroom((std::string&)ip, (std::string&)port);
+        ImGui::CloseCurrentPopup();
+    }
+    ImGui::EndPopup();
+}
+
+
+
 
 
 
@@ -197,13 +325,13 @@ int main(int, char**)
     // - Read 'docs/FONTS.md' for more instructions and details.
     // - Remember that in C/C++ if you want to include a backslash \ in a string literal you need to write a double backslash \\ !
     // - Our Emscripten build process allows embedding fonts to be accessible at runtime from the "fonts/" folder. See Makefile.emscripten for details.
-    //io.Fonts->AddFontDefault();
+    io.Fonts->AddFontDefault();
     //io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\segoeui.ttf", 18.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Roboto-Medium.ttf", 16.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
-    //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
-    //IM_ASSERT(font != nullptr);
+    ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Fonts\\arialuni.ttf", 18.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
+    IM_ASSERT(font != nullptr);
 
     // Our state
     bool show_demo_window = true;
@@ -248,10 +376,10 @@ int main(int, char**)
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
 
+        bool exit = true;
 
 
         {
-            bool exit = true;
             ImGui::Begin("ChatRoom", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize );
             {
                 // Check for critical error
@@ -259,8 +387,6 @@ int main(int, char**)
                 {
                     break;
                 }
-
-                
 
                 // Gui Logic
                 ErrorChecker();
@@ -285,19 +411,13 @@ int main(int, char**)
             
 
             static char str0[128] = "";
-
             ImGui::InputText("Message", str0, IM_ARRAYSIZE(str0));
-
+            
             ImGui::End();
         }
 
         {
-            bool exit = true;
             ImGui::Begin("Users", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
-            //ImGui::InputText()
-
-
-            //ImGui::InputText()
 
             ImGui::End();
         }
