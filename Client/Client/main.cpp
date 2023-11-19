@@ -407,7 +407,7 @@ int main(int, char**)
                 const float maxWindowHeight = ImGui::GetWindowHeight();
                 const float textLineHeight = ImGui::GetTextLineHeightWithSpacing();
                 const float maxWidth = maxWindowHeight * textLineHeight * 0.039f;
-                ImGui::SetNextWindowSizeConstraints(ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 1), ImVec2(FLT_MAX, maxWidth));
+                ImGui::SetNextWindowSizeConstraints(ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 1), ImVec2(FLT_MAX, (ImGui::GetWindowHeight() - 92)));
                 if (ImGui::BeginChild("ConstrainedChild", ImVec2(0.0f, 0.0f), 0))
                 {
                     for (int n = 0; n < 100; n++)
@@ -419,19 +419,15 @@ int main(int, char**)
                         ImGui::Text(dsa.c_str(), n);
                         ImGui::Text(fes.c_str(), n);
                     }
-                        
-                        
-                }
                     
-
-
-
+                }
                 ImGui::EndChild();
+                static char str0[128] = "";
+                ImGui::InputText("Message", str0, IM_ARRAYSIZE(str0));
             }
             
 
-            static char str0[128] = "";
-            ImGui::InputText("Message", str0, IM_ARRAYSIZE(str0));
+            
             
             ImGui::End();
         }
