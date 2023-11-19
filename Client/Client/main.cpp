@@ -45,6 +45,7 @@ bool finishedError = true;
 
 // Chatroom Info
 bool inChatroom = false;
+User users[32];
 
 
 
@@ -167,6 +168,8 @@ void JoinChatroom(std::string& _ip, std::string& _port)
 }
 
 
+
+
 // GUI Constructs
 
 // Menu Bar
@@ -247,7 +250,13 @@ void ModalJoinChatroomGui()
     ImGui::EndPopup();
 }
 
-
+void PopulateUsers()
+{
+    for (User& user : users)
+    {
+	    
+    }
+}
 
 
 
@@ -330,8 +339,10 @@ int main(int, char**)
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Roboto-Medium.ttf", 16.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
-    ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Fonts\\arialuni.ttf", 18.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
+    ImFont* font = io.Fonts->AddFontFromFileTTF("d:\\Fonts\\arialuni.ttf", 18.0f);
     IM_ASSERT(font != nullptr);
+    
+
 
     // Our state
     bool show_demo_window = true;
@@ -372,12 +383,12 @@ int main(int, char**)
 
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+        ImGui::PushFont(font);
         ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
 
         bool exit = true;
-
 
         {
             ImGui::Begin("ChatRoom", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize );
@@ -387,23 +398,32 @@ int main(int, char**)
                 {
                     break;
                 }
-
                 // Gui Logic
                 ErrorChecker();
 
                 // Gui
                 MenuBar();
 
-                
-                
-
-                ImGui::SetNextWindowSizeConstraints(ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 1), ImVec2(FLT_MAX, ImGui::GetTextLineHeightWithSpacing() * 37.75f));
+                const float maxWindowHeight = ImGui::GetWindowHeight();
+                const float textLineHeight = ImGui::GetTextLineHeightWithSpacing();
+                const float maxWidth = maxWindowHeight * textLineHeight * 0.039f;
+                ImGui::SetNextWindowSizeConstraints(ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 1), ImVec2(FLT_MAX, maxWidth));
                 if (ImGui::BeginChild("ConstrainedChild", ImVec2(0.0f, 0.0f), 0))
                 {
                     for (int n = 0; n < 100; n++)
-                        ImGui::Text("Line %04d", n);
+                    {
+                        std::string asd = std::to_string(maxWindowHeight);
+                        std::string dsa = std::to_string(textLineHeight);
+                        std::string fes = std::to_string(maxWidth);
+                        ImGui::Text(asd.c_str(), n);
+                        ImGui::Text(dsa.c_str(), n);
+                        ImGui::Text(fes.c_str(), n);
+                    }
+                        
+                        
                 }
                     
+
 
 
                 ImGui::EndChild();
@@ -418,7 +438,6 @@ int main(int, char**)
 
         {
             ImGui::Begin("Users", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
-
             ImGui::End();
         }
 
