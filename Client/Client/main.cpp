@@ -403,21 +403,12 @@ int main(int, char**)
 
                 // Gui
                 MenuBar();
-
-                const float maxWindowHeight = ImGui::GetWindowHeight();
-                const float textLineHeight = ImGui::GetTextLineHeightWithSpacing();
-                const float maxWidth = maxWindowHeight * textLineHeight * 0.039f;
                 ImGui::SetNextWindowSizeConstraints(ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 1), ImVec2(FLT_MAX, (ImGui::GetWindowHeight() - 92)));
                 if (ImGui::BeginChild("ConstrainedChild", ImVec2(0.0f, 0.0f), 0))
                 {
                     for (int n = 0; n < 100; n++)
                     {
-                        std::string asd = std::to_string(maxWindowHeight);
-                        std::string dsa = std::to_string(textLineHeight);
-                        std::string fes = std::to_string(maxWidth);
-                        ImGui::Text(asd.c_str(), n);
-                        ImGui::Text(dsa.c_str(), n);
-                        ImGui::Text(fes.c_str(), n);
+                        ImGui::Text("sample", n);
                     }
                     
                 }
