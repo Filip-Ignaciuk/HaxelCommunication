@@ -292,7 +292,7 @@ int main(int, char**)
 #endif
 
     // Create window with graphics context
-    GLFWwindow* window = glfwCreateWindow(1280, 720, "Dear ImGui GLFW+OpenGL3 example", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(1280, 720, "Haxel Communication", nullptr, nullptr);
     if (window == nullptr)
         return 1;
     glfwMakeContextCurrent(window);
@@ -308,6 +308,9 @@ int main(int, char**)
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
     //io.ConfigViewportsNoAutoMerge = true;
     //io.ConfigViewportsNoTaskBarIcon = true;
+
+    
+    
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
@@ -352,7 +355,9 @@ int main(int, char**)
 
     // Loading Configs
     config::StartConfigs();
-
+    User user1("Nice", "1", 0.1f, 1.0f, 1.0f);
+    users[0] = user1;
+    users[1] = user1;
 
 
     // Main loop
@@ -391,6 +396,7 @@ int main(int, char**)
         bool exit = true;
 
         {
+
             ImGui::Begin("ChatRoom", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize );
             {
                 // Check for critical error
@@ -424,8 +430,29 @@ int main(int, char**)
         }
 
         {
+
             ImGui::Begin("Users", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
-            ImGui::End();
+            if (ImGui::BeginTable("Users", 3))
+            {
+                for (int row = 0; row < 32; row++)
+                {
+                    ImGui::TableNextRow();
+                    for (int column = 0; column < 2; column++)
+                    {
+                        ImGui::TableSetColumnIndex(column);
+                        if (!column)
+                        {
+                            ImGui::Text(users[row].GetDisplayName().c_str());
+                        }
+                        else if (column == 1)
+                        {
+                            ImGui::Text(users[row].GetId().c_str());
+                        }
+                    }
+                }
+                ImGui::EndTable();
+            }
+        	ImGui::End();
         }
 
 
