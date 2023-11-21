@@ -45,6 +45,7 @@ bool finishedError = true;
 
 // Chatroom Info
 bool inChatroom = false;
+bool isReset = true;
 User users[32];
 
 
@@ -165,6 +166,11 @@ void JoinChatroom(std::string& _ip, std::string& _port)
             ErrorHandler::AddError(invalidPortError);
         }
     }
+}
+
+void ResetChatroom()
+{
+    
 }
 
 
@@ -395,6 +401,7 @@ int main(int, char**)
 
         bool exit = true;
 
+        if(inChatroom)
         {
 
             ImGui::Begin("ChatRoom", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize );
@@ -428,11 +435,41 @@ int main(int, char**)
             
             ImGui::End();
         }
+        else
+        {
+	        if(!isReset)
+	        {
+                ResetChatroom();
+	        }
+
+            ImGui::Begin("Join Chatroom", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+            {
+                // Check for critical error
+                if (criticalError)
+                {
+                    break;
+                }
+                // Gui Logic
+                ErrorChecker();
+
+                // Gui
+                MenuBar();
+                ImGui::Text("Chatroom info:");
+                static char ip[128] = "";
+                ImGui::InputText("Ip", ip, IM_ARRAYSIZE(ip));
+            }
+
+
+
+
+            ImGui::End();
+
+        }
 
         {
 
             ImGui::Begin("Users", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
-            if (ImGui::BeginTable("Users", 3))
+            if (ImGui::BeginTable("Users", 3) && inChatroom)
             {
                 for (int row = 0; row < 32; row++)
                 {
@@ -443,11 +480,10 @@ int main(int, char**)
                         if (!column)
                         {
                             ImGui::Text(users[row].GetDisplayName().c_str());
+                            continue;
                         }
-                        else if (column == 1)
-                        {
-                            ImGui::Text(users[row].GetId().c_str());
-                        }
+
+                        ImGui::Text(users[row].GetId().c_str());
                     }
                 }
                 ImGui::EndTable();
