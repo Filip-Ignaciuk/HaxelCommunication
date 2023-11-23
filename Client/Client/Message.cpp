@@ -52,28 +52,22 @@ void MessageBuilder::AddTime()
 	//}
 }
 
-void MessageBuilder::AddDate()
+void MessageBuilder::AddDateLong()
 {
 	
-	 //if (hasContent)
-	 //{
-	 //	this->m_preMessage->AddMessage(" " + _id + " ");
-	 //}
-	 //else
-	 //{
-	 //	this->m_preMessage->AddMessage(_id + " ");
-	 //}
+	 
+}
+
+void MessageBuilder::AddDateShort()
+{
+	//std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
+	//auto now_local = std::chrono::current_zone()->to_local(now);
+	//std::chrono::weekday today{ floor<std::chrono::days>(now_local) };
+	
 }
 void MessageBuilder::AddId(const std::string& _id)
 {
-	if(hasContent)
-	{
-		this->m_preMessage->AddMessage(" " + _id + " ");
-	}
-	else
-	{
-		this->m_preMessage->AddMessage(_id + " ");
-	}
+	this->m_preMessage->AddMessage(_id + " ");
 	
 }
 

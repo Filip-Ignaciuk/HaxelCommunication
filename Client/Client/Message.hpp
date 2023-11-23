@@ -18,14 +18,14 @@ class MessageBuilder
 private:
 	Message* m_mainMessage;
 	Message* m_preMessage;
-	bool hasContent;
 public:
 	MessageBuilder();
 	~MessageBuilder();
 	void Reset();
 	void AddMessage(const std::string& _message);
 	void AddTime();
-	void AddDate();
+	void AddDateLong();
+	void AddDateShort();
 	void AddId(const std::string& _id);
 	const Message* GetMessage() const;
 };
