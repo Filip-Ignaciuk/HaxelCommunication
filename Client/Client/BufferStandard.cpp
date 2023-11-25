@@ -1,0 +1,18 @@
+#include "BufferStandard.hpp"
+
+BufferNormal::BufferNormal(int _type) : m_type(_type)
+{
+	
+}
+
+
+
+int BufferNormal::GetType() const
+{
+	return m_type;
+}
+
+
+// BufferSendMessage
+BufferSendMessage::BufferSendMessage(int _type, std::string& _message) : m_message(_message), BufferNormal(_type){}
+std::string BufferSendMessage::GetMessage() const{	return m_message;	}

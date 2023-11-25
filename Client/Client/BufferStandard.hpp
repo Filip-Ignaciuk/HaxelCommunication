@@ -1,35 +1,25 @@
 #pragma once
 #include <string>
 
-#include "user.hpp"
-
 constexpr int bufferSize = 200;
 
-struct BufferReady
+class BufferNormal
 {
-	bool isReady;
+private:
+	int m_type;
+public:
+	BufferNormal(int _type);
+	virtual ~BufferNormal();
+	int GetType() const;
 };
 
-struct BufferSendMessage
-{
-	std::string message;
-	User user;
-};
 
-struct BufferRequestIp
+class BufferSendMessage : public BufferNormal
 {
-	std::string requestedDomain;
-	std::string requestedDomainPassword;
-};
+private:
+	std::string m_message;
+public:
+	BufferSendMessage(int _type, std::string& _message);
+	std::string GetMessage() const;
 
-struct BufferResponseIp
-{
-	std::string responseIp;
-	int responsePort;
-};
-
-struct BufferUpdateUser
-{
-	std::string displayName;
-	
 };

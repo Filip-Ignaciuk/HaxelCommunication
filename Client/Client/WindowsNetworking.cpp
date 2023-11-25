@@ -1,6 +1,6 @@
 #include "WindowsNetworking.hpp"
-
 #include "Languages.hpp"
+#include "BufferStandard.hpp"
 
 DWORD WINAPI WindowsNetworking::ConnectThread(LPVOID param)
 {
@@ -67,6 +67,20 @@ DWORD WINAPI WindowsNetworking::UpdateUserThread(LPVOID param)
 
 DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 {
+	BufferNormal* buffer;
+	recv(clientSocket, (char*)&buffer, sizeof(BufferNormal), 0);
+	BufferNormal bufferNormal = *buffer;
+
+	if(!buffer->GetType())
+	{
+		// Message Buffer
+		BufferSendMessage messageBuffer = dynamic_cast<BufferSendMessage> (bufferNormal);
+	}
+	else if(buffer->GetType() == 1)
+	{
+		// 
+	}
+
 	return 0;
 }
 

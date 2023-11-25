@@ -212,11 +212,23 @@ void MenuBar()
         }
         if (ImGui::BeginMenu("Chatroom"))
         {
-            if(ImGui::MenuItem("Leave Chatroom"))
+            if(inChatroom)
             {
-	            
+                if (ImGui::MenuItem("Leave Chatroom"))
+                {
+
+                }
+                ImGui::EndMenu();
             }
-            ImGui::EndMenu();
+            else
+            {
+                if (ImGui::MenuItem("Join Chatroom"))
+                {
+
+                }
+                ImGui::EndMenu();
+            }
+            
         }
         if (ImGui::BeginMenu("User"))
         {
@@ -457,6 +469,8 @@ int main(int, char**)
                 ImGui::Text("Chatroom info:");
                 static char ip[128] = "";
                 ImGui::InputText("Ip", ip, IM_ARRAYSIZE(ip));
+                static char port[5] = "";
+                ImGui::InputText("Port", port, IM_ARRAYSIZE(port));
             }
 
 
