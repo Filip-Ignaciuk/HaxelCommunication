@@ -20,6 +20,6 @@ private:
 	std::string m_message;
 public:
 	BufferSendMessage(int _type, std::string& _message);
-	std::string GetMessage() const;
+	std::string GetMessageString() const;
 
 };

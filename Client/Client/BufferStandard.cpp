@@ -15,4 +15,4 @@ int BufferNormal::GetType() const
 
 // BufferSendMessage
 BufferSendMessage::BufferSendMessage(int _type, std::string& _message) : m_message(_message), BufferNormal(_type){}
-std::string BufferSendMessage::GetMessage() const{	return m_message;	}
+std::string BufferSendMessage::GetMessageString() const{	return m_message;	}
