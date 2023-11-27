@@ -67,22 +67,22 @@ DWORD WINAPI WindowsNetworking::UpdateUserThread(LPVOID param)
 
 DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 {
-	BufferNormal* buffer;
+	BufferNormal buffer;
 	recv(clientSocket, (char*)&buffer, sizeof(BufferNormal), 0);
-
-	if(!buffer->GetType())
+	
+	if(!buffer.GetType())
 	{
 		// Message Buffer
-		BufferSendMessage* messageBuffer = dynamic_cast<BufferSendMessage*> (buffer);
-		messageBuffer->GetMessageString();
+		BufferSendMessage& messageBuffer = dynamic_cast<BufferSendMessage&> (buffer);
+		messageBuffer.GetMessageString();
 
 	}
-	else if(buffer->GetType() == 1)
+	else if(buffer.GetType() == 1)
 	{
 		// 
 	}
 
-	delete buffer;
+
 	return 0;
 }
 

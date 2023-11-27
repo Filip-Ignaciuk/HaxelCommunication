@@ -8,6 +8,7 @@ class BufferNormal
 private:
 	int m_type;
 public:
+	BufferNormal();
 	BufferNormal(int _type);
 	virtual ~BufferNormal();
 	int GetType() const;

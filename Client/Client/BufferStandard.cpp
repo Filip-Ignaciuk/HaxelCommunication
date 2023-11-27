@@ -1,10 +1,13 @@
 #include "BufferStandard.hpp"
 
+BufferNormal::BufferNormal() = default;
+
 BufferNormal::BufferNormal(int _type) : m_type(_type)
 {
 	
 }
 
+BufferNormal::~BufferNormal() = default;
 
 
 int BufferNormal::GetType() const
