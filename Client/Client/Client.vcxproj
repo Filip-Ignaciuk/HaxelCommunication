@@ -163,6 +163,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BufferStandard.cpp" />
+    <ClCompile Include="Chatroom.cpp" />
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="Error.cpp" />
     <ClCompile Include="ErrorHandler.cpp" />
@@ -184,6 +185,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferStandard.hpp" />
+    <ClInclude Include="Chatroom.hpp" />
     <ClInclude Include="config.hpp" />
     <ClInclude Include="Error.hpp" />
     <ClInclude Include="ErrorHandler.hpp" />

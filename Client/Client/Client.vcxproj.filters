@@ -98,6 +98,9 @@
     <ClCompile Include="GuiLanguage.hpp">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="Chatroom.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="user.hpp">
@@ -170,6 +173,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Message.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Chatroom.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

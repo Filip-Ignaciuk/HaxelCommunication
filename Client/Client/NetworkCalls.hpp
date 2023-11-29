@@ -11,5 +11,8 @@ public:
 	virtual void SendText(const std::string& _message);
 	virtual void UpdateUser();
 	virtual void Receive();
+
+	virtual bool GetReceiving();
+
 	virtual ~NetworkCalls();
 };

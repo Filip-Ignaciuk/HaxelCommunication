@@ -26,29 +26,27 @@ DWORD WINAPI WindowsNetworking::ConnectThread(LPVOID param)
 
 DWORD WindowsNetworking::TryToConnectThread(LPVOID param)
 {
-	//ConnectHolder* CH = (ConnectHolder*)param;
-	//// Converting ip input to const wchar_t
-	//std::string stringIp = CH->ip;
-	//std::wstring wideIp = std::wstring(stringIp.begin(), stringIp.end());
-	//PCWSTR ip = wideIp.c_str();
-	//int port = std::stoi(CH->port);
-	//delete CH;
-	//
-	//sockaddr_in service;
-	//service.sin_family = AF_INET;
-	//service.sin_port = htons(port);
-	//InetPtonW(AF_INET, ip, &service.sin_addr.S_un.S_addr);
-	//
-	//int result = connect(clientSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service));
-	//if (result)
-	//{
-	//	currentConnectionStatus = LanguageFileInitialiser::allTextsInApplication[6];
-	//}
-	//else
-	//{
-	//	currentConnectionStatus = LanguageFileInitialiser::allTextsInApplication[4];
-	//
-	//}
+	ConnectHolder* CH = (ConnectHolder*)param;
+	// Converting ip input to const wchar_t
+	std::wstring ip = CH->ip;
+	int port = CH->port;
+	delete CH;
+	
+	sockaddr_in service;
+	service.sin_family = AF_INET;
+	service.sin_port = htons(port);
+	InetPtonW(AF_INET, ip, &service.sin_addr.S_un.S_addr);
+	
+	int result = connect(clientSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service));
+	if (result)
+	{
+		
+	}
+	else
+	{
+		
+	
+	}
 	return 0;
 }
 
@@ -56,6 +54,8 @@ DWORD WindowsNetworking::TryToConnectThread(LPVOID param)
 DWORD WINAPI WindowsNetworking::SendTextThread(LPVOID param)
 {
 	std::string* message = (std::string*)param;
+
+
 
 	return 0;
 }
@@ -67,6 +67,7 @@ DWORD WINAPI WindowsNetworking::UpdateUserThread(LPVOID param)
 
 DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 {
+	isReceiving = true;
 	BufferNormal buffer;
 	recv(clientSocket, (char*)&buffer, sizeof(BufferNormal), 0);
 	
@@ -82,13 +83,17 @@ DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 		// 
 	}
 
-
+	isReceiving = false;
 	return 0;
 }
+
+
+// Outwards Facing Functions
 
 WindowsNetworking::WindowsNetworking()
 {
 	clientSocket = INVALID_SOCKET;
+	isReceiving = false;
 }
 
 
@@ -127,7 +132,7 @@ bool WindowsNetworking::CloseSocket()
 	return true;
 }
 
-void WindowsNetworking::Connect(const std::string& _ip, const int _port)
+void WindowsNetworking::Connect(const std::string& _ip, int _port)
 {
 	// Convert Ip to wide Ip
 	std::wstring wideIp = std::wstring(_ip.begin(), _ip.end());
@@ -135,7 +140,7 @@ void WindowsNetworking::Connect(const std::string& _ip, const int _port)
 
 	DWORD threadId;
 	HANDLE handle;
-	//handle = CreateThread(NULL, 0, ConnectThread, (LPVOID)CH, 0, &threadId);
+	handle = CreateThread(nullptr, 0, ConnectThread, CH, 0, &threadId);
 }
 
 void WindowsNetworking::SendText(const std::string& _message)
@@ -144,56 +149,28 @@ void WindowsNetworking::SendText(const std::string& _message)
 	std::string* message = const_cast<std::string*>(&_message);
 	DWORD threadId;
 	HANDLE handle;
-	//handle = CreateThread(NULL, 0, SendTextThread, (LPVOID)message, 0, &threadId);
+	handle = CreateThread(nullptr, 0, SendTextThread, message, 0, &threadId);
 }
 
 void WindowsNetworking::UpdateUser()
 {
 	DWORD threadId;
 	HANDLE handle;
-	//handle = CreateThread(NULL, 0, UpdateUserThread, nullptr, 0, &threadId);
+	handle = CreateThread(nullptr, 0, UpdateUserThread, nullptr, 0, &threadId);
 }
 
 void WindowsNetworking::Receive()
 {
 	DWORD threadId;
 	HANDLE handle;
-	//handle = CreateThread(NULL, 0, UpdateUserThread, nullptr, 0, &threadId);
+	handle = CreateThread(nullptr, 0, ReceiveThread, nullptr, 0, &threadId);
+}
+
+bool WindowsNetworking::GetReceiving()
+{
+	return isReceiving;
 }
 
 
 // Override
 NetworkCalls::~NetworkCalls() = default;
-
-
-bool NetworkCalls::CreateSocket()
-{
-	return CreateSocket();
-}
-
-bool NetworkCalls::CloseSocket()
-{
-	return CloseSocket();
-}
-
-void NetworkCalls::Connect(const std::string& _ip, const int _port)
-{
-	Connect(_ip, _port);
-}
-
-void NetworkCalls::SendText(const std::string& _message)
-{
-	SendText(_message);
-}
-
-void NetworkCalls::UpdateUser()
-{
-	UpdateUser();
-}
-
-
-void NetworkCalls::Receive()
-{
-	Receive();
-}
-

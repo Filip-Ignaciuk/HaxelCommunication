@@ -13,6 +13,9 @@
 #include "ErrorHandler.hpp"
 #include "GuiLanguage.hpp"
 
+#include "WindowsNetworking.hpp"
+#include "WindowsNetworkCallsCreator.hpp"
+
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
 // Your own project should not be affected, as you are likely to link with a newer binary of GLFW that is adequate for your version of Visual Studio.
@@ -33,6 +36,10 @@ static void glfw_error_callback(int error, const char* description)
 #define IMGUI_ENABLE_FREETYPE
 
 // Client
+
+// Application
+NetworkCallsCreator creator;
+NetworkCalls* networkCalls;
 
 // Error Data
 
@@ -60,7 +67,7 @@ void ErrorChecker()
     {
         latestError = ErrorHandler::GetError();
         latestErrorLevel = latestError.GetLevel();
-        latestErrorMessage = latestError.GetMessage().c_str();
+        latestErrorMessage = latestError.GetMessageString().c_str();
         finishedError = false;
     }
 
@@ -370,6 +377,10 @@ int main(int, char**)
     bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
+    // Setup Networking
+    creator = WindowsCallsCreator();
+    networkCalls = creator.CreateNetworkCalls();
+    networkCalls->CreateSocket();
 
     // Loading Configs
     config::StartConfigs();
@@ -411,10 +422,17 @@ int main(int, char**)
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
 
+        
         bool exit = true;
 
         if(inChatroom)
         {
+            // Receive data from chatroom
+            if(!networkCalls->GetReceiving())
+            {
+                networkCalls->Receive();
+            }
+
 
             ImGui::Begin("ChatRoom", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize );
             {
@@ -471,6 +489,17 @@ int main(int, char**)
                 ImGui::InputText("Ip", ip, IM_ARRAYSIZE(ip));
                 static char port[5] = "";
                 ImGui::InputText("Port", port, IM_ARRAYSIZE(port));
+                if(ImGui::Button("Connect"))
+                {
+                    std::string sIp = ip;
+                    std::string sPort = port;
+                    // Checking if port is valid.
+                    if(IpChecker(sIp) && PortChecker(sPort))
+                    {
+                        networkCalls->Connect(ip, std::stoi(port));
+
+                    }
+                }
             }
 
 

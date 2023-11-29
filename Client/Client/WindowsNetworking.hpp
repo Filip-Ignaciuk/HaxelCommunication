@@ -15,24 +15,31 @@ struct ConnectHolder
 class WindowsNetworking : public NetworkCalls
 {
 private:
-	SOCKET clientSocket;
+	static SOCKET clientSocket;
 
-	DWORD WINAPI ConnectThread(LPVOID param);
-	DWORD WINAPI TryToConnectThread(LPVOID param);
-	DWORD WINAPI SendTextThread(LPVOID param);
-	DWORD WINAPI UpdateUserThread(LPVOID param);
-	DWORD WINAPI ReceiveThread(LPVOID param);
+	static bool isReceiving;
+
+	static DWORD WINAPI ConnectThread(LPVOID param);
+	static DWORD WINAPI TryToConnectThread(LPVOID param);
+	static DWORD WINAPI SendTextThread(LPVOID param);
+	static DWORD WINAPI UpdateUserThread(LPVOID param);
+	static DWORD WINAPI ReceiveThread(LPVOID param);
 	
 	
 public:
 	WindowsNetworking();
 
-
+	// Fundamental Functions
 	bool CreateSocket() override;
 	bool CloseSocket() override;
 
-	void Connect(const std::string& _ip, const int _port) override;
+	// Common Procedures
+	void Connect(const std::string& _ip, int _port) override;
 	void SendText(const std::string& _message) override;
 	void UpdateUser() override;
 	void Receive() override;
+
+	// Class Based
+	bool GetReceiving() override;
+
 };

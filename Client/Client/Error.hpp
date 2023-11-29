@@ -10,6 +10,6 @@ public:
 	Error();
 	Error(const std::string& _message, const int _level);
 	Error(const Error& _other);
-	std::string GetMessage() const;
+	std::string GetMessageString() const;
 	int GetLevel() const;
 };
