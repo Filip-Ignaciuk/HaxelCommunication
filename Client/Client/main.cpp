@@ -130,6 +130,10 @@ void ErrorChecker()
 // Checks if Ip is valid
 bool IpChecker(std::string& _ip)
 {
+    if(!_ip.size())
+    {
+        return false;
+    }
     int i = 0;
     for (char character : _ip)
     {
@@ -145,6 +149,10 @@ bool IpChecker(std::string& _ip)
 // Checks if Port is valid
 bool PortChecker(std::string& _port)
 {
+    if (!_port.size())
+    {
+        return false;
+    }
     for (char character : _port)
     {
         if (!isdigit(character))
@@ -161,7 +169,8 @@ void JoinChatroom(std::string& _ip, std::string& _port)
     const bool isPortValid = PortChecker(_port);
     if(isIpValid && isPortValid)
     {
-	    
+        networkCalls->Connect(_ip, std::stoi(_port));
+
     }
     else
     {
@@ -493,12 +502,7 @@ int main(int, char**)
                 {
                     std::string sIp = ip;
                     std::string sPort = port;
-                    // Checking if port is valid.
-                    if(IpChecker(sIp) && PortChecker(sPort))
-                    {
-                        networkCalls->Connect(ip, std::stoi(port));
-
-                    }
+                    JoinChatroom(sIp, sPort);
                 }
             }
 
