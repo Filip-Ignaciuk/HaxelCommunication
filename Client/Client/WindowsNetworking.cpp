@@ -2,6 +2,9 @@
 #include "Languages.hpp"
 #include "BufferStandard.hpp"
 
+SOCKET WindowsNetworking::clientSocket = INVALID_SOCKET;
+bool WindowsNetworking::isReceiving = false;
+
 DWORD WINAPI WindowsNetworking::ConnectThread(LPVOID param)
 {
 	ConnectHolder* CH = (ConnectHolder*)param;
@@ -28,7 +31,7 @@ DWORD WindowsNetworking::TryToConnectThread(LPVOID param)
 {
 	ConnectHolder* CH = (ConnectHolder*)param;
 	// Converting ip input to const wchar_t
-	std::wstring ip = CH->ip;
+	PCWSTR ip = CH->ip.c_str();
 	int port = CH->port;
 	delete CH;
 	
@@ -67,9 +70,9 @@ DWORD WINAPI WindowsNetworking::UpdateUserThread(LPVOID param)
 
 DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 {
-	isReceiving = true;
 	BufferNormal buffer;
 	recv(clientSocket, (char*)&buffer, sizeof(BufferNormal), 0);
+	isReceiving = false;
 	
 	if(!buffer.GetType())
 	{
@@ -83,7 +86,7 @@ DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 		// 
 	}
 
-	isReceiving = false;
+	
 	return 0;
 }
 
@@ -92,12 +95,10 @@ DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 
 WindowsNetworking::WindowsNetworking()
 {
-	clientSocket = INVALID_SOCKET;
-	isReceiving = false;
 }
 
 
-bool WindowsNetworking::CreateSocket()
+bool WindowsNetworking::CreateSocket() 
 {
 	WORD version = MAKEWORD(2, 2);
 	WSADATA wsaData;
@@ -118,7 +119,7 @@ bool WindowsNetworking::CreateSocket()
 	return true;
 }
 
-bool WindowsNetworking::CloseSocket()
+bool WindowsNetworking::CloseSocket() 
 {
 	if(closesocket(clientSocket))
 	{
@@ -132,7 +133,7 @@ bool WindowsNetworking::CloseSocket()
 	return true;
 }
 
-void WindowsNetworking::Connect(const std::string& _ip, int _port)
+void WindowsNetworking::Connect(const std::string& _ip, int _port) 
 {
 	// Convert Ip to wide Ip
 	std::wstring wideIp = std::wstring(_ip.begin(), _ip.end());
@@ -143,7 +144,7 @@ void WindowsNetworking::Connect(const std::string& _ip, int _port)
 	handle = CreateThread(nullptr, 0, ConnectThread, CH, 0, &threadId);
 }
 
-void WindowsNetworking::SendText(const std::string& _message)
+void WindowsNetworking::SendText(const std::string& _message) 
 {
 	// Allocate string on heap
 	std::string* message = const_cast<std::string*>(&_message);
@@ -152,25 +153,25 @@ void WindowsNetworking::SendText(const std::string& _message)
 	handle = CreateThread(nullptr, 0, SendTextThread, message, 0, &threadId);
 }
 
-void WindowsNetworking::UpdateUser()
+void WindowsNetworking::UpdateUser() 
 {
 	DWORD threadId;
 	HANDLE handle;
 	handle = CreateThread(nullptr, 0, UpdateUserThread, nullptr, 0, &threadId);
 }
 
-void WindowsNetworking::Receive()
+void WindowsNetworking::Receive()  
 {
+	// Declare isReceiving here so that the computer doesn't create multiple threads quickly.
+	isReceiving = true;
 	DWORD threadId;
 	HANDLE handle;
 	handle = CreateThread(nullptr, 0, ReceiveThread, nullptr, 0, &threadId);
 }
 
-bool WindowsNetworking::GetReceiving()
+bool WindowsNetworking::GetReceiving() 
 {
 	return isReceiving;
 }
 
 
-// Override
-NetworkCalls::~NetworkCalls() = default;

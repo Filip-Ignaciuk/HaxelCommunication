@@ -179,6 +179,8 @@
     <ClCompile Include="LinuxNetworking.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Message.cpp" />
+    <ClCompile Include="NetworkCalls.cpp" />
+    <ClCompile Include="NetworkCallsCreator.cpp" />
     <ClCompile Include="user.cpp" />
     <ClCompile Include="WindowsNetworkCallsCreator.cpp" />
     <ClCompile Include="WindowsNetworking.cpp" />

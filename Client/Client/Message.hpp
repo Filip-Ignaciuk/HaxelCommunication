@@ -5,6 +5,9 @@
 class Message
 {
 private:
+	// Complete message with all atributes
+	std::string m_completeMessage;
+	// Have original unedited message so that we can change it on the fly.
 	std::string m_message;
 public:
 	Message();

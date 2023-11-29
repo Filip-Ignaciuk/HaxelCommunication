@@ -8,6 +8,7 @@
 #endif
 #include <glfw3.h> // Will drag system OpenGL headers
 
+#include "Chatroom.hpp"
 #include "config.hpp"
 #include "User.hpp"
 #include "ErrorHandler.hpp"
@@ -51,9 +52,11 @@ const char* latestErrorMessage = "";
 bool finishedError = true;
 
 // Chatroom Info
+
+// We store all chatroom behaviour in the chatroom class, to organise and simplify our code.
 bool inChatroom = false;
 bool isReset = true;
-User users[32];
+Chatroom chatroom;
 
 
 
@@ -277,9 +280,10 @@ void ModalJoinChatroomGui()
 
 void PopulateUsers()
 {
-    for (User& user : users)
+    for (int i = 0; i < 31; i++)
     {
-	    
+        User user = chatroom.GetUser(i);
+
     }
 }
 
@@ -384,10 +388,6 @@ int main(int, char**)
 
     // Loading Configs
     config::StartConfigs();
-    User user1("Nice", "1", 0.1f, 1.0f, 1.0f);
-    users[0] = user1;
-    users[1] = user1;
-
 
     // Main loop
 #ifdef __EMSCRIPTEN__
@@ -516,17 +516,18 @@ int main(int, char**)
             {
                 for (int row = 0; row < 32; row++)
                 {
+                    User user = chatroom.GetUser(row);
                     ImGui::TableNextRow();
                     for (int column = 0; column < 2; column++)
                     {
                         ImGui::TableSetColumnIndex(column);
                         if (!column)
                         {
-                            ImGui::Text(users[row].GetDisplayName().c_str());
+                            ImGui::Text(user.GetDisplayName().c_str());
                             continue;
                         }
 
-                        ImGui::Text(users[row].GetId().c_str());
+                        ImGui::Text(user.GetId().c_str());
                     }
                 }
                 ImGui::EndTable();
