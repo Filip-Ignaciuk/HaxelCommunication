@@ -57,7 +57,7 @@ bool finishedError = true;
 bool inChatroom = false;
 bool isReset = true;
 Chatroom chatroom;
-
+MessageBuilder messageBuilder;
 
 
 // GUI Logic
@@ -458,9 +458,10 @@ int main(int, char**)
                 ImGui::SetNextWindowSizeConstraints(ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 1), ImVec2(FLT_MAX, (ImGui::GetWindowHeight() - 92)));
                 if (ImGui::BeginChild("ConstrainedChild", ImVec2(0.0f, 0.0f), 0))
                 {
-                    for (int n = 0; n < 100; n++)
+                    std::vector<Message> messages = chatroom.GetMessages();
+                    for(Message message : messages)
                     {
-                        ImGui::Text("sample", n);
+                        ImGui::Text(message.GetMessageComplete().c_str());
                     }
                     
                 }
