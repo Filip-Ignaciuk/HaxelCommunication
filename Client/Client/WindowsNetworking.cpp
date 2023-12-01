@@ -1,6 +1,8 @@
 #include "WindowsNetworking.hpp"
 #include "Languages.hpp"
 #include "BufferStandard.hpp"
+#include "Error.hpp"
+#include "ErrorHandler.hpp"
 
 SOCKET WindowsNetworking::clientSocket = INVALID_SOCKET;
 bool WindowsNetworking::isReceiving = false;
@@ -16,43 +18,27 @@ DWORD WINAPI WindowsNetworking::ConnectThread(LPVOID param)
 	service.sin_port = htons(port);
 	InetPtonW(AF_INET, ip.c_str(), &service.sin_addr.S_un.S_addr);
 
-	if (connect(clientSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
+	if (!connect(clientSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
 	{
+		// Successful
+		isConnected = true;
 
 	}
 	else
 	{
+		// UnSuccessful
+		const Error ConnectionFaliure("Could not connect to desired ip. Check if your ip/port is correct.", 1);
+		ErrorHandler::AddError(ConnectionFaliure);
 
 	}
 	return 0;
 }
 
-DWORD WindowsNetworking::TryToConnectThread(LPVOID param)
+DWORD WINAPI WindowsNetworking::DisconnectThread(LPVOID param)
 {
-	ConnectHolder* CH = (ConnectHolder*)param;
-	// Converting ip input to const wchar_t
-	PCWSTR ip = CH->ip.c_str();
-	int port = CH->port;
-	delete CH;
-	
-	sockaddr_in service;
-	service.sin_family = AF_INET;
-	service.sin_port = htons(port);
-	InetPtonW(AF_INET, ip, &service.sin_addr.S_un.S_addr);
-	
-	int result = connect(clientSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service));
-	if (result)
-	{
-		
-	}
-	else
-	{
-		
-	
-	}
-	return 0;
-}
+	// Send disconnect message
 
+}
 
 DWORD WINAPI WindowsNetworking::SendTextThread(LPVOID param)
 {
@@ -98,14 +84,15 @@ WindowsNetworking::WindowsNetworking()
 }
 
 
-bool WindowsNetworking::CreateSocket() 
+void WindowsNetworking::CreateSocket()
 {
 	WORD version = MAKEWORD(2, 2);
 	WSADATA wsaData;
 	if (WSAStartup(version, &wsaData))
 	{
+		const Error creatingSocketError("Couldn't create socket.", 0);
+		ErrorHandler::AddError(creatingSocketError);
 		// WSAGetLastError()
-		return false;
 	}
 
 
@@ -113,24 +100,21 @@ bool WindowsNetworking::CreateSocket()
 	if (clientSocket == INVALID_SOCKET)
 	{
 		WSACleanup();
-		return false;
+		const Error creatingSocketError("Couldn't create socket.", 0);
+		ErrorHandler::AddError(creatingSocketError);
 	}
 
-	return true;
 }
 
-bool WindowsNetworking::CloseSocket() 
+void WindowsNetworking::CloseSocket() 
 {
-	if(closesocket(clientSocket))
+	if(!closesocket(clientSocket))
 	{
-		
+		const Error ClosingSocketError("Couldn't close socket.", 0);
+		ErrorHandler::AddError(ClosingSocketError);
 	}
-	else
-	{
-		
-	}
+	
 	WSACleanup();
-	return true;
 }
 
 void WindowsNetworking::Connect(const std::string& _ip, int _port) 
@@ -143,6 +127,14 @@ void WindowsNetworking::Connect(const std::string& _ip, int _port)
 	HANDLE handle;
 	handle = CreateThread(nullptr, 0, ConnectThread, CH, 0, &threadId);
 }
+
+void WindowsNetworking::Disconnect()
+{
+	DWORD threadId;
+	HANDLE handle;
+	handle = CreateThread(nullptr, 0, ConnectThread, nullptr, 0, &threadId);
+}
+
 
 void WindowsNetworking::SendText(const std::string& _message) 
 {
@@ -169,9 +161,6 @@ void WindowsNetworking::Receive()
 	handle = CreateThread(nullptr, 0, ReceiveThread, nullptr, 0, &threadId);
 }
 
-bool WindowsNetworking::GetReceiving() 
-{
-	return isReceiving;
-}
-
-
+bool WindowsNetworking::GetReceivingStatus() { return isReceiving; }
+bool WindowsNetworking::GetConnectionStatus() {	return isConnected;	}
+bool WindowsNetworking::GetChatroomStatus() { return inChatroom; }

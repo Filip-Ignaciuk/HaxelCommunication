@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 
+// Application Headers
 #include "User.hpp"
 
 
@@ -43,5 +44,5 @@ public:
 	void AddDateShort();
 	void AddId();
 	void AddDisplayName();
-	const Message* GetFinalMessage() const;
+	Message* GetFinalMessage() const;
 };

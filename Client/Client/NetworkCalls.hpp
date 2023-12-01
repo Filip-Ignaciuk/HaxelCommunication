@@ -4,15 +4,18 @@
 class NetworkCalls
 {
 public:
-	virtual bool CreateSocket();
-	virtual bool CloseSocket();
-
+	virtual void CreateSocket();
+	virtual void CloseSocket();
 	virtual void Connect(const std::string& _ip, const int _port);
+	virtual void Disconnect();
+
 	virtual void SendText(const std::string& _message);
 	virtual void UpdateUser();
 	virtual void Receive();
 
-	virtual bool GetReceiving();
+	virtual bool GetReceivingStatus();
+	virtual bool GetConnectionStatus();
+	virtual bool GetChatroomStatus();
 
 	virtual ~NetworkCalls();
 };

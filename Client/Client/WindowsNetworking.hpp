@@ -3,6 +3,7 @@
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 
+// Application Headers
 #include "NetworkCalls.hpp"
 
 struct ConnectHolder
@@ -19,8 +20,13 @@ private:
 
 	static bool isReceiving;
 
+	static bool isConnected;
+
+	static bool inChatroom;
+
 	static DWORD WINAPI ConnectThread(LPVOID param);
-	static DWORD WINAPI TryToConnectThread(LPVOID param);
+	static DWORD WINAPI DisconnectThread(LPVOID param);
+
 	static DWORD WINAPI SendTextThread(LPVOID param);
 	static DWORD WINAPI UpdateUserThread(LPVOID param);
 	static DWORD WINAPI ReceiveThread(LPVOID param);
@@ -29,17 +35,20 @@ private:
 public:
 	WindowsNetworking();
 
-	// Fundamental Functions
-	bool CreateSocket() override;
-	bool CloseSocket() override;
-
-	// Common Procedures
+	// Fundamental Procedures
+	void CreateSocket() override;
+	void CloseSocket() override;
 	void Connect(const std::string& _ip, int _port) override;
+	void Disconnect() override;
+
+	// Main Procedures
 	void SendText(const std::string& _message) override;
 	void UpdateUser() override;
 	void Receive() override;
 
 	// Class Based
-	bool GetReceiving() override;
+	bool GetReceivingStatus() override;
+	bool GetConnectionStatus() override;
+	bool GetChatroomStatus() override;
 
 };

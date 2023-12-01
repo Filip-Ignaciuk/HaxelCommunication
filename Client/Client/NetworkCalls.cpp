@@ -1,20 +1,17 @@
 #include "NetworkCalls.hpp"
 
-bool NetworkCalls::CreateSocket()
-{
-	return false;
-}
-
-bool NetworkCalls::CloseSocket()
-{
-	return false;
-}
-
+void NetworkCalls::CreateSocket(){}
+void NetworkCalls::CloseSocket(){}
 void NetworkCalls::Connect(const std::string& _ip, const int _port) {}
+void NetworkCalls::Disconnect(){}
+
+
 void NetworkCalls::SendText(const std::string& _message) {}
 void NetworkCalls::UpdateUser() {}
 void NetworkCalls::Receive() {}
 
-bool NetworkCalls::GetReceiving() { return false; }
+bool NetworkCalls::GetReceivingStatus() { return false; }
+bool NetworkCalls::GetConnectionStatus() { return false; }
+bool NetworkCalls::GetChatroomStatus() { return false; }
 
 NetworkCalls::~NetworkCalls() = default;

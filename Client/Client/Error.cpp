@@ -11,7 +11,7 @@ Error::Error(const std::string& _message, const int _level) : m_message(_message
 	
 }
 
-Error::Error(const Error& _other) : m_level(_other.m_level), m_message(_other.m_message)
+Error::Error(const Error& _other) :m_message(_other.m_message), m_level(_other.m_level)
 {
 	
 }

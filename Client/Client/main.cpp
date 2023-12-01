@@ -8,6 +8,7 @@
 #endif
 #include <glfw3.h> // Will drag system OpenGL headers
 
+// Application Headers
 #include "Chatroom.hpp"
 #include "config.hpp"
 #include "User.hpp"
@@ -54,8 +55,6 @@ bool finishedError = true;
 // Chatroom Info
 
 // We store all chatroom behaviour in the chatroom class, to organise and simplify our code.
-bool inChatroom = false;
-bool isReset = true;
 Chatroom chatroom;
 MessageBuilder messageBuilder;
 
@@ -187,11 +186,6 @@ void JoinChatroom(std::string& _ip, std::string& _port)
     }
 }
 
-void ResetChatroom()
-{
-    
-}
-
 
 
 
@@ -231,7 +225,7 @@ void MenuBar()
         }
         if (ImGui::BeginMenu("Chatroom"))
         {
-            if(inChatroom)
+            if(networkCalls->GetChatroomStatus())
             {
                 if (ImGui::MenuItem("Leave Chatroom"))
                 {
@@ -266,7 +260,7 @@ void ModalLeaveChatroomGui()
     ImGui::Text("Are you sure you would like to leave the chatroom");
     if (ImGui::Button("Cancel", ImVec2(120, 0)))
     {
-        inChatroom = false;
+        
         ImGui::CloseCurrentPopup();
     }
     ImGui::EndPopup();
@@ -434,15 +428,14 @@ int main(int, char**)
         
         bool exit = true;
 
-        if(inChatroom)
+        // Receive data from chatroom
+        if (!networkCalls->GetReceivingStatus())
         {
-            // Receive data from chatroom
-            if(!networkCalls->GetReceiving())
-            {
-                networkCalls->Receive();
-            }
+            networkCalls->Receive();
+        }
 
-
+        if(networkCalls->GetChatroomStatus())
+        {
             ImGui::Begin("ChatRoom", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize );
             {
                 // Check for critical error
@@ -477,11 +470,6 @@ int main(int, char**)
         }
         else
         {
-	        if(!isReset)
-	        {
-                ResetChatroom();
-	        }
-
             ImGui::Begin("Join Chatroom", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
             {
                 // Check for critical error

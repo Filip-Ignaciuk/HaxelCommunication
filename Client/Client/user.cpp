@@ -1,4 +1,4 @@
-#include "user.hpp"
+#include "User.hpp"
 
 User::User() = default;
 
@@ -34,4 +34,12 @@ ColourHolder User::GetUserColour() const
 	return CH;
 }
 
+bool operator==(User& _user1, User& _user2)
+{
+	if(_user1.m_id != _user2.m_id || _user1.m_displayName != _user2.m_displayName || _user1.m_userColourR != _user2.m_userColourR || _user1.m_userColourG != _user2.m_userColourG || _user1.m_userColourB != _user2.m_userColourB)
+	{
+		return false;
+	}
+	return true;
+}
 

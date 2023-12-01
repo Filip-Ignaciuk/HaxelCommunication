@@ -181,7 +181,7 @@
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="NetworkCalls.cpp" />
     <ClCompile Include="NetworkCallsCreator.cpp" />
-    <ClCompile Include="user.cpp" />
+    <ClCompile Include="User.cpp" />
     <ClCompile Include="WindowsNetworkCallsCreator.cpp" />
     <ClCompile Include="WindowsNetworking.cpp" />
   </ItemGroup>
@@ -208,7 +208,7 @@
     <ClInclude Include="Message.hpp" />
     <ClInclude Include="NerworkCallsCreator.hpp" />
     <ClInclude Include="NetworkCalls.hpp" />
-    <ClInclude Include="user.hpp" />
+    <ClInclude Include="User.hpp" />
     <ClInclude Include="WindowsNetworkCallsCreator.hpp" />
     <ClInclude Include="WindowsNetworking.hpp" />
   </ItemGroup>

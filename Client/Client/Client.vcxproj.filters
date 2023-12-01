@@ -41,7 +41,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="user.cpp">
+    <ClCompile Include="User.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Languages.cpp">
@@ -109,7 +109,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="user.hpp">
+    <ClInclude Include="User.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Languages.hpp">

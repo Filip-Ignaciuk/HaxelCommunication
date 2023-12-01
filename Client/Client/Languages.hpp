@@ -1,5 +1,5 @@
-
 #pragma once
+// Application Headers
 #include "config.hpp"
 
 class LanguageFileInitialiser

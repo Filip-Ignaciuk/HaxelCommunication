@@ -35,4 +35,6 @@ public:
 
 	ColourHolder GetUserColour() const;
 
+	friend bool operator==(User& _user1, User& _user2);
+
 };
