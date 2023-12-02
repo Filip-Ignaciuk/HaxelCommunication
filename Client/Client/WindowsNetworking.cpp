@@ -6,6 +6,9 @@
 
 SOCKET WindowsNetworking::clientSocket = INVALID_SOCKET;
 bool WindowsNetworking::isReceiving = false;
+bool WindowsNetworking::isConnected = false;
+bool WindowsNetworking::inChatroom = false;
+
 
 DWORD WINAPI WindowsNetworking::ConnectThread(LPVOID param)
 {
@@ -22,6 +25,7 @@ DWORD WINAPI WindowsNetworking::ConnectThread(LPVOID param)
 	{
 		// Successful
 		isConnected = true;
+		BufferConnect BC();
 
 	}
 	else

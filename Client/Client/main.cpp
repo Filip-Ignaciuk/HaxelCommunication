@@ -427,9 +427,10 @@ int main(int, char**)
 
         
         bool exit = true;
+        bool chatroomStatus = networkCalls->GetReceivingStatus();
 
         // Receive data from chatroom
-        if (!networkCalls->GetReceivingStatus())
+        if (!chatroomStatus)
         {
             networkCalls->Receive();
         }
@@ -505,7 +506,7 @@ int main(int, char**)
         {
 
             ImGui::Begin("Users", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
-            if (ImGui::BeginTable("Users", 3) && inChatroom)
+            if (ImGui::BeginTable("Users", 3) && chatroomStatus)
             {
                 for (int row = 0; row < 32; row++)
                 {

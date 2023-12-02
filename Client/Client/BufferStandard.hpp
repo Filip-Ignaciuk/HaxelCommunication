@@ -33,13 +33,15 @@ public:
 	std::string GetPassword() const;
 };
 
-class BufferServerConnect
+class BufferServerConnect : public BufferNormal
 {
 private:
 	int m_isAccepted; // 2 - Requires password, 1 - Accepted, 0 - Not accepted.
-	Chatroom
+	Chatroom m_chatroom;
 public:
-	
+	BufferServerConnect(int _type, int _isAccepted, Chatroom& _chatroom);
+	int GetIsAccepted() const;
+	Chatroom& GetChatroom();
 };
 
 class BufferSendMessage : public BufferNormal

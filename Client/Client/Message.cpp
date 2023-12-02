@@ -104,7 +104,7 @@ void MessageBuilder::AddDisplayName()
 }
 
 
-const Message* MessageBuilder::GetFinalMessage() const
+Message* MessageBuilder::GetFinalMessage() const
 {
 	this->m_Message->AddToMessage(">> " + m_Message->GetMessageMain());
 	return m_Message;
