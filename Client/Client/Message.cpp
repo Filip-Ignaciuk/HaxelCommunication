@@ -18,6 +18,7 @@ void Message::AddToMessage(const std::string& _message)
 	m_completeMessage = m_completeMessage + _message;
 }
 
+
 void Message::ChangeUser(User& _user)
 {
 	m_user = _user;
@@ -39,7 +40,7 @@ std::string Message::GetMessageComplete() const
 	return m_completeMessage;
 }
 
-User Message::GetUser() const
+User& Message::GetUser()
 {
 	return m_user;
 }
@@ -61,11 +62,12 @@ void MessageBuilder::Reset()
 	this->m_Message = new Message();
 }
 
-void MessageBuilder::AddMessage(const std::string& _message)
+void MessageBuilder::AddMessage(Message& _message)
 {
-	this->m_Message->ChangeMainMessage(_message);
-	
+	this->m_Message->ChangeMainMessage(_message.GetMessageMain());
+	this->m_Message->ChangeUser(_message.GetUser());
 }
+
 
 void MessageBuilder::AddTime()
 {

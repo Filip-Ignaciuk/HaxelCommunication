@@ -55,7 +55,7 @@ bool finishedError = true;
 // Chatroom Info
 
 // We store all chatroom behaviour in the chatroom class, to organise and simplify our code.
-Chatroom chatroom;
+Chatroom& chatroom = config::GetChatroom();
 MessageBuilder messageBuilder;
 
 

@@ -17,6 +17,7 @@ void Chatroom::AddUser(User& _user)
 void Chatroom::AddMessage(Message& _message)
 {
 	messageBuilder.Reset();
+	messageBuilder.AddMessage(_message);
 	//Change in accordance to the users settings
 
 	messageBuilder.GetFinalMessage();

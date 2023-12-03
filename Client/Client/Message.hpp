@@ -24,7 +24,7 @@ public:
 
 	std::string GetMessageMain() const;
 	std::string GetMessageComplete() const;
-	User GetUser() const;
+	User& GetUser();
 
 };
 
@@ -38,7 +38,7 @@ public:
 	MessageBuilder();
 	~MessageBuilder();
 	void Reset();
-	void AddMessage(const std::string& _message);
+	void AddMessage(Message& _message);
 	void AddTime();
 	void AddDateLong();
 	void AddDateShort();

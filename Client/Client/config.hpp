@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 
+#include "Chatroom.hpp"
+
 
 class config
 {
@@ -10,6 +12,8 @@ private:
 	static int m_currentWindow;
 	static int m_currentLanguage;
 
+	static Chatroom m_chatroom;
+
 	static void Initialise(const std::string& _txt);
 	static void InitFolders();
 
@@ -18,17 +22,23 @@ public:
 
 	static void StartConfigs();
 
-	static void UpdateLanguage(const int _language);
+	static void UpdateLanguage(int _language);
+
+	static int GetCurrentLanguage();
 
 	static void SetIp(std::string& _ip);
 
 	static void SetPort(std::string& _port);
 
-	static void ChangeWindow(const int _window);
+	static void ChangeWindow(int _window);
 
 	static bool GetIsInitialised();
 	static int GetCurrentWindow();
-	static int GetCurrentLanguage();
+
+	static void SetChatroom(Chatroom& _chatroom);
+	static Chatroom& GetChatroom();
+
+	
 	
 
 	// For requesting a chatroom with a specific domain. Not to be confused with the actual domain server ip/port

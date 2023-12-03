@@ -29,6 +29,11 @@ private:
 
 	static DWORD WINAPI SendTextThread(LPVOID param);
 	static DWORD WINAPI UpdateUserThread(LPVOID param);
+
+	static DWORD WINAPI ReceiveSendMessageThread(LPVOID param);
+	static DWORD WINAPI ReceiveUserUpdateThread(LPVOID param);
+	static DWORD WINAPI ReceiveTextThread(LPVOID param);
+
 	static DWORD WINAPI ReceiveThread(LPVOID param);
 	
 	

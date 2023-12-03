@@ -26,6 +26,9 @@ DWORD WINAPI WindowsNetworking::ConnectThread(LPVOID param)
 		// Successful
 		isConnected = true;
 		BufferConnect BC();
+		int result = send(clientSocket, (char*)&BC, sizeof(BufferConnect), 0);
+
+
 
 	}
 	else
@@ -41,7 +44,7 @@ DWORD WINAPI WindowsNetworking::ConnectThread(LPVOID param)
 DWORD WINAPI WindowsNetworking::DisconnectThread(LPVOID param)
 {
 	// Send disconnect message
-
+	return 0;
 }
 
 DWORD WINAPI WindowsNetworking::SendTextThread(LPVOID param)
@@ -58,6 +61,17 @@ DWORD WINAPI WindowsNetworking::UpdateUserThread(LPVOID param)
 	return 0;
 }
 
+DWORD WINAPI WindowsNetworking::ReceiveSendMessageThread(LPVOID param)
+{
+	BufferNormal* bufferPointer = (BufferNormal*)param;
+	BufferNormal bufferNormal = *bufferPointer;
+	delete bufferPointer;
+	BufferServerSendMessage& messageBuffer = dynamic_cast<BufferServerSendMessage&> (bufferNormal);
+	config::GetChatroom().AddMessage(messageBuffer.GetMessageObject());
+	
+	return 0;
+}
+
 DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 {
 	BufferNormal buffer;
@@ -67,8 +81,11 @@ DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 	if(!buffer.GetType())
 	{
 		// Message Buffer
-		BufferSendMessage& messageBuffer = dynamic_cast<BufferSendMessage&> (buffer);
-		messageBuffer.GetMessageString();
+		BufferNormal* BNPtr = &buffer;
+		DWORD threadId;
+		HANDLE handle;
+		handle = CreateThread(nullptr, 0, ReceiveSendMessageThread, BNPtr, 0, &threadId);
+		
 
 	}
 	else if(buffer.GetType() == 1)

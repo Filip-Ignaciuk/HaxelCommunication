@@ -24,6 +24,25 @@ public:
 	int GetType() const;
 };
 
+class BufferSendMessage : public BufferNormal
+{
+private:
+	Message m_message;
+public:
+	BufferSendMessage(int _type, Message& _message);
+	Message& GetMessageObject();
+};
+
+
+class BufferServerSendMessage : public BufferNormal
+{
+private:
+	Message m_message;
+public:
+	BufferServerSendMessage(int _type, Message& _message);
+	Message& GetMessageObject();
+};
+
 class BufferConnect : public BufferNormal
 {
 private:
@@ -44,12 +63,21 @@ public:
 	Chatroom& GetChatroom();
 };
 
-class BufferSendMessage : public BufferNormal
+class BufferUpdateUser : public BufferNormal
 {
 private:
-	std::string m_message;
+	User m_user;
 public:
-	BufferSendMessage(int _type, std::string& _message);
-	std::string GetMessageString() const;
+	BufferUpdateUser(int _type, User& _user);
+	User& GetUser();
 };
 
+
+class BufferServerUpdateUser : public BufferNormal
+{
+private:
+	User m_user;
+public:
+	BufferServerUpdateUser(int _type, User& _user);
+	User& GetUser();
+};

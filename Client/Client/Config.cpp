@@ -10,6 +10,7 @@ bool config::m_isInitialised = false;
 int config::m_currentWindow = 0;
 int config::m_currentLanguage = 0;
 
+Chatroom config::m_chatroom;
 
 std::string config::NormaliseDir(std::string& _str)
 {
@@ -138,6 +139,16 @@ int config::GetCurrentWindow()
 int config::GetCurrentLanguage()
 {
 	return m_currentLanguage;
+}
+
+void config::SetChatroom(Chatroom& _chatroom)
+{
+	m_chatroom = _chatroom;
+}
+
+Chatroom& config::GetChatroom()
+{
+	return m_chatroom;
 }
 
 
