@@ -1,50 +1,83 @@
 #pragma once
 #include <string>
 
+// Application Headers
+#include "Chatroom.hpp"
+
 constexpr int bufferSize = 200;
 
-struct BufferReady
+/* The standard allows for objects to be sent back and forth between a client and a server.
+ * Each class has a notion starting with Buffer, and then the person who is sending the object.
+ * For example BufferConnect is a class reserved for the client to send an object to the server, and BufferServerConnect is the server's Response.
+ *
+ *
+ */
+
+class BufferNormal
 {
-	bool isReady;
+private:
+	int m_type;
+public:
+	BufferNormal();
+	BufferNormal(int _type);
+	virtual ~BufferNormal();
+	int GetType() const;
+};
+
+class BufferSendMessage : public BufferNormal
+{
+private:
+	Message m_message;
+public:
+	BufferSendMessage(Message& _message);
+	Message& GetMessageObject();
 };
 
 
-struct BufferRequestIp
+class BufferServerSendMessage : public BufferNormal
 {
-	std::string requestedDomain;
-	std::string requestedDomainPassword;
+private:
+	Message m_message;
+public:
+	BufferServerSendMessage(Message& _message);
+	Message& GetMessageObject();
 };
 
-struct BufferResponseIp
+class BufferConnect : public BufferNormal
 {
-	std::string responseIp;
-	int responsePort;
+private:
+	std::string m_password;
+public:
+	BufferConnect(std::string& _password);
+	std::string GetPassword() const;
 };
 
-struct BufferRequestInitialiseServer
+class BufferServerConnect : public BufferNormal
 {
-	// Required
-	std::string requestedDomainName;
-	std::string requestedDomainPassword;
-	std::string requestedDomainAdminPassword;
-	std::string requestedDomainIp;
-	int requestedDomainPort;
-	// Settings
-	bool isDiscoverable;
+private:
+	int m_isAccepted; // 2 - Requires password, 1 - Accepted, 0 - Not accepted.
+	Chatroom m_chatroom;
+public:
+	BufferServerConnect(int _isAccepted, Chatroom& _chatroom);
+	int GetIsAccepted() const;
+	Chatroom& GetChatroom();
 };
 
-struct BufferResponseInitialiseServer
+class BufferUpdateUser : public BufferNormal
 {
-	int response;
+private:
+	User m_user;
+public:
+	BufferUpdateUser(User& _user);
+	User& GetUser();
 };
 
-struct BufferRequestDeleteServer
-{
-	std::string requestedDomainName;
-	std::string requestedDomainAdminPassword;
-};
 
-struct BufferResponseDeleteServer
+class BufferServerUpdateUser : public BufferNormal
 {
-	int response;
+private:
+	User m_user;
+public:
+	BufferServerUpdateUser(User& _user);
+	User& GetUser();
 };

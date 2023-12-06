@@ -3,11 +3,14 @@
 #include <fstream>
 
 #include "config.hpp"
+#include "ErrorHandler.hpp"
+#include "Languages.hpp"
 
-#include <WinSock2.h>
-#include <ws2def.h>
-#include <WS2tcpip.h>
+bool config::m_isInitialised = false;
+int config::m_currentWindow = 0;
+int config::m_currentLanguage = 0;
 
+Chatroom config::m_chatroom;
 
 std::string config::NormaliseDir(std::string& _str)
 {
@@ -22,203 +25,132 @@ std::string config::NormaliseDir(std::string& _str)
 	return _str;
 }
 
-bool config::InitFolders()
+void config::InitFolders()
 {
-	if (std::filesystem::create_directory(currentDirNormalised + "/Servers") == 0)
+	if (!std::filesystem::create_directory(currentDirNormalised + "/Languages"))
 	{
-		return false;
+		Error FileSystemError("Failed to create folders for language files.", 0);
+		ErrorHandler::AddError(FileSystemError);
 	}
 
-	return true;
+	if (!std::filesystem::create_directory(currentDirNormalised + "/Users"))
+	{
+		Error FileSystemError("Failed to create folders for user files.", 0);
+		ErrorHandler::AddError(FileSystemError);
+	}
+
 }
 
-void config::Initialise(const std::string& _txt, bool& _isSuccessful)
+void config::Initialise(const std::string& _txt)
 {
 	std::ofstream file(_txt);
+	file << "1" << std::endl; // Is Application initialised
+	file << "0" << std::endl; // Language
+	file << "1" << std::endl; // TimeFormat
+	file << SDomainIp << std::endl; // Domain Ip
+	file << SDomainPort << std::endl; // Domain Port
+
+	m_currentLanguage = 0;
+	//isTimeFormatOn = true;
+
 	// Initialising folders.
-	_isSuccessful = InitFolders();
-	if (_isSuccessful)
-	{
-		file << "1" << std::endl; // Is Application initialised
-	}
-	else
-	{
-		file << "0" << std::endl; // Is Application initialised
-	}
-	file << SDomainPort << std::endl; // Domain Ip
-	file << SDomainIp << std::endl; // Domain Port
+	InitFolders();
+
+	// Initialising Language File.
 	file.close();
+	LanguageFileInitialiser::GenerateLanguageFile(0);
+	LanguageFileInitialiser::PopulateAllTextsInApplication();
+	m_isInitialised = 1;
 }
 
-
-
-
-
-bool config::StartConfigs()
+void config::UpdateLanguage(const int _language)
 {
-	bool isSuccessful = true;
+	LanguageFileInitialiser::ChangeLanguage(_language);
+}
 
+void config::StartConfigs()
+{
+	
 	const std::string initialisedTxt = currentDirNormalised + "/initialised.txt";
 	std::ifstream initFile(initialisedTxt);
 	if (!initFile.is_open())
 	{
 		initFile.close();
-		Initialise(initialisedTxt, isSuccessful);
-
-
+		Initialise(initialisedTxt);
 	}
 	else
 	{
+		LanguageFileInitialiser::CheckInstalledLanguages();
 		std::string line;
 		int i = 0;
 		while (std::getline(initFile, line))
 		{
-			if (i == 0) { isInitialised = std::stoi(line); } // Is Application initialised
-			else if (i == 1) { SetDomainPort(line); } // Domain Ip
-			else if (i == 2) { SetDomainIp(line); } // Domain Ip
-
-
+			if (i == 0) { m_isInitialised = std::stoi(line); } // Is Application initialised
+			else if (i == 1) { m_currentLanguage = std::stoi(line); } // Language
+			//else if (i == 2) { isTimeFormatOn = std::stoi(line); } // TimeFormat
+			else if (i == 3) { SetIp(line); } // Domain Ip
+			else if (i == 4) { SetPort(line); } // Domain Port
+			
+ 
 			i++;
 		}
 		initFile.close();
 
-		if(!isInitialised)
+		if (!LanguageFileInitialiser::initialisedLanguages[m_currentLanguage])
 		{
-			Initialise(initialisedTxt, isSuccessful);
+			LanguageFileInitialiser::GenerateLanguageFile(m_currentLanguage);
 		}
+
+		LanguageFileInitialiser::PopulateAllTextsInApplication();
+
+		
 	}
-
-	return isSuccessful;
-
-
 
 
 }
 
-void config::SetDomainIp(std::string& _ip)
+void config::SetIp(std::string& _ip)
 {
 	SDomainIp = _ip;
 	WDomainIp = std::wstring(SDomainIp.begin(), SDomainIp.end());
 }
 
-void config::SetDomainPort(std::string& _port)
+void config::SetPort(std::string& _port)
 {
 	SDomainPort = _port;
 	IDomainPort = std::stoi(SDomainPort);
 }
 
-bool config::IsIpValid(std::string& _ip)
+void config::ChangeWindow(const int _window)
 {
-	if (_ip.empty())
-	{
-		return false;
-	}
-
-	int dotCount = 0;
-	for (unsigned char i = 0; i < _ip.size(); i++)
-	{
-		if (_ip[i] == '.')
-		{
-			dotCount++;
-		}
-		else if (!isdigit(_ip[i]))
-		{
-			return false;
-		}
-
-	}
-	if (dotCount != 3)
-	{
-		return false;
-	}
-	return true;
+	m_currentWindow = _window;
 }
 
-bool config::IsPortValid(std::string& _port)
+bool config::GetIsInitialised()
 {
-	if(_port.empty())
-	{
-		return false;
-	}
-
-	const int port = std::stoi(_port);
-	const int portSize = _port.size();
-	if (port < 1024)
-	{
-		return false;
-	}
-	if (port > 49151)
-	{
-		return false;
-	}
-	if(portSize < 4 || portSize > 5)
-	{
-		return false;
-	}
-	for (unsigned char i = 0; i < portSize; i++)
-	{
-		if (!isdigit(_port[i]))
-		{
-			return false;
-		}
-
-	}
-	return true;
+	return m_isInitialised;
 }
 
-bool config::StartWinsock()
+int config::GetCurrentWindow()
 {
-	WSADATA wsaData;
-	WORD version = MAKEWORD(2, 2);
-	if (WSAStartup(version, &wsaData))
-	{
-		currentError = "Winsock DLL failed to be found/loaded. Error: " + WSAGetLastError();
-		WSACleanup();
-		return false;
-	}
-
-	allServerText.emplace_back("DLL has been successfully found/loaded.");
-
-	serverSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if (serverSocket == INVALID_SOCKET)
-	{
-		currentError = "Error creating server socket.";
-		WSACleanup();
-		return false;
-	}
-
-	allServerText.emplace_back("Server socket has been successfully created.");
-	return true;
+	return m_currentWindow;
 }
 
-void config::StartServer()
+int config::GetCurrentLanguage()
 {
-	// converting ip input to const wchar_t
-	std::wstring wideIpInput = std::wstring(serverIp.begin(), serverIp.end());
-	PCWSTR ip = wideIpInput.c_str();
-	sockaddr_in service;
-	service.sin_family = AF_INET;
-	service.sin_port = htons(serverPort);
-	InetPtonW(AF_INET, ip, &service.sin_addr.S_un.S_addr);
-	if (bind(serverSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
-	{
-		currentError = "Binding failed, perhaps an invalid or non-existent ip";
-	}
-	else
-	{
-		isServerInitialised = true;
-		allServerText.emplace_back("Server socket bind has been successfully done.");
-	}
+	return m_currentLanguage;
 }
 
-void config::AddToErrorLog(std::string& _message)
+void config::SetChatroom(Chatroom& _chatroom)
 {
-
+	m_chatroom = _chatroom;
 }
 
-std::string config::currentError = "None";
+Chatroom& config::GetChatroom()
+{
+	return m_chatroom;
+}
 
-std::vector<std::string> config::allServerText;
 
 // Domain Config
 std::string config::SDomainIp = "127.0.0.1";
@@ -226,19 +158,5 @@ std::wstring config::WDomainIp = std::wstring(config::SDomainIp.begin(), SDomain
 std::string config::SDomainPort = "4096";
 int config::IDomainPort = 4096;
 
-// Server Config
-SOCKET config::serverSocket = INVALID_SOCKET;
-std::string config::serverIp = "127.0.0.1";
-int config::serverPort = 8192;
-std::string config::serverDomainName;
-std::string config::serverDomainPassword;
-std::string config::serverDomainAdminPassword;
-std::string config::ServerDomainIp;
-bool config::serverIsDiscoverable = false;
-
 std::string config::currentDirUnNormalised = std::filesystem::current_path().string();
 std::string config::currentDirNormalised = NormaliseDir(currentDirUnNormalised);
-
-bool config::isInitialised = false;
-bool config::isServerInitialised = false;
-
