@@ -70,7 +70,7 @@ void Chatroom::UpdateMessages()
 	for (Message& message : m_messages)
 	{
 		messageBuilder.Reset();
-		messageBuilder.AddMessage(message.GetMessageMain());
+		messageBuilder.AddMessage(message);
 		//Change in accordance to the users settings
 
 		message = *messageBuilder.GetFinalMessage();;

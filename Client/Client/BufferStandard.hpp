@@ -29,7 +29,7 @@ class BufferSendMessage : public BufferNormal
 private:
 	Message m_message;
 public:
-	BufferSendMessage(int _type, Message& _message);
+	BufferSendMessage(Message& _message);
 	Message& GetMessageObject();
 };
 
@@ -39,7 +39,7 @@ class BufferServerSendMessage : public BufferNormal
 private:
 	Message m_message;
 public:
-	BufferServerSendMessage(int _type, Message& _message);
+	BufferServerSendMessage(Message& _message);
 	Message& GetMessageObject();
 };
 
@@ -48,7 +48,7 @@ class BufferConnect : public BufferNormal
 private:
 	std::string m_password;
 public:
-	BufferConnect(int _type, std::string& _password);
+	BufferConnect(std::string& _password);
 	std::string GetPassword() const;
 };
 
@@ -58,7 +58,7 @@ private:
 	int m_isAccepted; // 2 - Requires password, 1 - Accepted, 0 - Not accepted.
 	Chatroom m_chatroom;
 public:
-	BufferServerConnect(int _type, int _isAccepted, Chatroom& _chatroom);
+	BufferServerConnect(int _isAccepted, Chatroom& _chatroom);
 	int GetIsAccepted() const;
 	Chatroom& GetChatroom();
 };
@@ -68,7 +68,7 @@ class BufferUpdateUser : public BufferNormal
 private:
 	User m_user;
 public:
-	BufferUpdateUser(int _type, User& _user);
+	BufferUpdateUser(User& _user);
 	User& GetUser();
 };
 
@@ -78,6 +78,6 @@ class BufferServerUpdateUser : public BufferNormal
 private:
 	User m_user;
 public:
-	BufferServerUpdateUser(int _type, User& _user);
+	BufferServerUpdateUser(User& _user);
 	User& GetUser();
 };

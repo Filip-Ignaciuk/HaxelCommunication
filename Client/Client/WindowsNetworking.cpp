@@ -25,7 +25,8 @@ DWORD WINAPI WindowsNetworking::ConnectThread(LPVOID param)
 	{
 		// Successful
 		isConnected = true;
-		BufferConnect BC();
+		std::string password = "";
+		BufferConnect BC(password);
 		int result = send(clientSocket, (char*)&BC, sizeof(BufferConnect), 0);
 
 

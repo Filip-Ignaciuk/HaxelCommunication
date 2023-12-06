@@ -3,9 +3,10 @@ The standard allows for objects to be sent back and forth between a client and a
 Each class has a notion starting with Buffer, and then the person who is sending the object.
 For example BufferConnect is a class reserved for the client to send an object to the server, and BufferServerConnect is the server's Response.
 
-0 - BufferSendMessage
-1 - BufferServerSendMessage
-2 - BufferConnect
-3 - BufferConnectServer
-4 - BufferUpdateUser
-5 - BufferServerUpdateUser
+0 - BufferNormal
+1 - BufferSendMessage
+2 - BufferServerSendMessage
+3 - BufferConnect
+4 - BufferConnectServer
+5 - BufferUpdateUser
+6 - BufferServerUpdateUser
