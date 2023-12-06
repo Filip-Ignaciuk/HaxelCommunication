@@ -201,16 +201,11 @@ void MenuBar()
         {
             if (ImGui::BeginMenu("Language"))
             {
-                const char* englishLabel = "English";
-                const char* frenchLabel = "français";
-                const char* polishLabel = "Polski";
-                const char* netherlandsLabel = "Nederlands";
-                const char* spanishLabel = "español";
-;               ImGui::MenuItem(englishLabel, "", &GuiLanguage::english);
-                ImGui::MenuItem(frenchLabel, "", &GuiLanguage::french);
-                ImGui::MenuItem(polishLabel, "", &GuiLanguage::polish);
-                ImGui::MenuItem(netherlandsLabel, "", &GuiLanguage::dutch);
-                ImGui::MenuItem(spanishLabel, "", &GuiLanguage::spanish);
+                ImGui::MenuItem("English", "", &GuiLanguage::english);
+                ImGui::MenuItem((const char*)u8"français", "", &GuiLanguage::french);
+                ImGui::MenuItem("Polski", "", &GuiLanguage::polish);
+                ImGui::MenuItem("Nederlands", "", &GuiLanguage::dutch);
+                ImGui::MenuItem((const char*)u8"español", "", &GuiLanguage::spanish);
                 ImGui::EndMenu();
             }
             if (ImGui::MenuItem("Apperance"))
@@ -231,11 +226,12 @@ void MenuBar()
                 {
 
                 }
-                ImGui::EndMenu();
+                
             }
             
-            
+            ImGui::EndMenu();
         }
+        ImGui::EndMenuBar();
     }
 }
 
@@ -255,20 +251,6 @@ void ModalLeaveChatroomGui()
     ImGui::EndPopup();
 }
 
-void ModalJoinChatroomGui()
-{
-    ImGui::Text("Chatroom");
-    char ip[15];
-    char port[5];
-    ImGui::InputText("IP", ip, IM_ARRAYSIZE(ip));
-    ImGui::InputText("Port", port, IM_ARRAYSIZE(port));
-    if (ImGui::Button("Join", ImVec2(120, 0)))
-    {
-        JoinChatroom((std::string&)ip, (std::string&)port);
-        ImGui::CloseCurrentPopup();
-    }
-    ImGui::EndPopup();
-}
 
 void PopulateUsers()
 {
@@ -410,7 +392,7 @@ int main(int, char**)
 
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-        //ImGui::PushFont(font);
+        ImGui::PushFont(font);
         ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
@@ -437,6 +419,14 @@ int main(int, char**)
 
             // Gui
             MenuBar();
+
+            // Server Info
+            ImGui::Text("Chatroom network details:");
+            char ip[15];
+            char port[5];
+            ImGui::InputText("IP", ip, IM_ARRAYSIZE(ip));
+            ImGui::InputText("Port", port, IM_ARRAYSIZE(port));
+
             ImGui::End();
 
         }

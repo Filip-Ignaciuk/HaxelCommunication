@@ -201,17 +201,12 @@ void MenuBar()
         {
             if (ImGui::BeginMenu("Language"))
             {
-                const char* englishLabel = "English";
-                const char* frenchLabel = "français";
-                const char* polishLabel = "Polski";
-                const char* netherlandsLabel = "Nederlands";
-                const char* spanishLabel = "español";
-;               ImGui::MenuItem(englishLabel, "", &GuiLanguage::english);
-                ImGui::MenuItem(frenchLabel, "", &GuiLanguage::french);
-                ImGui::MenuItem(polishLabel, "", &GuiLanguage::polish);
-                ImGui::MenuItem(netherlandsLabel, "", &GuiLanguage::dutch);
-                ImGui::MenuItem(spanishLabel, "", &GuiLanguage::spanish);
-                ImGui::EndMenu();
+;               ImGui::MenuItem("English", "", &GuiLanguage::english);
+                ImGui::MenuItem((const char*)u8"français", "", &GuiLanguage::french);
+                ImGui::MenuItem("Polski", "", &GuiLanguage::polish);
+                ImGui::MenuItem("Nederlands", "", &GuiLanguage::dutch);
+                ImGui::MenuItem((const char*)u8"español", "", &GuiLanguage::spanish);
+                ImGui::EndMenu(); 
             }
             if (ImGui::MenuItem("Apperance"))
             {
@@ -231,7 +226,7 @@ void MenuBar()
                 {
 
                 }
-                ImGui::EndMenu();
+                
             }
             else
             {
@@ -239,9 +234,9 @@ void MenuBar()
                 {
 
                 }
-                ImGui::EndMenu();
+                
             }
-            
+            ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("User"))
         {
@@ -381,7 +376,6 @@ int main(int, char**)
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
     ImFont* font = io.Fonts->AddFontFromFileTTF("d:\\Fonts\\arialuni.ttf", 18.0f);
     IM_ASSERT(font != nullptr);
-    
 
 
     // Our state
