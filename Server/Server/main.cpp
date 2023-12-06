@@ -227,20 +227,13 @@ void MenuBar()
         {
             if(networkCalls->GetChatroomStatus())
             {
-                if (ImGui::MenuItem("Leave Chatroom"))
+                if (ImGui::MenuItem("Close Chatroom"))
                 {
 
                 }
                 ImGui::EndMenu();
             }
-            else
-            {
-                if (ImGui::MenuItem("Join Chatroom"))
-                {
-
-                }
-                ImGui::EndMenu();
-            }
+            
             
         }
     }
@@ -248,8 +241,13 @@ void MenuBar()
 
 void ModalLeaveChatroomGui()
 {
-    ImGui::Text("Are you sure you would like to leave the chatroom");
-    if (ImGui::Button("Cancel", ImVec2(120, 0)))
+    ImGui::Text("Are you sure you would like to close the chatroom?");
+    if (ImGui::Button("Yes", ImVec2(120, 0)))
+    {
+
+        ImGui::CloseCurrentPopup();
+    }
+    if (ImGui::Button("No", ImVec2(120, 0)))
     {
         
         ImGui::CloseCurrentPopup();
@@ -365,6 +363,7 @@ int main(int, char**)
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Roboto-Medium.ttf", 16.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
+
     ImFont* font = io.Fonts->AddFontFromFileTTF("d:\\Fonts\\arialuni.ttf", 18.0f);
     IM_ASSERT(font != nullptr);
     
@@ -411,7 +410,7 @@ int main(int, char**)
 
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-        ImGui::PushFont(font);
+        //ImGui::PushFont(font);
         ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
@@ -438,18 +437,18 @@ int main(int, char**)
 
             // Gui
             MenuBar();
-            
+            ImGui::End();
+
         }
 
 
 
 
-        ImGui::End();
         
-
+        ImGui::Begin("Users", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
         {
-
-            ImGui::Begin("Users", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+        
+            
             if (ImGui::BeginTable("Users", 3) && chatroomStatus)
             {
                 for (int row = 0; row < 32; row++)
@@ -464,7 +463,7 @@ int main(int, char**)
                             ImGui::Text(user.GetDisplayName().c_str());
                             continue;
                         }
-
+            
                         ImGui::Text(user.GetId().c_str());
                     }
                 }

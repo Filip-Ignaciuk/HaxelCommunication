@@ -257,10 +257,15 @@ void MenuBar()
 
 void ModalLeaveChatroomGui()
 {
-    ImGui::Text("Are you sure you would like to leave the chatroom");
-    if (ImGui::Button("Cancel", ImVec2(120, 0)))
+    ImGui::Text("Are you sure you would like to leave the chatroom?");
+    if (ImGui::Button("Yes", ImVec2(120, 0)))
     {
-        
+
+        ImGui::CloseCurrentPopup();
+    }
+    if (ImGui::Button("No", ImVec2(120, 0)))
+    {
+
         ImGui::CloseCurrentPopup();
     }
     ImGui::EndPopup();
