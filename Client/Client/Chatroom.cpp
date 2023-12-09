@@ -72,8 +72,7 @@ void Chatroom::UpdateMessages()
 		messageBuilder.Reset();
 		messageBuilder.AddMessage(message);
 		//Change in accordance to the users settings
-
-		message = *messageBuilder.GetFinalMessage();;
+		message = *messageBuilder.GetFinalMessage();
 
 
 	}

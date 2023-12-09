@@ -6,7 +6,7 @@
 
 Message::Message(const std::string& _message, User& _user) : m_message(_message), m_user(_user) {  }
 
-Message::Message(){  }
+Message::Message() = default;
 
 void Message::ChangeMainMessage(const std::string& _message)
 {
@@ -19,7 +19,7 @@ void Message::AddToMessage(const std::string& _message)
 }
 
 
-void Message::ChangeUser(User& _user)
+void Message::ChangeUser(User& _user) const
 {
 	m_user = _user;
 }
@@ -112,5 +112,10 @@ Message* MessageBuilder::GetFinalMessage() const
 	return m_Message;
 }
 
-
+Message& Message::operator=(const Message& _other)
+{
+	this->m_completeMessage = _other.m_completeMessage;
+	this->m_message = _other.m_message;
+	this->m_user = _other.m_user;
+}
 

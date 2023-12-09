@@ -13,18 +13,20 @@ private:
 	// Have original unedited message so that we can change it on the fly.
 	std::string m_message;
 	// Date we need for the message
-	User m_user;
+	User& m_user;
 public:
 	Message();
 	Message(const std::string& _message, User& _user);
 	void AddToMessage(const std::string& _message);
 	void ChangeMainMessage(const std::string& _message);
-	void ChangeUser(User& _user);
+	void ChangeUser(User& _user) const;
 	void DeleteCompleteMessage();
 
 	std::string GetMessageMain() const;
 	std::string GetMessageComplete() const;
 	User& GetUser();
+
+	Message& operator=(const Message& _other);
 
 };
 

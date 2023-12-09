@@ -68,8 +68,8 @@ void ErrorChecker()
     if (ErrorHandler::HasError() && finishedError)
     {
         latestError = ErrorHandler::GetError();
-        latestErrorLevel = latestError.GetLevel();
         latestErrorMessage = latestError.GetMessageString().c_str();
+        latestErrorLevel = latestError.GetLevel();
         finishedError = false;
     }
 
@@ -483,12 +483,13 @@ int main(int, char**)
                 // Gui
                 MenuBar();
                 ImGui::Text("Chatroom info:");
-                static char ip[128] = "";
+                static char ip[14] = "";
                 ImGui::InputText("Ip", ip, IM_ARRAYSIZE(ip));
                 static char port[5] = "";
                 ImGui::InputText("Port", port, IM_ARRAYSIZE(port));
                 if(ImGui::Button("Connect"))
                 {
+                    
                     std::string sIp = ip;
                     std::string sPort = port;
                     JoinChatroom(sIp, sPort);
