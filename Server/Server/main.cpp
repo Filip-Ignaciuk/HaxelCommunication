@@ -162,7 +162,7 @@ bool PortChecker(std::string& _port)
     return true;
 }
 
-void JoinChatroom(std::string& _ip, std::string& _port)
+void CreateChatroom(std::string& _ip, std::string& _port)
 {
     const bool isIpValid = IpChecker(_ip);
     const bool isPortValid = PortChecker(_port);
@@ -422,10 +422,17 @@ int main(int, char**)
 
             // Server Info
             ImGui::Text("Chatroom network details:");
-            char ip[15];
-            char port[5];
+            static char ip[15];
+            static char port[5];
             ImGui::InputText("IP", ip, IM_ARRAYSIZE(ip));
             ImGui::InputText("Port", port, IM_ARRAYSIZE(port));
+            if(ImGui::Button("Create Chatroom"))
+            {
+                std::string sIp = ip;
+                std::string sPort = port;
+                CreateChatroom(sIp, sPort);
+            }
+            
 
             ImGui::End();
 

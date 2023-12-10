@@ -114,5 +114,6 @@ Message& Message::operator=(const Message& _other)
 	this->m_completeMessage = _other.m_completeMessage;
 	this->m_message = _other.m_message;
 	this->m_user = _other.m_user;
+	return *this;
 }
 

@@ -68,7 +68,6 @@ void ErrorChecker()
     if (ErrorHandler::HasError() && finishedError)
     {
         latestError = ErrorHandler::GetError();
-        latestErrorMessage = latestError.GetMessageString().c_str();
         latestErrorLevel = latestError.GetLevel();
         finishedError = false;
     }
@@ -77,49 +76,52 @@ void ErrorChecker()
     {
         if (!latestErrorLevel)
         {
-            ImGui::OpenPopup("Critical");
-
-            if (ImGui::BeginPopupModal("Critical", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
-                ImGui::Text(latestErrorMessage);
-                if (ImGui::Button("Cancel", ImVec2(120, 0)))
-                {
-                    finishedError = true;
-                    criticalError = true;
-                    ErrorHandler::DeleteError();
-                    ImGui::CloseCurrentPopup();
-                }
-                ImGui::EndPopup();
-            }
+            //ImGui::OpenPopup("Critical");
+            //
+            //if (ImGui::BeginPopupModal("Critical", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+            //    ImGui::Text(latestError.GetMessageString().c_str());
+            //    if (ImGui::Button("Cancel", ImVec2(120, 0)))
+            //    {
+            //        finishedError = true;
+            //        criticalError = true;
+            //        ErrorHandler::DeleteError();
+            //        ImGui::CloseCurrentPopup();
+            //    }
+            //    
+            //}
+            //ImGui::EndPopup();
         }
         else if (latestErrorLevel == 1)
         {
-            ImGui::OpenPopup("Warning");
-
-            if (ImGui::BeginPopupModal("Warning", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
-                ImGui::Text(latestErrorMessage);
-                if (ImGui::Button("Cancel", ImVec2(120, 0)))
-                {
-                    finishedError = true;
-                    ErrorHandler::DeleteError();
-                    ImGui::CloseCurrentPopup();
-                }
-                ImGui::EndPopup();
-            }
+            //ImGui::OpenPopup("Warning");
+            //
+            //if (ImGui::BeginPopupModal("Warning", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+            //    ImGui::Text(latestError.GetMessageString().c_str());
+            //    if (ImGui::Button("Cancel", ImVec2(120, 0)))
+            //    {
+            //        finishedError = true;
+            //        ErrorHandler::DeleteError();
+            //        ImGui::CloseCurrentPopup();
+            //    }
+            //    
+            //}
+            //ImGui::EndPopup();
         }
         else if (latestErrorLevel == 2)
         {
-            ImGui::OpenPopup("Information");
-
-            if (ImGui::BeginPopupModal("Information", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
-                ImGui::Text(latestErrorMessage);
-                if (ImGui::Button("Cancel", ImVec2(120, 0)))
-                {
-                    finishedError = true;
-                    ErrorHandler::DeleteError();
-                    ImGui::CloseCurrentPopup();
-                }
-                ImGui::EndPopup();
-            }
+            //ImGui::OpenPopup("Information");
+            //
+            //if (ImGui::BeginPopupModal("Information", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+            //    ImGui::Text(latestError.GetMessageString().c_str());
+            //    if (ImGui::Button("Cancel", ImVec2(120, 0)))
+            //    {
+            //        finishedError = true;
+            //        ErrorHandler::DeleteError();
+            //        ImGui::CloseCurrentPopup();
+            //    }
+            //    
+            //}
+            //ImGui::EndPopup();
         }
 
 
@@ -136,9 +138,13 @@ bool IpChecker(std::string& _ip)
     int i = 0;
     for (char character : _ip)
     {
-        if(!isdigit(character) || (character == '.' && i != 3))
+        if(!isdigit(character) || (character == '.' && (i > 3 || i == 0)))
         {
             return false;
+        }
+        else
+        {
+            i = -1;
         }
         i++;
     }
@@ -195,90 +201,97 @@ void JoinChatroom(std::string& _ip, std::string& _port)
 
 void MenuBar()
 {
-    if (ImGui::BeginMenuBar())
-    {
-        if (ImGui::BeginMenu("Settings"))
-        {
-            if (ImGui::BeginMenu("Language"))
-            {
-;               ImGui::MenuItem("English", "", &GuiLanguage::english);
-                ImGui::MenuItem((const char*)u8"français", "", &GuiLanguage::french);
-                ImGui::MenuItem("Polski", "", &GuiLanguage::polish);
-                ImGui::MenuItem("Nederlands", "", &GuiLanguage::dutch);
-                ImGui::MenuItem((const char*)u8"español", "", &GuiLanguage::spanish);
-                ImGui::EndMenu(); 
-            }
-            if (ImGui::MenuItem("Apperance"))
-            {
-
-            }
-            if (ImGui::MenuItem("Credit"))
-            {
-
-            }
-            ImGui::EndMenu();
-        }
-        if (ImGui::BeginMenu("Chatroom"))
-        {
-            if(networkCalls->GetChatroomStatus())
-            {
-                if (ImGui::MenuItem("Leave Chatroom"))
-                {
-
-                }
-                
-            }
-            else
-            {
-                if (ImGui::MenuItem("Join Chatroom"))
-                {
-
-                }
-                
-            }
-            ImGui::EndMenu();
-        }
-        if (ImGui::BeginMenu("User"))
-        {
-            if (ImGui::MenuItem("Edit User"))
-            {
-
-            }
-            ImGui::EndMenu();
-        }
-        ImGui::EndMenuBar();
-    }
+    //if (ImGui::BeginMenuBar())
+    //{
+    //    if (ImGui::BeginMenu("Settings"))
+    //    {
+    //        if (ImGui::BeginMenu("Language"))
+    //        {
+    //            ImGui::MenuItem("English", "", &GuiLanguage::english);
+    //            ImGui::MenuItem((const char*)u8"français", "", &GuiLanguage::french);
+    //            ImGui::MenuItem("Polski", "", &GuiLanguage::polish);
+    //            ImGui::MenuItem("Nederlands", "", &GuiLanguage::dutch);
+    //            ImGui::MenuItem((const char*)u8"español", "", &GuiLanguage::spanish);
+    //             
+    //        }
+    //        ImGui::EndMenu();
+    //        if (ImGui::MenuItem("Apperance"))
+    //        {
+    //
+    //        }
+    //        ImGui::EndMenu();
+    //        if (ImGui::MenuItem("Credit"))
+    //        {
+    //
+    //        }
+    //        ImGui::EndMenu();
+    //    }
+    //    ImGui::EndMenu();
+    //    if (ImGui::BeginMenu("Chatroom"))
+    //    {
+    //        if(networkCalls->GetChatroomStatus())
+    //        {
+    //            if (ImGui::MenuItem("Leave Chatroom"))
+    //            {
+    //
+    //            }
+    //            ImGui::EndMenu();
+    //            
+    //        }
+    //        else
+    //        {
+    //            if (ImGui::MenuItem("Join Chatroom"))
+    //            {
+    //
+    //            }
+    //            ImGui::EndMenu();
+    //            
+    //        }
+    //    }
+    //    ImGui::EndMenu();
+    //    if (ImGui::BeginMenu("User"))
+    //    {
+    //        if (ImGui::MenuItem("Edit User"))
+    //        {
+    //
+    //        }
+    //        ImGui::EndMenu();
+    //
+    //    }
+    //    ImGui::EndMenu();
+    //}
+    //ImGui::EndMenuBar();
 }
 
 void ModalLeaveChatroomGui()
 {
-    ImGui::Text("Are you sure you would like to leave the chatroom?");
-    if (ImGui::Button("Yes", ImVec2(120, 0)))
-    {
-
-        ImGui::CloseCurrentPopup();
-    }
-    if (ImGui::Button("No", ImVec2(120, 0)))
-    {
-
-        ImGui::CloseCurrentPopup();
-    }
-    ImGui::EndPopup();
+    //ImGui::Text("Are you sure you would like to leave the chatroom?");
+    //if (ImGui::Button("Yes", ImVec2(120, 0)))
+    //{
+    //
+    //    ImGui::CloseCurrentPopup();
+    //}
+    //if (ImGui::Button("No", ImVec2(120, 0)))
+    //{
+    //
+    //    ImGui::CloseCurrentPopup();
+    //}
+    //ImGui::EndPopup();
 }
 
 void ModalJoinChatroomGui()
 {
-    ImGui::Text("Chatroom");
-    char ip[15];
-    char port[5];
-    ImGui::InputText("IP", ip, IM_ARRAYSIZE(ip));
-    ImGui::InputText("Port", port, IM_ARRAYSIZE(port));
-    if (ImGui::Button("Join", ImVec2(120, 0)))
-    {
-        JoinChatroom((std::string&)ip, (std::string&)port);
-        ImGui::CloseCurrentPopup();
-    }
-    ImGui::EndPopup();
+    //ImGui::Text("Chatroom");
+    //char ip[15];
+    //char port[5];
+    //ImGui::InputText("IP", ip, IM_ARRAYSIZE(ip));
+    //ImGui::InputText("Port", port, IM_ARRAYSIZE(port));
+    //if (ImGui::Button("Join", ImVec2(120, 0)))
+    //{
+    //    JoinChatroom((std::string&)ip, (std::string&)port);
+    //    ImGui::CloseCurrentPopup();
+    //}
+    //ImGui::EndPopup();
 }
 
 void PopulateUsers()
@@ -369,11 +382,12 @@ int main(int, char**)
     // - Read 'docs/FONTS.md' for more instructions and details.
     // - Remember that in C/C++ if you want to include a backslash \ in a string literal you need to write a double backslash \\ !
     // - Our Emscripten build process allows embedding fonts to be accessible at runtime from the "fonts/" folder. See Makefile.emscripten for details.
-    io.Fonts->AddFontDefault();
+    
     //io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\segoeui.ttf", 18.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Roboto-Medium.ttf", 16.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
+    io.Fonts->AddFontDefault();
     ImFont* font = io.Fonts->AddFontFromFileTTF("d:\\Fonts\\arialuni.ttf", 18.0f);
     IM_ASSERT(font != nullptr);
 
@@ -506,30 +520,34 @@ int main(int, char**)
         {
 
             ImGui::Begin("Users", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
-            if (ImGui::BeginTable("Users", 3) && chatroomStatus)
             {
-                for (int row = 0; row < 32; row++)
+                if (ImGui::BeginTable("Users", 3) && chatroomStatus)
                 {
-                    User user = chatroom.GetUser(row);
-                    ImGui::TableNextRow();
-                    for (int column = 0; column < 2; column++)
+                    for (int row = 0; row < 32; row++)
                     {
-                        ImGui::TableSetColumnIndex(column);
-                        if (!column)
+                        User user = chatroom.GetUser(row);
+                        ImGui::TableNextRow();
+                        for (int column = 0; column < 2; column++)
                         {
-                            ImGui::Text(user.GetDisplayName().c_str());
-                            continue;
-                        }
+                            ImGui::TableSetColumnIndex(column);
+                            if (!column)
+                            {
+                                ImGui::Text(user.GetDisplayName().c_str());
+                                continue;
+                            }
 
-                        ImGui::Text(user.GetId().c_str());
+                            ImGui::Text(user.GetId().c_str());
+                        }
                     }
+
                 }
                 ImGui::EndTable();
             }
+            
         	ImGui::End();
         }
 
-
+        ImGui::PopFont();
         // Rendering
         ImGui::Render();
         int display_w, display_h;
@@ -551,6 +569,7 @@ int main(int, char**)
         }
 
         glfwSwapBuffers(window);
+        
     }
 #ifdef __EMSCRIPTEN__
     EMSCRIPTEN_MAINLOOP_END;

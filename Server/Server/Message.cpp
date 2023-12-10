@@ -6,8 +6,6 @@
 
 Message::Message(const std::string& _message, User& _user) : m_message(_message), m_user(_user) {  }
 
-Message::Message(){  }
-
 void Message::ChangeMainMessage(const std::string& _message)
 {
 	m_message = _message;
@@ -19,7 +17,7 @@ void Message::AddToMessage(const std::string& _message)
 }
 
 
-void Message::ChangeUser(User& _user)
+void Message::ChangeUser(User& _user) const
 {
 	m_user = _user;
 }
@@ -46,7 +44,6 @@ User& Message::GetUser()
 }
 
 
-
 MessageBuilder::MessageBuilder()
 {
 	this->Reset();
@@ -59,7 +56,7 @@ MessageBuilder::~MessageBuilder()
 
 void MessageBuilder::Reset()
 {
-	this->m_Message = new Message();
+	this->m_Message = new Message("", emptyUser);
 }
 
 void MessageBuilder::AddMessage(Message& _message)
@@ -75,7 +72,7 @@ void MessageBuilder::AddTime()
 	auto currentTime = std::chrono::system_clock::now();
 	std::time_t finalTime = std::chrono::system_clock::to_time_t(currentTime);
 	std::string stringTime = std::string(std::ctime(&finalTime));
-	
+
 	this->m_Message->AddToMessage(stringTime + " ");
 }
 
@@ -96,8 +93,8 @@ void MessageBuilder::AddDateShort()
 }
 void MessageBuilder::AddId()
 {
-	this->m_Message->AddToMessage(m_Message->GetUser().GetId() +" ");
-	
+	this->m_Message->AddToMessage(m_Message->GetUser().GetId() + " ");
+
 }
 
 void MessageBuilder::AddDisplayName()
@@ -112,5 +109,10 @@ Message* MessageBuilder::GetFinalMessage() const
 	return m_Message;
 }
 
-
+Message& Message::operator=(const Message& _other)
+{
+	this->m_completeMessage = _other.m_completeMessage;
+	this->m_message = _other.m_message;
+	this->m_user = _other.m_user;
+}
 
