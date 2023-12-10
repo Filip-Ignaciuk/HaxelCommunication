@@ -6,8 +6,6 @@
 
 Message::Message(const std::string& _message, User& _user) : m_message(_message), m_user(_user) {  }
 
-Message::Message() = default;
-
 void Message::ChangeMainMessage(const std::string& _message)
 {
 	m_message = _message;
@@ -46,7 +44,6 @@ User& Message::GetUser()
 }
 
 
-
 MessageBuilder::MessageBuilder()
 {
 	this->Reset();
@@ -59,7 +56,7 @@ MessageBuilder::~MessageBuilder()
 
 void MessageBuilder::Reset()
 {
-	this->m_Message = new Message();
+	this->m_Message = new Message("", emptyUser);
 }
 
 void MessageBuilder::AddMessage(Message& _message)
