@@ -129,14 +129,22 @@ void ErrorChecker()
 // Checks if Ip is valid
 bool IpChecker(std::string& _ip)
 {
-    if(!_ip.size())
+    if (!_ip.size())
     {
         return false;
     }
     int i = 0;
     for (char character : _ip)
     {
-        if(!isdigit(character) || (character == '.' && i != 3))
+        if (!isdigit(character) && (character == '.' && (i > 3 || i == 0)))
+        {
+            return false;
+        }
+        else if (character == '.')
+        {
+            i = -1;
+        }
+        else if (!isdigit(character))
         {
             return false;
         }
@@ -207,32 +215,42 @@ void MenuBar()
                 ImGui::MenuItem("Nederlands", "", &GuiLanguage::dutch);
                 ImGui::MenuItem((const char*)u8"español", "", &GuiLanguage::spanish);
                 ImGui::EndMenu();
+
             }
             if (ImGui::MenuItem("Apperance"))
             {
-
+                ImGui::EndMenu();
             }
+
             if (ImGui::MenuItem("Credit"))
             {
-
+                ImGui::EndMenu();
             }
+
             ImGui::EndMenu();
         }
+
         if (ImGui::BeginMenu("Chatroom"))
         {
-            if(networkCalls->GetChatroomStatus())
+            if (networkCalls->GetChatroomStatus())
             {
                 if (ImGui::MenuItem("Close Chatroom"))
                 {
-
+                    ImGui::EndMenu();
                 }
-                
             }
-            
+            else
+            {
+                if (ImGui::MenuItem("Create Chatroom"))
+                {
+                    ImGui::EndMenu();
+                }
+            }
             ImGui::EndMenu();
         }
-        ImGui::EndMenuBar();
+
     }
+    ImGui::EndMenuBar();
 }
 
 void ModalLeaveChatroomGui()
@@ -469,7 +487,7 @@ int main(int, char**)
         	ImGui::End();
         }
 
-
+        ImGui::PopFont();
         // Rendering
         ImGui::Render();
         int display_w, display_h;
