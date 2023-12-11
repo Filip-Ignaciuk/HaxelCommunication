@@ -134,6 +134,7 @@ bool IpChecker(std::string& _ip)
         return false;
     }
     int i = 0;
+    int dotCount = 0;
     for (char character : _ip)
     {
         if (!isdigit(character) && (character == '.' && (i > 3 || i == 0)))
@@ -143,6 +144,7 @@ bool IpChecker(std::string& _ip)
         else if (character == '.')
         {
             i = -1;
+            dotCount++;
         }
         else if (!isdigit(character))
         {
@@ -150,7 +152,14 @@ bool IpChecker(std::string& _ip)
         }
         i++;
     }
-    return true;
+    if (dotCount == 3)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 // Checks if Port is valid
