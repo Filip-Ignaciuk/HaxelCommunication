@@ -16,15 +16,16 @@ struct ConnectHolder
 class WindowsNetworking : public NetworkCalls
 {
 private:
-	static SOCKET clientSocket;
+	static SOCKET serverSocket;
 
 	static bool isReceiving;
 
-	static bool isConnected;
+	static bool isBinded;
 
 	static bool inChatroom;
 
-	static DWORD WINAPI ConnectThread(LPVOID param);
+	static DWORD WINAPI ListenThread(LPVOID param);
+	static DWORD WINAPI BindThread(LPVOID param);
 	static DWORD WINAPI DisconnectThread(LPVOID param);
 
 	static DWORD WINAPI SendTextThread(LPVOID param);
@@ -43,7 +44,7 @@ public:
 	// Fundamental Procedures
 	void CreateSocket() override;
 	void CloseSocket() override;
-	void Connect(const std::string& _ip, int _port) override;
+	void Bind(const std::string& _ip, int _port) override;
 	void Disconnect() override;
 
 	// Main Procedures
@@ -53,7 +54,7 @@ public:
 
 	// Class Based
 	bool GetReceivingStatus() override;
-	bool GetConnectionStatus() override;
+	bool GetBindStatus() override;
 	bool GetChatroomStatus() override;
 
 };

@@ -4,13 +4,18 @@
 #include "Error.hpp"
 #include "ErrorHandler.hpp"
 
-SOCKET WindowsNetworking::clientSocket = INVALID_SOCKET;
+SOCKET WindowsNetworking::serverSocket = INVALID_SOCKET;
 bool WindowsNetworking::isReceiving = false;
-bool WindowsNetworking::isConnected = false;
+bool WindowsNetworking::isBinded = false;
 bool WindowsNetworking::inChatroom = false;
 
+DWORD WINAPI WindowsNetworking::ListenThread(LPVOID param)
+{
 
-DWORD WINAPI WindowsNetworking::ConnectThread(LPVOID param)
+	return 0;
+}
+
+DWORD WINAPI WindowsNetworking::BindThread(LPVOID param)
 {
 	ConnectHolder* CH = (ConnectHolder*)param;
 	const std::wstring ip = CH->ip;
@@ -21,13 +26,10 @@ DWORD WINAPI WindowsNetworking::ConnectThread(LPVOID param)
 	service.sin_port = htons(port);
 	InetPtonW(AF_INET, ip.c_str(), &service.sin_addr.S_un.S_addr);
 
-	if (!connect(clientSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
+	if (!bind(serverSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
 	{
 		// Successful
-		isConnected = true;
-		std::string password = "";
-		BufferConnect BC(password);
-		int result = send(clientSocket, (char*)&BC, sizeof(BufferConnect), 0);
+		isBinded = true;
 
 
 
@@ -35,7 +37,7 @@ DWORD WINAPI WindowsNetworking::ConnectThread(LPVOID param)
 	else
 	{
 		// UnSuccessful
-		const Error ConnectionFaliure("Could not connect to desired ip. Check if your ip/port is correct.", 1);
+		const Error ConnectionFaliure("Could not bind to specified Ip/Port.", 1);
 		ErrorHandler::AddError(ConnectionFaliure);
 
 	}
@@ -76,7 +78,7 @@ DWORD WINAPI WindowsNetworking::ReceiveSendMessageThread(LPVOID param)
 DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 {
 	BufferNormal buffer;
-	recv(clientSocket, (char*)&buffer, sizeof(BufferNormal), 0);
+	recv(serverSocket, (char*)&buffer, sizeof(BufferNormal), 0);
 	isReceiving = false;
 	
 	if(!buffer.GetType())
@@ -112,14 +114,14 @@ void WindowsNetworking::CreateSocket()
 	WSADATA wsaData;
 	if (WSAStartup(version, &wsaData))
 	{
-		const Error creatingSocketError("Couldn't create socket.", 0);
+		const Error creatingSocketError("Couldn't create socket. Wsa startup failed.", 0);
 		ErrorHandler::AddError(creatingSocketError);
 		// WSAGetLastError()
 	}
 
 
-	clientSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if (clientSocket == INVALID_SOCKET)
+	serverSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	if (serverSocket == INVALID_SOCKET)
 	{
 		WSACleanup();
 		const Error creatingSocketError("Couldn't create socket.", 0);
@@ -130,7 +132,7 @@ void WindowsNetworking::CreateSocket()
 
 void WindowsNetworking::CloseSocket() 
 {
-	if(!closesocket(clientSocket))
+	if(!closesocket(serverSocket))
 	{
 		const Error ClosingSocketError("Couldn't close socket.", 0);
 		ErrorHandler::AddError(ClosingSocketError);
@@ -139,7 +141,7 @@ void WindowsNetworking::CloseSocket()
 	WSACleanup();
 }
 
-void WindowsNetworking::Connect(const std::string& _ip, int _port) 
+void WindowsNetworking::Bind(const std::string& _ip, int _port) 
 {
 	// Convert Ip to wide Ip
 	std::wstring wideIp = std::wstring(_ip.begin(), _ip.end());
@@ -147,14 +149,14 @@ void WindowsNetworking::Connect(const std::string& _ip, int _port)
 
 	DWORD threadId;
 	HANDLE handle;
-	handle = CreateThread(nullptr, 0, ConnectThread, CH, 0, &threadId);
+	handle = CreateThread(nullptr, 0, BindThread, CH, 0, &threadId);
 }
 
 void WindowsNetworking::Disconnect()
 {
 	DWORD threadId;
 	HANDLE handle;
-	handle = CreateThread(nullptr, 0, ConnectThread, nullptr, 0, &threadId);
+	handle = CreateThread(nullptr, 0, DisconnectThread, nullptr, 0, &threadId);
 }
 
 
@@ -184,5 +186,5 @@ void WindowsNetworking::Receive()
 }
 
 bool WindowsNetworking::GetReceivingStatus() { return isReceiving; }
-bool WindowsNetworking::GetConnectionStatus() {	return isConnected;	}
+bool WindowsNetworking::GetBindStatus() {	return isBinded;	}
 bool WindowsNetworking::GetChatroomStatus() { return inChatroom; }

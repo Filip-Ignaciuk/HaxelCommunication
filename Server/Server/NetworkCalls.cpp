@@ -2,7 +2,7 @@
 
 void NetworkCalls::CreateSocket(){}
 void NetworkCalls::CloseSocket(){}
-void NetworkCalls::Connect(const std::string& _ip, const int _port) {}
+void NetworkCalls::Bind(const std::string& _ip, int _port){}
 void NetworkCalls::Disconnect(){}
 
 
@@ -11,7 +11,7 @@ void NetworkCalls::UpdateUser() {}
 void NetworkCalls::Receive() {}
 
 bool NetworkCalls::GetReceivingStatus() { return false; }
-bool NetworkCalls::GetConnectionStatus() { return false; }
+bool NetworkCalls::GetBindStatus() { return false; }
 bool NetworkCalls::GetChatroomStatus() { return false; }
 
 NetworkCalls::~NetworkCalls() = default;

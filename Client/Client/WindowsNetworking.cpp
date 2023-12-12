@@ -154,7 +154,7 @@ void WindowsNetworking::Disconnect()
 {
 	DWORD threadId;
 	HANDLE handle;
-	handle = CreateThread(nullptr, 0, ConnectThread, nullptr, 0, &threadId);
+	handle = CreateThread(nullptr, 0, DisconnectThread, nullptr, 0, &threadId);
 }
 
 

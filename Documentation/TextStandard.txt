@@ -1,0 +1,33 @@
+Chatroom
+Users
+Settings
+Language
+Apperance
+Credit
+Chatroom network details:
+IP
+Port
+Create Chatroom
+Critical
+Close Program
+Warning
+Cancel
+Information
+Invalid IP
+Invalid Port
+Close Chatroom
+Close Socket
+Are you sure you would like to close the chatroom?
+Are you sure you would like to unbind from your chosen IP and Port?
+Yes
+No
+Could not bind to specified Ip/Port.
+Couldn't create socket. Wsa startup failed.
+Couldn't create socket.
+Couldn't close socket.
+Failed to create folders for language files.
+Failed to create folders for user files.
+Tried to change to a language that isn't support.
+Failed to create EnGB text file.
+Tried to read a language File that doesn't exist, regenerating file.
+Tried to update non-existent User.

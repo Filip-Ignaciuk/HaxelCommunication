@@ -37,11 +37,17 @@ static void glfw_error_callback(int error, const char* description)
 
 #define IMGUI_ENABLE_FREETYPE
 
-// Client
+// Server
 
 // Application
 NetworkCallsCreator creator;
 NetworkCalls* networkCalls;
+
+// Status
+static std::string currentStatus = "";
+static ImVec4 red;
+static ImVec4 yellow;
+static ImVec4 green;
 
 // Error Data
 
@@ -81,7 +87,7 @@ void ErrorChecker()
 
             if (ImGui::BeginPopupModal("Critical", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
                 ImGui::Text(latestErrorMessage);
-                if (ImGui::Button("Cancel", ImVec2(120, 0)))
+                if (ImGui::Button("Close Program", ImVec2(120, 0)))
                 {
                     finishedError = true;
                     criticalError = true;
@@ -185,7 +191,7 @@ void CreateChatroom(std::string& _ip, std::string& _port)
     const bool isPortValid = PortChecker(_port);
     if(isIpValid && isPortValid)
     {
-        networkCalls->Connect(_ip, std::stoi(_port));
+        networkCalls->Bind(_ip, std::stoi(_port));
 
     }
     else
@@ -208,12 +214,57 @@ void CreateChatroom(std::string& _ip, std::string& _port)
 
 // GUI Constructs
 
+
+
+void ModalCloseChatroomGui()
+{
+    ImGui::Text("Are you sure you would like to close the chatroom?");
+    if (ImGui::Button("Yes", ImVec2(120, 0)))
+    {
+
+        ImGui::CloseCurrentPopup();
+    }
+    if (ImGui::Button("No", ImVec2(120, 0)))
+    {
+        
+        ImGui::CloseCurrentPopup();
+    }
+    ImGui::EndPopup();
+}
+
+void ModalCloseBindGui()
+{
+    ImGui::Text("Are you sure you would like to unbind from your chosen IP and Port?");
+    if (ImGui::Button("Yes", ImVec2(120, 0)))
+    {
+
+        ImGui::CloseCurrentPopup();
+    }
+    if (ImGui::Button("No", ImVec2(120, 0)))
+    {
+
+        ImGui::CloseCurrentPopup();
+    }
+    ImGui::EndPopup();
+}
+
+
+void PopulateUsers()
+{
+    for (int i = 0; i < 31; i++)
+    {
+        User user = chatroom.GetUser(i);
+
+    }
+}
+
 // Menu Bar
 
 void MenuBar()
 {
     if (ImGui::BeginMenuBar())
     {
+        ImGui::TextColored(ImVec4(1, 1, 0, 1), "Status");
         if (ImGui::BeginMenu("Settings"))
         {
             if (ImGui::BeginMenu("Language"))
@@ -245,6 +296,18 @@ void MenuBar()
             {
                 if (ImGui::MenuItem("Close Chatroom"))
                 {
+                    ModalCloseChatroomGui();
+                    ImGui::EndMenu();
+                }
+                if (ImGui::MenuItem("Close Socket"))
+                {
+                    ImGui::EndMenu();
+                }
+            }
+            else if (networkCalls->GetBindStatus())
+            {
+                if (ImGui::MenuItem("Close Socket"))
+                {
                     ImGui::EndMenu();
                 }
             }
@@ -261,34 +324,6 @@ void MenuBar()
     }
     ImGui::EndMenuBar();
 }
-
-void ModalLeaveChatroomGui()
-{
-    ImGui::Text("Are you sure you would like to close the chatroom?");
-    if (ImGui::Button("Yes", ImVec2(120, 0)))
-    {
-
-        ImGui::CloseCurrentPopup();
-    }
-    if (ImGui::Button("No", ImVec2(120, 0)))
-    {
-        
-        ImGui::CloseCurrentPopup();
-    }
-    ImGui::EndPopup();
-}
-
-
-void PopulateUsers()
-{
-    for (int i = 0; i < 31; i++)
-    {
-        User user = chatroom.GetUser(i);
-
-    }
-}
-
-
 
 
 // Main code
@@ -434,16 +469,16 @@ int main(int, char**)
             networkCalls->Receive();
         }
 
-        ImGui::Begin("ChatRoom", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+        ImGui::Begin("Chatroom", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
         {
+            
+            // Gui Logic
+            ErrorChecker();
             // Check for critical error
             if (criticalError)
             {
                 break;
             }
-            // Gui Logic
-            ErrorChecker();
-
             // Gui
             MenuBar();
 
