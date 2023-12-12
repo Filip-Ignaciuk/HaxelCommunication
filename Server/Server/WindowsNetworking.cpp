@@ -37,7 +37,7 @@ DWORD WINAPI WindowsNetworking::BindThread(LPVOID param)
 	else
 	{
 		// UnSuccessful
-		const Error ConnectionFaliure("Could not bind to specified Ip/Port.", 1);
+		const Error ConnectionFaliure(LanguageFileInitialiser::charAllTextsInApplication[25], 1);
 		ErrorHandler::AddError(ConnectionFaliure);
 
 	}
@@ -114,7 +114,7 @@ void WindowsNetworking::CreateSocket()
 	WSADATA wsaData;
 	if (WSAStartup(version, &wsaData))
 	{
-		const Error creatingSocketError("Couldn't create socket. Wsa startup failed.", 0);
+		const Error creatingSocketError(LanguageFileInitialiser::charAllTextsInApplication[26], 0);
 		ErrorHandler::AddError(creatingSocketError);
 		// WSAGetLastError()
 	}
@@ -124,7 +124,7 @@ void WindowsNetworking::CreateSocket()
 	if (serverSocket == INVALID_SOCKET)
 	{
 		WSACleanup();
-		const Error creatingSocketError("Couldn't create socket.", 0);
+		const Error creatingSocketError(LanguageFileInitialiser::charAllTextsInApplication[27], 0);
 		ErrorHandler::AddError(creatingSocketError);
 	}
 
@@ -134,7 +134,7 @@ void WindowsNetworking::CloseSocket()
 {
 	if(!closesocket(serverSocket))
 	{
-		const Error ClosingSocketError("Couldn't close socket.", 0);
+		const Error ClosingSocketError(LanguageFileInitialiser::charAllTextsInApplication[28], 0);
 		ErrorHandler::AddError(ClosingSocketError);
 	}
 	

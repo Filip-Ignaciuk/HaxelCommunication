@@ -1,33 +1,34 @@
+Haxel Communication
+Chatroom
+Users
+Settings
+Language
+Apperance 
+Credit
+Chatroom network details:
 IP
 Port
-Connection
-Not connected
-Connected
-Connect 
-Failed to connect
-Connecting.
-Connecting..
-Connecting...
-User
-Display Name
-Changing.
-Changing..
-Changing...
-Successfully initialised user
-Update user
-Chat room
-In chat room
-Type /h for help
-Message
-Successfully changed user data
-Languages
-Display Name is too large
-Invalid port or IP
-Max clients within chatroom! Please wait for someone to leave or join another one.
-Request timed out. Please try to reconnect to the server.
-The server has been disconnected.
-Failed to connect to the domain server.
-Chatroom doesn't exist with chosen name.
-Password incorrect for the requested chatroom.
-User Information
-User Customisation
+Create Chatroom
+Critical
+Close Program
+Warning
+Cancel
+Information
+Invalid IP
+Invalid Port
+Close Chatroom
+Close Socket
+Are you sure you would like to close the chatroom?
+Are you sure you would like to unbind from your chosen IP and Port?
+Yes
+No
+Could not bind to specified Ip/Port.
+Couldn't create socket. Wsa startup failed.
+Couldn't create socket.
+Couldn't close socket.
+Failed to create folders for language files.
+Failed to create folders for user files.
+Tried to change to a language that isn't supported.
+Failed to create EnGB text file.
+Tried to read a language File that doesn't exist, regenerating file.
+Tried to update non-existent User.

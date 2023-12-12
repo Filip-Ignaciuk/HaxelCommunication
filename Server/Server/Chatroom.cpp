@@ -1,6 +1,7 @@
 #include "Chatroom.hpp"
 
 #include "ErrorHandler.hpp"
+#include "Languages.hpp"
 
 Chatroom::Chatroom() = default;
 
@@ -52,7 +53,7 @@ void Chatroom::UpdateUser(User& _oldUser, User& _newUser)
 		
 	}
 
-	const Error updateUserError("Tried to update non-existent User.", 1);
+	const Error updateUserError(LanguageFileInitialiser::charAllTextsInApplication[33], 1);
 	ErrorHandler::AddError(updateUserError);
 }
 
@@ -73,7 +74,7 @@ void Chatroom::UpdateMessages()
 		messageBuilder.AddMessage(message);
 		//Change in accordance to the users settings
 
-		message = *messageBuilder.GetFinalMessage();;
+		message = *messageBuilder.GetFinalMessage();
 
 
 	}

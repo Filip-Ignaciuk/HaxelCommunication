@@ -27,7 +27,7 @@ Couldn't create socket.
 Couldn't close socket.
 Failed to create folders for language files.
 Failed to create folders for user files.
-Tried to change to a language that isn't support.
+Tried to change to a language that isn't supported.
 Failed to create EnGB text file.
 Tried to read a language File that doesn't exist, regenerating file.
 Tried to update non-existent User.

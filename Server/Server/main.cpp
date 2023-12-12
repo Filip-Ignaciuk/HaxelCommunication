@@ -14,6 +14,7 @@
 #include "User.hpp"
 #include "ErrorHandler.hpp"
 #include "GuiLanguage.hpp"
+#include "Languages.hpp"
 
 #include "WindowsNetworking.hpp"
 #include "WindowsNetworkCallsCreator.hpp"
@@ -83,11 +84,11 @@ void ErrorChecker()
     {
         if (!latestErrorLevel)
         {
-            ImGui::OpenPopup("Critical");
+            ImGui::OpenPopup(LanguageFileInitialiser::charAllTextsInApplication[11]);
 
-            if (ImGui::BeginPopupModal("Critical", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+            if (ImGui::BeginPopupModal(LanguageFileInitialiser::charAllTextsInApplication[11], NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
                 ImGui::Text(latestErrorMessage);
-                if (ImGui::Button("Close Program", ImVec2(120, 0)))
+                if (ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[12], ImVec2(120, 0)))
                 {
                     finishedError = true;
                     criticalError = true;
@@ -99,11 +100,11 @@ void ErrorChecker()
         }
         else if (latestErrorLevel == 1)
         {
-            ImGui::OpenPopup("Warning");
+            ImGui::OpenPopup(LanguageFileInitialiser::charAllTextsInApplication[13]);
 
-            if (ImGui::BeginPopupModal("Warning", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+            if (ImGui::BeginPopupModal(LanguageFileInitialiser::charAllTextsInApplication[13], NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
                 ImGui::Text(latestErrorMessage);
-                if (ImGui::Button("Cancel", ImVec2(120, 0)))
+                if (ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[14], ImVec2(120, 0)))
                 {
                     finishedError = true;
                     ErrorHandler::DeleteError();
@@ -114,11 +115,11 @@ void ErrorChecker()
         }
         else if (latestErrorLevel == 2)
         {
-            ImGui::OpenPopup("Information");
+            ImGui::OpenPopup(LanguageFileInitialiser::charAllTextsInApplication[15]);
 
-            if (ImGui::BeginPopupModal("Information", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+            if (ImGui::BeginPopupModal(LanguageFileInitialiser::charAllTextsInApplication[15], NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
                 ImGui::Text(latestErrorMessage);
-                if (ImGui::Button("Cancel", ImVec2(120, 0)))
+                if (ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[14], ImVec2(120, 0)))
                 {
                     finishedError = true;
                     ErrorHandler::DeleteError();
@@ -198,12 +199,12 @@ void CreateChatroom(std::string& _ip, std::string& _port)
     {
 	    if(!isIpValid)
 	    {
-            Error invalidIpError("Invalid Ip", 1);
+            Error invalidIpError(LanguageFileInitialiser::charAllTextsInApplication[16], 1);
             ErrorHandler::AddError(invalidIpError);
 	    }
         else if(!isPortValid)
         {
-            Error invalidPortError("Invalid Port", 1);
+            Error invalidPortError(LanguageFileInitialiser::charAllTextsInApplication[17], 1);
             ErrorHandler::AddError(invalidPortError);
         }
     }
@@ -218,34 +219,34 @@ void CreateChatroom(std::string& _ip, std::string& _port)
 
 void ModalCloseChatroomGui()
 {
-    ImGui::Text("Are you sure you would like to close the chatroom?");
-    if (ImGui::Button("Yes", ImVec2(120, 0)))
-    {
-
-        ImGui::CloseCurrentPopup();
-    }
-    if (ImGui::Button("No", ImVec2(120, 0)))
-    {
-        
-        ImGui::CloseCurrentPopup();
-    }
-    ImGui::EndPopup();
+    //ImGui::Text(LanguageFileInitialiser::charAllTextsInApplication[20]);
+    //if (ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[22], ImVec2(120, 0)))
+    //{
+    //
+    //    ImGui::CloseCurrentPopup();
+    //}
+    //if (ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[23], ImVec2(120, 0)))
+    //{
+    //    
+    //    ImGui::CloseCurrentPopup();
+    //}
+    //ImGui::EndPopup();
 }
 
 void ModalCloseBindGui()
 {
-    ImGui::Text("Are you sure you would like to unbind from your chosen IP and Port?");
-    if (ImGui::Button("Yes", ImVec2(120, 0)))
-    {
-
-        ImGui::CloseCurrentPopup();
-    }
-    if (ImGui::Button("No", ImVec2(120, 0)))
-    {
-
-        ImGui::CloseCurrentPopup();
-    }
-    ImGui::EndPopup();
+    //ImGui::Text(LanguageFileInitialiser::charAllTextsInApplication[21]);
+    //if (ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[22], ImVec2(120, 0)))
+    //{
+    //
+    //    ImGui::CloseCurrentPopup();
+    //}
+    //if (ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[23], ImVec2(120, 0)))
+    //{
+    //
+    //    ImGui::CloseCurrentPopup();
+    //}
+    //ImGui::EndPopup();
 }
 
 
@@ -265,9 +266,9 @@ void MenuBar()
     if (ImGui::BeginMenuBar())
     {
         ImGui::TextColored(ImVec4(1, 1, 0, 1), "Status");
-        if (ImGui::BeginMenu("Settings"))
+        if (ImGui::BeginMenu(LanguageFileInitialiser::charAllTextsInApplication[3]))
         {
-            if (ImGui::BeginMenu("Language"))
+            if (ImGui::BeginMenu(LanguageFileInitialiser::charAllTextsInApplication[4]))
             {
                 ImGui::MenuItem("English", "", &GuiLanguage::english);
                 ImGui::MenuItem((const char*)u8"français", "", &GuiLanguage::french);
@@ -277,12 +278,12 @@ void MenuBar()
                 ImGui::EndMenu();
 
             }
-            if (ImGui::MenuItem("Apperance"))
+            if (ImGui::MenuItem(LanguageFileInitialiser::charAllTextsInApplication[5]))
             {
                 ImGui::EndMenu();
             }
 
-            if (ImGui::MenuItem("Credit"))
+            if (ImGui::MenuItem(LanguageFileInitialiser::charAllTextsInApplication[6]))
             {
                 ImGui::EndMenu();
             }
@@ -290,30 +291,30 @@ void MenuBar()
             ImGui::EndMenu();
         }
 
-        if (ImGui::BeginMenu("Chatroom"))
+        if (ImGui::BeginMenu(LanguageFileInitialiser::charAllTextsInApplication[1]))
         {
             if (networkCalls->GetChatroomStatus())
             {
-                if (ImGui::MenuItem("Close Chatroom"))
+                if (ImGui::MenuItem(LanguageFileInitialiser::charAllTextsInApplication[18]))
                 {
                     ModalCloseChatroomGui();
                     ImGui::EndMenu();
                 }
-                if (ImGui::MenuItem("Close Socket"))
+                if (ImGui::MenuItem(LanguageFileInitialiser::charAllTextsInApplication[19]))
                 {
                     ImGui::EndMenu();
                 }
             }
             else if (networkCalls->GetBindStatus())
             {
-                if (ImGui::MenuItem("Close Socket"))
+                if (ImGui::MenuItem(LanguageFileInitialiser::charAllTextsInApplication[19]))
                 {
                     ImGui::EndMenu();
                 }
             }
             else
             {
-                if (ImGui::MenuItem("Create Chatroom"))
+                if (ImGui::MenuItem(LanguageFileInitialiser::charAllTextsInApplication[10]))
                 {
                     ImGui::EndMenu();
                 }
@@ -469,7 +470,7 @@ int main(int, char**)
             networkCalls->Receive();
         }
 
-        ImGui::Begin("Chatroom", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+        ImGui::Begin(LanguageFileInitialiser::charAllTextsInApplication[1], &exit, ImGuiWindowFlags_MenuBar);
         {
             
             // Gui Logic
@@ -483,12 +484,12 @@ int main(int, char**)
             MenuBar();
 
             // Server Info
-            ImGui::Text("Chatroom network details:");
+            ImGui::Text(LanguageFileInitialiser::charAllTextsInApplication[7]);
             static char ip[15];
             static char port[5];
-            ImGui::InputText("IP", ip, IM_ARRAYSIZE(ip));
-            ImGui::InputText("Port", port, IM_ARRAYSIZE(port));
-            if(ImGui::Button("Create Chatroom"))
+            ImGui::InputText(LanguageFileInitialiser::charAllTextsInApplication[8], ip, IM_ARRAYSIZE(ip));
+            ImGui::InputText(LanguageFileInitialiser::charAllTextsInApplication[9], port, IM_ARRAYSIZE(port));
+            if(ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[10]))
             {
                 std::string sIp = ip;
                 std::string sPort = port;
@@ -504,11 +505,11 @@ int main(int, char**)
 
 
         
-        ImGui::Begin("Users", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+        ImGui::Begin(LanguageFileInitialiser::charAllTextsInApplication[2], &exit, ImGuiWindowFlags_MenuBar);
         {
         
             
-            if (ImGui::BeginTable("Users", 3) && chatroomStatus)
+            if (ImGui::BeginTable(LanguageFileInitialiser::charAllTextsInApplication[2], 3) && chatroomStatus)
             {
                 for (int row = 0; row < 32; row++)
                 {
@@ -526,8 +527,9 @@ int main(int, char**)
                         ImGui::Text(user.GetId().c_str());
                     }
                 }
-                ImGui::EndTable();
+                
             }
+            ImGui::EndTable();
         	ImGui::End();
         }
 

@@ -19,7 +19,7 @@ void LanguageFileInitialiser::ChangeLanguage(const int _language)
 {
 	if(_language < 0 || _language > numberOfLanguages  )
 	{
-		Error invalidLanguage("Tried to change to a language that isn't support.", 1);
+		Error invalidLanguage(charAllTextsInApplication[30], 1);
 		ErrorHandler::AddError(invalidLanguage);
 	}
 	config::UpdateLanguage(_language);
@@ -74,7 +74,7 @@ bool LanguageFileInitialiser::GenerateEnGb()
 	}
 	else
 	{
-		Error failedToCreateLanguageFile("Failed to create EnGB text file.", 0);
+		Error failedToCreateLanguageFile(LanguageFileInitialiser::charAllTextsInApplication[31], 0);
 		ErrorHandler::AddError(failedToCreateLanguageFile);
 		return false;
 	}
@@ -125,7 +125,7 @@ void LanguageFileInitialiser::PopulateAllTextsInApplication()
 	
 	if(!initialisedLanguages[config::GetCurrentLanguage()])
 	{
-		Error NoLanguageFile("Tried to read a language File that doesn't exist, regenerating file.", 1);
+		Error NoLanguageFile(charAllTextsInApplication[32], 1);
 		ErrorHandler::AddError(NoLanguageFile);
 		GenerateLanguageFile(config::GetCurrentLanguage());
 	}
@@ -135,7 +135,7 @@ void LanguageFileInitialiser::PopulateAllTextsInApplication()
 	if (!languageFile.is_open())
 	{
 		// System thinks there is a language file and that it is initialised.
-		Error NoLanguageFile("Tried to read a language File that doesn't exist, regenerating file.", 1);
+		Error NoLanguageFile(charAllTextsInApplication[32], 1);
 		ErrorHandler::AddError(NoLanguageFile);
 		GenerateLanguageFile(config::GetCurrentLanguage());
 

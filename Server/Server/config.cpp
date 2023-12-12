@@ -29,13 +29,13 @@ void config::InitFolders()
 {
 	if (!std::filesystem::create_directory(currentDirNormalised + "/Languages"))
 	{
-		Error FileSystemError("Failed to create folders for language files.", 0);
+		Error FileSystemError(LanguageFileInitialiser::charAllTextsInApplication[28], 0);
 		ErrorHandler::AddError(FileSystemError);
 	}
 
 	if (!std::filesystem::create_directory(currentDirNormalised + "/Users"))
 	{
-		Error FileSystemError("Failed to create folders for user files.", 0);
+		Error FileSystemError(LanguageFileInitialiser::charAllTextsInApplication[29], 0);
 		ErrorHandler::AddError(FileSystemError);
 	}
 

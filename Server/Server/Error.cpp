@@ -16,7 +16,7 @@ Error::Error(const Error& _other) :m_message(_other.m_message), m_level(_other.m
 	
 }
 
-std::string Error::GetMessageString() const
+std::string& Error::GetMessageString()
 {
 	return m_message;
 }
