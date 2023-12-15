@@ -18,19 +18,18 @@ DWORD WINAPI WindowsNetworking::ListenThread(LPVOID param)
 DWORD WINAPI WindowsNetworking::BindThread(LPVOID param)
 {
 	ConnectHolder* CH = (ConnectHolder*)param;
-	const std::wstring ip = CH->ip;
-	const int port = CH->port;
-
+	std::wstring* ip = CH->ip;
+	int* port = CH->port;
+	delete CH;
 	sockaddr_in service;
 	service.sin_family = AF_INET;
-	service.sin_port = htons(port);
-	InetPtonW(AF_INET, ip.c_str(), &service.sin_addr.S_un.S_addr);
+	service.sin_port = htons(*port);
+	InetPtonW(AF_INET, ip->c_str(), &service.sin_addr.S_un.S_addr);
 
 	if (!bind(serverSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
 	{
 		// Successful
 		isBinded = true;
-
 
 
 	}
@@ -39,7 +38,9 @@ DWORD WINAPI WindowsNetworking::BindThread(LPVOID param)
 		// UnSuccessful
 		const Error ConnectionFaliure(LanguageFileInitialiser::charAllTextsInApplication[25], 1);
 		ErrorHandler::AddError(ConnectionFaliure);
-
+		// Reset Ip and Port
+		*port = 0;
+		//std::wstring emptyString = u8"";
 	}
 	return 0;
 }
@@ -145,7 +146,9 @@ void WindowsNetworking::Bind(const std::string& _ip, int _port)
 {
 	// Convert Ip to wide Ip
 	std::wstring wideIp = std::wstring(_ip.begin(), _ip.end());
-	ConnectHolder* CH = new ConnectHolder{ wideIp, _port };
+	m_currentIp = wideIp;
+	m_currentPort = _port;
+	ConnectHolder* CH = new ConnectHolder{ &m_currentIp, &m_currentPort };
 
 	DWORD threadId;
 	HANDLE handle;

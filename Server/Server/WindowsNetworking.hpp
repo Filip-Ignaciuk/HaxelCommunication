@@ -8,8 +8,8 @@
 
 struct ConnectHolder
 {
-	const std::wstring ip;
-	const int port;
+	std::wstring* ip;
+	int* port;
 };
 
 // Implementation of NetworkCalls in windows.
@@ -23,6 +23,9 @@ private:
 	static bool isBinded;
 
 	static bool inChatroom;
+
+	std::string m_currentIp;
+	int m_currentPort;
 
 	static DWORD WINAPI ListenThread(LPVOID param);
 	static DWORD WINAPI BindThread(LPVOID param);

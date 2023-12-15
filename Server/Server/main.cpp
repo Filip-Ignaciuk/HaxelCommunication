@@ -484,17 +484,25 @@ int main(int, char**)
             MenuBar();
 
             // Server Info
-            ImGui::Text(LanguageFileInitialiser::charAllTextsInApplication[7]);
-            static char ip[15];
-            static char port[5];
-            ImGui::InputText(LanguageFileInitialiser::charAllTextsInApplication[8], ip, IM_ARRAYSIZE(ip));
-            ImGui::InputText(LanguageFileInitialiser::charAllTextsInApplication[9], port, IM_ARRAYSIZE(port));
-            if(ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[10]))
+            if(!networkCalls->GetBindStatus())
             {
-                std::string sIp = ip;
-                std::string sPort = port;
-                CreateChatroom(sIp, sPort);
+                ImGui::Text(LanguageFileInitialiser::charAllTextsInApplication[7]);
+                static char ip[15];
+                static char port[5];
+                ImGui::InputText(LanguageFileInitialiser::charAllTextsInApplication[8], ip, IM_ARRAYSIZE(ip));
+                ImGui::InputText(LanguageFileInitialiser::charAllTextsInApplication[9], port, IM_ARRAYSIZE(port));
+                if (ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[10]))
+                {
+                    std::string sIp = ip;
+                    std::string sPort = port;
+                    CreateChatroom(sIp, sPort);
+                }
             }
+            else
+            {
+	            std::string
+            }
+            
             
 
             ImGui::End();

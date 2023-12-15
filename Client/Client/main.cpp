@@ -514,7 +514,6 @@ int main(int, char**)
                 ImGui::InputText("Port", port, IM_ARRAYSIZE(port));
                 if(ImGui::Button("Connect"))
                 {
-                    ModalJoinChatroomGui();
                     std::string sIp = ip;
                     std::string sPort = port;
                     JoinChatroom(sIp, sPort);
