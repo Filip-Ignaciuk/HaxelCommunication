@@ -3,5 +3,5 @@
 
 NetworkCalls* WindowsCallsCreator::CreateNetworkCalls() const
 {
-	return new WindowsNetworking;
+	return new WindowsNetworking();
 }

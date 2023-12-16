@@ -41,8 +41,7 @@ static void glfw_error_callback(int error, const char* description)
 // Server
 
 // Application
-NetworkCallsCreator creator;
-NetworkCalls* networkCalls;
+NetworkCallsCreator* creator;
 
 // Status
 static std::string currentStatus;
@@ -194,7 +193,7 @@ void CreateChatroom(std::string& _ip, std::string& _port)
     const bool isPortValid = PortChecker(_port);
     if(isIpValid && isPortValid)
     {
-        networkCalls->Bind(_ip, std::stoi(_port));
+        creator->Bind(_ip, std::stoi(_port));
 
     }
     else
@@ -295,7 +294,7 @@ void MenuBar()
 
         if (ImGui::BeginMenu(LanguageFileInitialiser::charAllTextsInApplication[1]))
         {
-            if (networkCalls->GetChatroomStatus())
+            if (creator->GetChatroomStatus())
             {
                 if (ImGui::MenuItem(LanguageFileInitialiser::charAllTextsInApplication[18]))
                 {
@@ -307,7 +306,7 @@ void MenuBar()
                     ImGui::EndMenu();
                 }
             }
-            else if (networkCalls->GetBindStatus())
+            else if (creator->GetBindStatus())
             {
                 if (ImGui::MenuItem(LanguageFileInitialiser::charAllTextsInApplication[19]))
                 {
@@ -422,9 +421,8 @@ int main(int, char**)
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     // Setup Networking
-    creator = WindowsCallsCreator();
-    networkCalls = creator.CreateNetworkCalls();
-    networkCalls->CreateSocket();
+    creator = new WindowsCallsCreator();
+    creator->CreateSocket();
 
     // Loading Configs
     config::StartConfigs();
@@ -464,12 +462,14 @@ int main(int, char**)
 
         
         bool exit = true;
-        bool chatroomStatus = networkCalls->GetReceivingStatus();
+        bool receivingStatus = creator->GetReceivingStatus();
+        bool chatroomStatus = creator->GetChatroomStatus();
+        bool getBindedStatus = creator->GetBindStatus();
 
         // Receive data from chatroom
-        if (!chatroomStatus)
+        if (!receivingStatus && chatroomStatus && getBindedStatus)
         {
-            networkCalls->Receive();
+            creator->Receive();
         }
 
         ImGui::Begin(LanguageFileInitialiser::charAllTextsInApplication[1], &exit, ImGuiWindowFlags_MenuBar);
@@ -486,7 +486,7 @@ int main(int, char**)
             MenuBar();
 
             // Server Info
-            if(!networkCalls->GetBindStatus())
+            if(!getBindedStatus)
             {
                 currentStatus = LanguageFileInitialiser::allTextsInApplication[35];
                 ImGui::Text(LanguageFileInitialiser::charAllTextsInApplication[7]);
@@ -504,8 +504,8 @@ int main(int, char**)
             else
             {
                 currentStatus = LanguageFileInitialiser::allTextsInApplication[34];
-                std::string currentIp = LanguageFileInitialiser::allTextsInApplication[8] + ":" + networkCalls->GetCurrentIp();
-                std::string currentPort = LanguageFileInitialiser::allTextsInApplication[9] + ":" + std::to_string(networkCalls->GetCurrentPort());
+                std::string currentIp = LanguageFileInitialiser::allTextsInApplication[8] + ":" + creator->GetCurrentIp();
+                std::string currentPort = LanguageFileInitialiser::allTextsInApplication[9] + ":" + std::to_string(creator->GetCurrentPort());
 
             	ImGui::Text(currentIp.c_str());
                 ImGui::Text(currentPort.c_str());

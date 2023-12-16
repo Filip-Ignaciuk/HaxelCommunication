@@ -20,7 +20,7 @@ DWORD WINAPI WindowsNetworking::BindThread(LPVOID param)
 	ConnectHolder* CH = (ConnectHolder*)param;
 	std::wstring* ip = CH->ip;
 	int* port = CH->port;
-	delete CH;
+	
 	sockaddr_in service;
 	service.sin_family = AF_INET;
 	service.sin_port = htons(*port);
@@ -43,7 +43,9 @@ DWORD WINAPI WindowsNetworking::BindThread(LPVOID param)
 		const std::wstring emptyString;
 		*ip = emptyString;
 	}
+	delete CH;
 	return 0;
+	
 }
 
 DWORD WINAPI WindowsNetworking::DisconnectThread(LPVOID param)
@@ -194,3 +196,4 @@ bool WindowsNetworking::GetBindStatus() {	return isBinded;	}
 bool WindowsNetworking::GetChatroomStatus() { return inChatroom; }
 const char* WindowsNetworking::GetCurrentIp() { return (const char*)m_currentIp.c_str(); }
 int WindowsNetworking::GetCurrentPort() { return m_currentPort; }
+
