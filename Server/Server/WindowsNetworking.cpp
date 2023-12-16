@@ -9,6 +9,10 @@ bool WindowsNetworking::isReceiving = false;
 bool WindowsNetworking::isBinded = false;
 bool WindowsNetworking::inChatroom = false;
 
+std::wstring WindowsNetworking::currentWideIp = L"";
+std::string WindowsNetworking::currentIp = "";
+int WindowsNetworking::currentPort = 0;
+
 DWORD WINAPI WindowsNetworking::ListenThread(LPVOID param)
 {
 
@@ -17,14 +21,11 @@ DWORD WINAPI WindowsNetworking::ListenThread(LPVOID param)
 
 DWORD WINAPI WindowsNetworking::BindThread(LPVOID param)
 {
-	ConnectHolder* CH = (ConnectHolder*)param;
-	std::wstring* ip = CH->ip;
-	int* port = CH->port;
-	
+	PCWSTR pcIp = currentWideIp.c_str();
 	sockaddr_in service;
 	service.sin_family = AF_INET;
-	service.sin_port = htons(*port);
-	InetPtonW(AF_INET, ip->c_str(), &service.sin_addr.S_un.S_addr);
+	service.sin_port = htons(currentPort);
+	InetPtonW(AF_INET, pcIp, &service.sin_addr.S_un.S_addr);
 
 	if (!bind(serverSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
 	{
@@ -39,11 +40,10 @@ DWORD WINAPI WindowsNetworking::BindThread(LPVOID param)
 		const Error ConnectionFaliure(LanguageFileInitialiser::charAllTextsInApplication[25], 1);
 		ErrorHandler::AddError(ConnectionFaliure);
 		// Reset Ip and Port
-		*port = 0;
-		const std::wstring emptyString;
-		*ip = emptyString;
+		currentPort = 0;
+		currentWideIp = L"";
+		currentIp = "";
 	}
-	delete CH;
 	return 0;
 	
 }
@@ -149,13 +149,12 @@ void WindowsNetworking::Bind(const std::string& _ip, int _port)
 {
 	// Convert Ip to wide Ip
 	std::wstring wideIp = std::wstring(_ip.begin(), _ip.end());
-	m_currentIp = wideIp;
-	m_currentPort = _port;
-	ConnectHolder* CH = new ConnectHolder{ &m_currentIp, &m_currentPort };
-
+	currentWideIp = wideIp;
+	currentIp = _ip;
+	currentPort = _port;
 	DWORD threadId;
 	HANDLE handle;
-	handle = CreateThread(nullptr, 0, BindThread, CH, 0, &threadId);
+	handle = CreateThread(nullptr, 0, BindThread, nullptr, 0, &threadId);
 }
 
 void WindowsNetworking::Disconnect()
@@ -194,6 +193,6 @@ void WindowsNetworking::Receive()
 bool WindowsNetworking::GetReceivingStatus() { return isReceiving; }
 bool WindowsNetworking::GetBindStatus() {	return isBinded;	}
 bool WindowsNetworking::GetChatroomStatus() { return inChatroom; }
-const char* WindowsNetworking::GetCurrentIp() { return (const char*)m_currentIp.c_str(); }
-int WindowsNetworking::GetCurrentPort() { return m_currentPort; }
+const char* WindowsNetworking::GetCurrentIp() { return currentIp.c_str(); }
+int WindowsNetworking::GetCurrentPort() { return currentPort; }
 

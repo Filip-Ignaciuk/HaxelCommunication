@@ -24,8 +24,9 @@ private:
 
 	static bool inChatroom;
 
-	std::wstring m_currentIp;
-	int m_currentPort;
+	static std::wstring currentWideIp;
+	static std::string currentIp;
+	static int currentPort;
 
 	static DWORD WINAPI ListenThread(LPVOID param);
 	static DWORD WINAPI BindThread(LPVOID param);

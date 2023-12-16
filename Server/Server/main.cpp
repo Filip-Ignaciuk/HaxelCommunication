@@ -427,6 +427,10 @@ int main(int, char**)
     // Loading Configs
     config::StartConfigs();
 
+    // Gui
+    std::string currentIpText = "";
+    std::string currentPortText = "";
+
     // Main loop
 #ifdef __EMSCRIPTEN__
     // For an Emscripten build we are disabling file-system access, so let's not attempt to do a fopen() of the imgui.ini file.
@@ -466,6 +470,8 @@ int main(int, char**)
         bool chatroomStatus = creator->GetChatroomStatus();
         bool getBindedStatus = creator->GetBindStatus();
 
+        
+
         // Receive data from chatroom
         if (!receivingStatus && chatroomStatus && getBindedStatus)
         {
@@ -499,16 +505,18 @@ int main(int, char**)
                     std::string sIp = ip;
                     std::string sPort = port;
                     CreateChatroom(sIp, sPort);
+                    currentIpText = LanguageFileInitialiser::allTextsInApplication[8] + ": " + sIp;
+                    currentPortText = LanguageFileInitialiser::allTextsInApplication[9] + ": " + sPort;
                 }
             }
             else
             {
-                currentStatus = LanguageFileInitialiser::allTextsInApplication[34];
-                std::string currentIp = LanguageFileInitialiser::allTextsInApplication[8] + ":" + creator->GetCurrentIp();
-                std::string currentPort = LanguageFileInitialiser::allTextsInApplication[9] + ":" + std::to_string(creator->GetCurrentPort());
 
-            	ImGui::Text(currentIp.c_str());
-                ImGui::Text(currentPort.c_str());
+                currentStatus = LanguageFileInitialiser::allTextsInApplication[34];
+                
+
+            	ImGui::Text(currentIpText.c_str());
+                ImGui::Text(currentPortText.c_str());
 
             }
             
