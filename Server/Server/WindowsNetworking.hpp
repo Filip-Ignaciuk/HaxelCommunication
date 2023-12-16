@@ -24,7 +24,7 @@ private:
 
 	static bool inChatroom;
 
-	std::string m_currentIp;
+	std::wstring m_currentIp;
 	int m_currentPort;
 
 	static DWORD WINAPI ListenThread(LPVOID param);
@@ -59,5 +59,6 @@ public:
 	bool GetReceivingStatus() override;
 	bool GetBindStatus() override;
 	bool GetChatroomStatus() override;
-
+    const char* GetCurrentIp() override;
+	int GetCurrentPort() override;
 };

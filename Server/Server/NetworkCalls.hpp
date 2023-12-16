@@ -16,7 +16,7 @@ public:
 	virtual bool GetReceivingStatus();
 	virtual bool GetBindStatus();
 	virtual bool GetChatroomStatus();
-	virtual std::string GetCurrentIp();
+	virtual const char* GetCurrentIp();
 	virtual int GetCurrentPort();
 
 	virtual ~NetworkCalls();

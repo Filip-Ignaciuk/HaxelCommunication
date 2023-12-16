@@ -13,5 +13,9 @@ void NetworkCalls::Receive() {}
 bool NetworkCalls::GetReceivingStatus() { return false; }
 bool NetworkCalls::GetBindStatus() { return false; }
 bool NetworkCalls::GetChatroomStatus() { return false; }
+const char* NetworkCalls::GetCurrentIp() { return ""; }
+int NetworkCalls::GetCurrentPort() { return 0; }
+
+
 
 NetworkCalls::~NetworkCalls() = default;

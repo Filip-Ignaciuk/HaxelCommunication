@@ -40,7 +40,8 @@ DWORD WINAPI WindowsNetworking::BindThread(LPVOID param)
 		ErrorHandler::AddError(ConnectionFaliure);
 		// Reset Ip and Port
 		*port = 0;
-		//std::wstring emptyString = u8"";
+		const std::wstring emptyString;
+		*ip = emptyString;
 	}
 	return 0;
 }
@@ -191,3 +192,5 @@ void WindowsNetworking::Receive()
 bool WindowsNetworking::GetReceivingStatus() { return isReceiving; }
 bool WindowsNetworking::GetBindStatus() {	return isBinded;	}
 bool WindowsNetworking::GetChatroomStatus() { return inChatroom; }
+const char* WindowsNetworking::GetCurrentIp() { return (const char*)m_currentIp.c_str(); }
+int WindowsNetworking::GetCurrentPort() { return m_currentPort; }

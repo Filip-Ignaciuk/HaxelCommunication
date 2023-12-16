@@ -45,7 +45,9 @@ NetworkCallsCreator creator;
 NetworkCalls* networkCalls;
 
 // Status
-static std::string currentStatus = "";
+static std::string currentStatus;
+static ImVec4 currentColour;
+static ImVec4 white{ 1,1,1,1 };
 static ImVec4 red;
 static ImVec4 yellow;
 static ImVec4 green;
@@ -265,7 +267,7 @@ void MenuBar()
 {
     if (ImGui::BeginMenuBar())
     {
-        ImGui::TextColored(ImVec4(1, 1, 0, 1), "Status");
+        ImGui::TextColored(ImVec4(1, 1, 0, 1), currentStatus.c_str());
         if (ImGui::BeginMenu(LanguageFileInitialiser::charAllTextsInApplication[3]))
         {
             if (ImGui::BeginMenu(LanguageFileInitialiser::charAllTextsInApplication[4]))
@@ -486,6 +488,7 @@ int main(int, char**)
             // Server Info
             if(!networkCalls->GetBindStatus())
             {
+                currentStatus = LanguageFileInitialiser::allTextsInApplication[35];
                 ImGui::Text(LanguageFileInitialiser::charAllTextsInApplication[7]);
                 static char ip[15];
                 static char port[5];
@@ -500,7 +503,13 @@ int main(int, char**)
             }
             else
             {
-	            std::string
+                currentStatus = LanguageFileInitialiser::allTextsInApplication[34];
+                std::string currentIp = LanguageFileInitialiser::allTextsInApplication[8] + ":" + networkCalls->GetCurrentIp();
+                std::string currentPort = LanguageFileInitialiser::allTextsInApplication[9] + ":" + std::to_string(networkCalls->GetCurrentPort());
+
+            	ImGui::Text(currentIp.c_str());
+                ImGui::Text(currentPort.c_str());
+
             }
             
             

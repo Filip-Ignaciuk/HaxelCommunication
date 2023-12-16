@@ -70,6 +70,7 @@ bool LanguageFileInitialiser::GenerateEnGb()
 		fileengb << "Failed to create EnGB text file." << std::endl;
 		fileengb << "Tried to read a language File that doesn't exist, regenerating file." << std::endl;
 		fileengb << "Tried to update non-existent User." << std::endl;
+		fileengb << "Binded" << std::endl;
 		fileengb.close();
 	}
 	else
