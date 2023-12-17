@@ -517,6 +517,13 @@ int main(int, char**)
 
             	ImGui::Text(currentIpText.c_str());
                 ImGui::Text(currentPortText.c_str());
+                static char chatroomName[30];
+                ImGui::InputText(LanguageFileInitialiser::charAllTextsInApplication[36], chatroomName, IM_ARRAYSIZE(chatroomName));
+                if(ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[37]))
+                {
+                    std::string sChatroomName = chatroomName;
+                    config::GetChatroom().UpdateName(sChatroomName);
+                }
 
             }
             

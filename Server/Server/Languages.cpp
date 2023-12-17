@@ -71,6 +71,9 @@ bool LanguageFileInitialiser::GenerateEnGb()
 		fileengb << "Tried to read a language File that doesn't exist, regenerating file." << std::endl;
 		fileengb << "Tried to update non-existent User." << std::endl;
 		fileengb << "Binded" << std::endl;
+		fileengb << "Not Binded" << std::endl;
+		fileengb << "Chatroom Name" << std::endl;
+		fileengb << "Change Chatroom Change" << std::endl;
 		fileengb.close();
 	}
 	else
