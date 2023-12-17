@@ -35,3 +35,4 @@ Tried to update non-existent User.
 Binded
 Not Binded
 Chatroom Name
+Change Chatroom Change

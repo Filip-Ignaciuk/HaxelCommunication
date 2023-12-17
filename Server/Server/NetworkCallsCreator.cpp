@@ -1,3 +1,4 @@
+#include "Chatroom.hpp"
 #include "NerworkCallsCreator.hpp"
 
 
@@ -24,6 +25,29 @@ void NetworkCallsCreator::Bind(const std::string& _ip, int _port) const
 {
 	NetworkCalls* networkCalls = this->CreateNetworkCalls();
 	networkCalls->Bind(_ip, _port);
+	delete networkCalls;
+}
+
+Chatroom* NetworkCallsCreator::GetChatroom()
+{
+	NetworkCalls* networkCalls = this->CreateNetworkCalls();
+    Chatroom* result =	networkCalls->GetChatroom();
+	delete networkCalls;
+	return  result;
+}
+
+void NetworkCallsCreator::OpenChatroom()
+{
+	NetworkCalls* networkCalls = this->CreateNetworkCalls();
+	networkCalls->OpenChatroom();
+	delete networkCalls;
+}
+
+
+void NetworkCallsCreator::CloseChatroom()
+{
+	NetworkCalls* networkCalls = this->CreateNetworkCalls();
+	networkCalls->CloseChatroom();
 	delete networkCalls;
 }
 

@@ -10,8 +10,6 @@ bool config::m_isInitialised = false;
 int config::m_currentWindow = 0;
 int config::m_currentLanguage = 0;
 
-Chatroom config::m_chatroom;
-
 std::string config::NormaliseDir(std::string& _str)
 {
 	// Converting all the \\ slashes into one singular forward slash.
@@ -29,14 +27,15 @@ void config::InitFolders()
 {
 	if (!std::filesystem::create_directory(currentDirNormalised + "/Languages"))
 	{
-		Error FileSystemError(LanguageFileInitialiser::charAllTextsInApplication[28], 0);
-		ErrorHandler::AddError(FileSystemError);
+		//Error FileSystemError(LanguageFileInitialiser::charAllTextsInApplication[28], 0);
+		//ErrorHandler::AddError(FileSystemError);
 	}
 
 	if (!std::filesystem::create_directory(currentDirNormalised + "/Users"))
 	{
-		Error FileSystemError(LanguageFileInitialiser::charAllTextsInApplication[29], 0);
-		ErrorHandler::AddError(FileSystemError);
+		// Fix if folder already Exists.
+		//Error FileSystemError(LanguageFileInitialiser::charAllTextsInApplication[29], 0);
+		//ErrorHandler::AddError(FileSystemError);
 	}
 
 }
@@ -140,17 +139,6 @@ int config::GetCurrentLanguage()
 {
 	return m_currentLanguage;
 }
-
-void config::SetChatroom(Chatroom& _chatroom)
-{
-	m_chatroom = _chatroom;
-}
-
-Chatroom& config::GetChatroom()
-{
-	return m_chatroom;
-}
-
 
 // Domain Config
 std::string config::SDomainIp = "127.0.0.1";

@@ -8,6 +8,7 @@ SOCKET WindowsNetworking::serverSocket = INVALID_SOCKET;
 bool WindowsNetworking::isReceiving = false;
 bool WindowsNetworking::isBinded = false;
 bool WindowsNetworking::inChatroom = false;
+Chatroom WindowsNetworking::chatroom;
 
 std::wstring WindowsNetworking::currentWideIp = L"";
 std::string WindowsNetworking::currentIp = "";
@@ -74,7 +75,7 @@ DWORD WINAPI WindowsNetworking::ReceiveSendMessageThread(LPVOID param)
 	BufferNormal bufferNormal = *bufferPointer;
 	delete bufferPointer;
 	BufferServerSendMessage& messageBuffer = dynamic_cast<BufferServerSendMessage&> (bufferNormal);
-	config::GetChatroom().AddMessage(messageBuffer.GetMessageObject());
+	chatroom.AddMessage(messageBuffer.GetMessageObject());
 	
 	return 0;
 }
@@ -87,18 +88,37 @@ DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 	
 	if(!buffer.GetType())
 	{
-		// Message Buffer
+		return 0;
+	}
+	else if(buffer.GetType() == 1)
+	{
+		// BufferSendMessage
 		BufferNormal* BNPtr = &buffer;
 		DWORD threadId;
 		HANDLE handle;
 		handle = CreateThread(nullptr, 0, ReceiveSendMessageThread, BNPtr, 0, &threadId);
-		
+	}
+	else if (buffer.GetType() == 3)
+	{
+		// BufferConnect
+		BufferNormal* BNPtr = &buffer;
+		DWORD threadId;
+		HANDLE handle;
+		handle = CreateThread(nullptr, 0, ReceiveSendMessageThread, BNPtr, 0, &threadId);
+	}
+	else if (buffer.GetType() == 5)
+	{
+		// BufferUpdateUser
+		BufferNormal* BNPtr = &buffer;
+		DWORD threadId;
+		HANDLE handle;
+		handle = CreateThread(nullptr, 0, ReceiveSendMessageThread, BNPtr, 0, &threadId);
+	}
+	else if (buffer.GetType() == 4)
+	{
 
 	}
-	else if(buffer.GetType() == 1)
-	{
-		// 
-	}
+
 
 	
 	return 0;
@@ -157,6 +177,27 @@ void WindowsNetworking::Bind(const std::string& _ip, int _port)
 	handle = CreateThread(nullptr, 0, BindThread, nullptr, 0, &threadId);
 }
 
+Chatroom* WindowsNetworking::GetChatroom()
+{
+	return &chatroom;
+}
+
+void WindowsNetworking::OpenChatroom()
+{
+	inChatroom = true;
+	Chatroom emptyChatroom;
+	chatroom = emptyChatroom;
+}
+
+
+void WindowsNetworking::CloseChatroom()
+{
+	Chatroom emptyChatroom;
+	chatroom = emptyChatroom;
+	inChatroom = false;
+}
+
+
 void WindowsNetworking::Disconnect()
 {
 	DWORD threadId;
@@ -190,6 +231,9 @@ void WindowsNetworking::Receive()
 	handle = CreateThread(nullptr, 0, ReceiveThread, nullptr, 0, &threadId);
 }
 
+
+
+// Class Based
 bool WindowsNetworking::GetReceivingStatus() { return isReceiving; }
 bool WindowsNetworking::GetBindStatus() {	return isBinded;	}
 bool WindowsNetworking::GetChatroomStatus() { return inChatroom; }

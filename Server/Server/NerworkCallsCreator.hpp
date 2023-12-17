@@ -4,11 +4,15 @@
 class NetworkCallsCreator
 {
 public:
+	// Fundamental Procedures
 	virtual NetworkCalls* CreateNetworkCalls() const = 0;
 	virtual ~NetworkCallsCreator();
 	void CreateSocket() const;
 	void CloseSocket() const;
 	void Bind(const std::string& _ip, int _port) const;
+	Chatroom* GetChatroom();
+	void OpenChatroom();
+	void CloseChatroom();
 	void Disconnect() const;
 
 	// Main Procedures

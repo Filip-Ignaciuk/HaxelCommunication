@@ -1,8 +1,12 @@
 #include "NetworkCalls.hpp"
+#include "Chatroom.hpp"
 
 void NetworkCalls::CreateSocket(){}
 void NetworkCalls::CloseSocket(){}
 void NetworkCalls::Bind(const std::string& _ip, int _port){}
+Chatroom* NetworkCalls::GetChatroom() { return nullptr; }
+void NetworkCalls::OpenChatroom(){}
+void NetworkCalls::CloseChatroom(){}
 void NetworkCalls::Disconnect(){}
 
 

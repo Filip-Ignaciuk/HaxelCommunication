@@ -4,6 +4,7 @@
 #include <WS2tcpip.h>
 
 // Application Headers
+#include "Chatroom.hpp"
 #include "NetworkCalls.hpp"
 
 struct ConnectHolder
@@ -23,6 +24,8 @@ private:
 	static bool isBinded;
 
 	static bool inChatroom;
+
+	static Chatroom chatroom;
 
 	static std::wstring currentWideIp;
 	static std::string currentIp;
@@ -49,6 +52,9 @@ public:
 	void CreateSocket() override;
 	void CloseSocket() override;
 	void Bind(const std::string& _ip, int _port) override;
+	Chatroom* GetChatroom() override;
+	void OpenChatroom() override;
+	void CloseChatroom() override;
 	void Disconnect() override;
 
 	// Main Procedures
