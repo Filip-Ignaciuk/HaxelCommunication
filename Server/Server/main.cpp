@@ -42,6 +42,7 @@ static void glfw_error_callback(int error, const char* description)
 
 // Application
 NetworkCallsCreator* creator;
+std::vector<std::string> allConsoleTexts;
 
 // Status
 static std::string currentStatus;
@@ -128,6 +129,17 @@ void ErrorChecker()
                 }
                 ImGui::EndPopup();
             }
+        }
+        else if(latestErrorLevel == 3)
+        {
+	        // Add to console chatroom
+            allConsoleTexts.emplace_back(latestErrorMessage);
+        }
+        else if (latestErrorLevel == 4)
+        {
+            // Change status of chatroom
+            currentStatus = latestErrorMessage;
+
         }
 
 
@@ -509,6 +521,7 @@ int main(int, char**)
                     CreateChatroom(sIp, sPort);
                     currentIpText = LanguageFileInitialiser::allTextsInApplication[8] + ": " + sIp;
                     currentPortText = LanguageFileInitialiser::allTextsInApplication[9] + ": " + sPort;
+
                 }
             }
             else if(!chatroomStatus)
@@ -535,6 +548,18 @@ int main(int, char**)
                 ImGui::Text(currentIpText.c_str());
                 ImGui::Text(currentPortText.c_str());
                 ImGui::Text(currentChatroomNameText.c_str());
+                ImGui::SetNextWindowSizeConstraints(ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 1), ImVec2(FLT_MAX, (ImGui::GetWindowHeight() - 158)));
+                if (ImGui::BeginChild("ConstrainedChild", ImVec2(0.0f, 0.0f), 0))
+                {
+                    for (std::string text : allConsoleTexts)
+                    {
+                        ImGui::Text(text.c_str());
+                    }
+
+                }
+                ImGui::EndChild();
+                static char command[128] = "";
+                ImGui::InputText("Command", command, IM_ARRAYSIZE(command));
             }
             
             

@@ -74,6 +74,9 @@ bool LanguageFileInitialiser::GenerateEnGb()
 		fileengb << "Not Binded" << std::endl;
 		fileengb << "Chatroom Name" << std::endl;
 		fileengb << "Change Chatroom Change" << std::endl;
+		fileengb << "Listening..." << std::endl;
+		fileengb << "Accepted Socket" << std::endl;
+		fileengb << "Declined Socket, maximum numbers of users reached." << std::endl;
 		fileengb.close();
 	}
 	else

@@ -36,3 +36,6 @@ Binded
 Not Binded
 Chatroom Name
 Change Chatroom Change
+Listening...
+Accepted Socket
+Declined Socket, maximum numbers of users reached.

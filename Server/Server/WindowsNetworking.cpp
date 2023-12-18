@@ -32,17 +32,18 @@ DWORD WINAPI WindowsNetworking::AcceptThread(LPVOID param)
 			DWORD threadId;
 			HANDLE handle;
 			handle = CreateThread(nullptr, 0, ReceiveThread, nullptr, 0, &threadId);
-		}
-		else
-		{
-			
+			Error listeningNotification(LanguageFileInitialiser::allTextsInApplication[38], 3);
+			return 0;
 		}
 	}
+
+	Error listeningNotification(LanguageFileInitialiser::allTextsInApplication[39], 3);
 	return 0;
 }
 
 DWORD WINAPI WindowsNetworking::ListenThread(LPVOID param)
 {
+	Error listeningNotification(LanguageFileInitialiser::allTextsInApplication[37], 3);
 	if(listen(serverSocket, 1) == SOCKET_ERROR)
 	{
 		Error listeningError("Error listening for clients", 0);
