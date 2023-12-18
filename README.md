@@ -1,2 +1,2 @@
 # HaxelCommunication
-Communicate with your friends by hosting your own server, so only you can see your own data. 
+Communicate with you're friends by hosting your own server. Free to use and works in Lan configurations.
