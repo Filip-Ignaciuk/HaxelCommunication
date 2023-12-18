@@ -10,6 +10,7 @@ public:
 	void CreateSocket() const;
 	void CloseSocket() const;
 	void Bind(const std::string& _ip, int _port) const;
+	void Listen();
 	Chatroom* GetChatroom();
 	void OpenChatroom();
 	void CloseChatroom();
@@ -18,10 +19,8 @@ public:
 	// Main Procedures
 	void SendText(const std::string& _message) const;
 	void UpdateUser() const;
-	void Receive() const;
-
 	// Class Based
-	bool GetReceivingStatus() const;
+	bool GetListeningStatus() const;
 	bool GetBindStatus() const;
 	bool GetChatroomStatus() const;
 	const char* GetCurrentIp() const;

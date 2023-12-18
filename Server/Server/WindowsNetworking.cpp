@@ -5,7 +5,8 @@
 #include "ErrorHandler.hpp"
 
 SOCKET WindowsNetworking::serverSocket = INVALID_SOCKET;
-bool WindowsNetworking::isReceiving = false;
+SOCKET WindowsNetworking::clientSockets[32];
+bool WindowsNetworking::isListening = false;
 bool WindowsNetworking::isBinded = false;
 bool WindowsNetworking::inChatroom = false;
 Chatroom WindowsNetworking::chatroom;
@@ -14,9 +15,42 @@ std::wstring WindowsNetworking::currentWideIp = L"";
 std::string WindowsNetworking::currentIp = "";
 int WindowsNetworking::currentPort = 0;
 
+DWORD WINAPI WindowsNetworking::AcceptThread(LPVOID param)
+{
+	SOCKET acceptedSocket = accept(serverSocket, NULL, NULL);
+	if (acceptedSocket == INVALID_SOCKET)
+	{
+		WSACleanup();
+	}
+	isListening = false;
+
+	for(SOCKET socket : clientSockets)
+	{
+		if(socket == INVALID_SOCKET)
+		{
+			socket = acceptedSocket;
+			DWORD threadId;
+			HANDLE handle;
+			handle = CreateThread(nullptr, 0, ReceiveThread, nullptr, 0, &threadId);
+		}
+		else
+		{
+			
+		}
+	}
+	return 0;
+}
+
 DWORD WINAPI WindowsNetworking::ListenThread(LPVOID param)
 {
-
+	if(listen(serverSocket, 1) == SOCKET_ERROR)
+	{
+		Error listeningError("Error listening for clients", 0);
+		ErrorHandler::AddError(listeningError);
+	}
+	DWORD threadId;
+	HANDLE handle;
+	handle = CreateThread(nullptr, 0, AcceptThread, nullptr, 0, &threadId);
 	return 0;
 }
 
@@ -32,8 +66,6 @@ DWORD WINAPI WindowsNetworking::BindThread(LPVOID param)
 	{
 		// Successful
 		isBinded = true;
-
-
 	}
 	else
 	{
@@ -71,52 +103,30 @@ DWORD WINAPI WindowsNetworking::UpdateUserThread(LPVOID param)
 
 DWORD WINAPI WindowsNetworking::ReceiveSendMessageThread(LPVOID param)
 {
-	BufferNormal* bufferPointer = (BufferNormal*)param;
-	BufferNormal bufferNormal = *bufferPointer;
-	delete bufferPointer;
-	BufferServerSendMessage& messageBuffer = dynamic_cast<BufferServerSendMessage&> (bufferNormal);
-	chatroom.AddMessage(messageBuffer.GetMessageObject());
+	BufferSendMessage* BNPtr = (BufferSendMessage*)param;
+	chatroom.AddMessage(BNPtr->GetMessageObject());
 	
 	return 0;
 }
 
 DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 {
+	SOCKET* clientSocket = (SOCKET*)param;
 	BufferNormal buffer;
-	recv(serverSocket, (char*)&buffer, sizeof(BufferNormal), 0);
-	isReceiving = false;
-	
-	if(!buffer.GetType())
+	// Use the largest possible class, so that we can accomidate everything.
+	int recievedBytes = recv(*clientSocket, (char*)&buffer, sizeof(BufferNormal), 0);
+	BufferNormal* BH = (BufferSendMessage*)&buffer;
+	if (!BH->GetType())
 	{
 		return 0;
 	}
-	else if(buffer.GetType() == 1)
+	else if (BH->GetType() == 1)
 	{
-		// BufferSendMessage
-		BufferNormal* BNPtr = &buffer;
+		// Message Buffer
+		BufferSendMessage* BNPtr = (BufferSendMessage*)&buffer;
 		DWORD threadId;
 		HANDLE handle;
 		handle = CreateThread(nullptr, 0, ReceiveSendMessageThread, BNPtr, 0, &threadId);
-	}
-	else if (buffer.GetType() == 3)
-	{
-		// BufferConnect
-		BufferNormal* BNPtr = &buffer;
-		DWORD threadId;
-		HANDLE handle;
-		handle = CreateThread(nullptr, 0, ReceiveSendMessageThread, BNPtr, 0, &threadId);
-	}
-	else if (buffer.GetType() == 5)
-	{
-		// BufferUpdateUser
-		BufferNormal* BNPtr = &buffer;
-		DWORD threadId;
-		HANDLE handle;
-		handle = CreateThread(nullptr, 0, ReceiveSendMessageThread, BNPtr, 0, &threadId);
-	}
-	else if (buffer.GetType() == 4)
-	{
-
 	}
 
 
@@ -177,6 +187,16 @@ void WindowsNetworking::Bind(const std::string& _ip, int _port)
 	handle = CreateThread(nullptr, 0, BindThread, nullptr, 0, &threadId);
 }
 
+void WindowsNetworking::Listen()
+{
+	isListening = true;
+	DWORD threadId;
+	HANDLE handle;
+	handle = CreateThread(nullptr, 0, ListenThread, nullptr, 0, &threadId);
+
+}
+
+
 Chatroom* WindowsNetworking::GetChatroom()
 {
 	return &chatroom;
@@ -222,19 +242,10 @@ void WindowsNetworking::UpdateUser()
 	handle = CreateThread(nullptr, 0, UpdateUserThread, nullptr, 0, &threadId);
 }
 
-void WindowsNetworking::Receive()  
-{
-	// Declare isReceiving here so that the computer doesn't create multiple threads quickly.
-	isReceiving = true;
-	DWORD threadId;
-	HANDLE handle;
-	handle = CreateThread(nullptr, 0, ReceiveThread, nullptr, 0, &threadId);
-}
-
 
 
 // Class Based
-bool WindowsNetworking::GetReceivingStatus() { return isReceiving; }
+bool WindowsNetworking::GetListeningStatus() { return isListening; }
 bool WindowsNetworking::GetBindStatus() {	return isBinded;	}
 bool WindowsNetworking::GetChatroomStatus() { return inChatroom; }
 const char* WindowsNetworking::GetCurrentIp() { return currentIp.c_str(); }

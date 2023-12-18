@@ -28,6 +28,14 @@ void NetworkCallsCreator::Bind(const std::string& _ip, int _port) const
 	delete networkCalls;
 }
 
+void NetworkCallsCreator::Listen()
+{
+	NetworkCalls* networkCalls = this->CreateNetworkCalls();
+	networkCalls->Listen();
+	delete networkCalls;
+}
+
+
 Chatroom* NetworkCallsCreator::GetChatroom()
 {
 	NetworkCalls* networkCalls = this->CreateNetworkCalls();
@@ -75,17 +83,11 @@ void NetworkCallsCreator::UpdateUser() const
 }
 
 
-void NetworkCallsCreator::Receive() const
-{
-	NetworkCalls* networkCalls = this->CreateNetworkCalls();
-	networkCalls->Receive();
-	delete networkCalls;
-}
 
-bool NetworkCallsCreator::GetReceivingStatus() const
+bool NetworkCallsCreator::GetListeningStatus() const
 {
 	NetworkCalls* networkCalls = this->CreateNetworkCalls();
-	bool result = networkCalls->GetReceivingStatus();
+	bool result = networkCalls->GetListeningStatus();
 	delete networkCalls;
 	return result;
 }

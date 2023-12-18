@@ -10,6 +10,7 @@ public:
 	virtual void CreateSocket();
 	virtual void CloseSocket();
 	virtual void Bind(const std::string& _ip, int _port);
+	virtual void Listen();
 	virtual Chatroom* GetChatroom();
 	virtual void OpenChatroom();
 	virtual void CloseChatroom();
@@ -17,9 +18,8 @@ public:
 
 	virtual void SendText(const std::string& _message);
 	virtual void UpdateUser();
-	virtual void Receive();
 
-	virtual bool GetReceivingStatus();
+	virtual bool GetListeningStatus();
 	virtual bool GetBindStatus();
 	virtual bool GetChatroomStatus();
 	virtual const char* GetCurrentIp();

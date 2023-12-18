@@ -19,7 +19,9 @@ class WindowsNetworking : public NetworkCalls
 private:
 	static SOCKET serverSocket;
 
-	static bool isReceiving;
+	static SOCKET clientSockets[32];
+
+	static bool isListening;
 
 	static bool isBinded;
 
@@ -31,6 +33,7 @@ private:
 	static std::string currentIp;
 	static int currentPort;
 
+	static DWORD WINAPI AcceptThread(LPVOID param);
 	static DWORD WINAPI ListenThread(LPVOID param);
 	static DWORD WINAPI BindThread(LPVOID param);
 	static DWORD WINAPI DisconnectThread(LPVOID param);
@@ -52,6 +55,7 @@ public:
 	void CreateSocket() override;
 	void CloseSocket() override;
 	void Bind(const std::string& _ip, int _port) override;
+	void Listen() override;
 	Chatroom* GetChatroom() override;
 	void OpenChatroom() override;
 	void CloseChatroom() override;
@@ -60,10 +64,9 @@ public:
 	// Main Procedures
 	void SendText(const std::string& _message) override;
 	void UpdateUser() override;
-	void Receive() override;
 
 	// Class Based
-	bool GetReceivingStatus() override;
+	bool GetListeningStatus() override;
 	bool GetBindStatus() override;
 	bool GetChatroomStatus() override;
     const char* GetCurrentIp() override;

@@ -468,16 +468,16 @@ int main(int, char**)
 
         
         bool exit = true;
-        bool receivingStatus = creator->GetReceivingStatus();
+        bool listeningStatus = creator->GetListeningStatus();
         bool chatroomStatus = creator->GetChatroomStatus();
         bool getBindedStatus = creator->GetBindStatus();
 
         
 
         // Receive data from chatroom
-        if (!receivingStatus && chatroomStatus && getBindedStatus)
+        if (!listeningStatus && chatroomStatus && getBindedStatus)
         {
-            creator->Receive();
+            creator->Listen();
         }
 
         ImGui::Begin(LanguageFileInitialiser::charAllTextsInApplication[1], &exit, ImGuiWindowFlags_MenuBar);
