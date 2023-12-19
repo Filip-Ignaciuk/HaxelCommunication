@@ -38,3 +38,5 @@ Change Chatroom
 Listening...
 Accepted Socket
 Declined Socket, maximum numbers of users reached.
+Enter Command
+Online

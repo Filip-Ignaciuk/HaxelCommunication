@@ -35,7 +35,9 @@ Tried to update non-existent User.
 Binded
 Not Binded
 Chatroom Name
-Change Chatroom Change
+Change Chatroom
 Listening...
 Accepted Socket
 Declined Socket, maximum numbers of users reached.
+Enter Command
+Online

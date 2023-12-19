@@ -48,9 +48,9 @@ std::vector<std::string> allConsoleTexts;
 static std::string currentStatus;
 static ImVec4 currentColour;
 static ImVec4 white{ 1,1,1,1 };
-static ImVec4 red;
-static ImVec4 yellow;
-static ImVec4 green;
+static ImVec4 red{ 1.0f, 0.0f, 0.0f ,1.0f};
+static ImVec4 yellow{ 1.0f, 1.0f, 0.0f , 1.0f};
+static ImVec4 green{ 0.0f, 1.0f, 0.0f, 1.0f};
 
 // Error Data
 
@@ -67,6 +67,10 @@ bool finishedError = true;
 Chatroom* chatroom;
 MessageBuilder messageBuilder;
 
+// Popups
+bool closeChatroomPopup = false;
+bool createChatroomPopup = false;
+bool closeSocketPopup = false;
 
 // GUI Logic
 
@@ -134,11 +138,15 @@ void ErrorChecker()
         {
 	        // Add to console chatroom
             allConsoleTexts.emplace_back(latestErrorMessage);
+            finishedError = true;
+            ErrorHandler::DeleteError();
         }
         else if (latestErrorLevel == 4)
         {
             // Change status of chatroom
             currentStatus = latestErrorMessage;
+            finishedError = true;
+            ErrorHandler::DeleteError();
 
         }
 
@@ -223,45 +231,34 @@ void CreateChatroom(std::string& _ip, std::string& _port)
     }
 }
 
+void PopupChecker()
+{
+	if (closeChatroomPopup)
+	{
+        ImGui::OpenPopup(LanguageFileInitialiser::charAllTextsInApplication[20]);
 
+        if (ImGui::BeginPopupModal(LanguageFileInitialiser::charAllTextsInApplication[20], NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+            if (ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[22], ImVec2(120, 0)))
+            {
+                closeChatroomPopup = false;
+                ImGui::CloseCurrentPopup();
+            }
+            if (ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[23], ImVec2(120, 0)))
+            {
+                closeChatroomPopup = false;
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+        }
+	}
+    else if(createChatroomPopup)
+    {
+	    
+    }
+}
 
 
 // GUI Constructs
-
-
-
-void ModalCloseChatroomGui()
-{
-    //ImGui::Text(LanguageFileInitialiser::charAllTextsInApplication[20]);
-    //if (ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[22], ImVec2(120, 0)))
-    //{
-    //
-    //    ImGui::CloseCurrentPopup();
-    //}
-    //if (ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[23], ImVec2(120, 0)))
-    //{
-    //    
-    //    ImGui::CloseCurrentPopup();
-    //}
-    //ImGui::EndPopup();
-}
-
-void ModalCloseBindGui()
-{
-    //ImGui::Text(LanguageFileInitialiser::charAllTextsInApplication[21]);
-    //if (ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[22], ImVec2(120, 0)))
-    //{
-    //
-    //    ImGui::CloseCurrentPopup();
-    //}
-    //if (ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[23], ImVec2(120, 0)))
-    //{
-    //
-    //    ImGui::CloseCurrentPopup();
-    //}
-    //ImGui::EndPopup();
-}
-
 
 void PopulateUsers()
 {
@@ -278,7 +275,7 @@ void MenuBar()
 {
     if (ImGui::BeginMenuBar())
     {
-        ImGui::TextColored(ImVec4(1, 1, 0, 1), currentStatus.c_str());
+        ImGui::TextColored(currentColour, currentStatus.c_str());
         if (ImGui::BeginMenu(LanguageFileInitialiser::charAllTextsInApplication[3]))
         {
             if (ImGui::BeginMenu(LanguageFileInitialiser::charAllTextsInApplication[4]))
@@ -308,28 +305,37 @@ void MenuBar()
         {
             if (creator->GetChatroomStatus())
             {
+                if (ImGui::BeginMenu(LanguageFileInitialiser::charAllTextsInApplication[1]))
+                {
+                    ImGui::Text("Socket Information:");
+                    ImGui::Text("Chatroom Information:");
+                    ImGui::EndMenu();
+                }
                 if (ImGui::MenuItem(LanguageFileInitialiser::charAllTextsInApplication[18]))
                 {
-                    ModalCloseChatroomGui();
-                    ImGui::EndMenu();
+                    
                 }
                 if (ImGui::MenuItem(LanguageFileInitialiser::charAllTextsInApplication[19]))
                 {
-                    ImGui::EndMenu();
                 }
             }
             else if (creator->GetBindStatus())
             {
+                if (ImGui::BeginMenu(LanguageFileInitialiser::charAllTextsInApplication[1]))
+                {
+                    ImGui::Text("Socket Information:");
+                    ImGui::EndMenu();
+                }
                 if (ImGui::MenuItem(LanguageFileInitialiser::charAllTextsInApplication[19]))
                 {
-                    ImGui::EndMenu();
+
                 }
             }
             else
             {
                 if (ImGui::MenuItem(LanguageFileInitialiser::charAllTextsInApplication[10]))
                 {
-                    ImGui::EndMenu();
+
                 }
             }
             ImGui::EndMenu();
@@ -428,6 +434,7 @@ int main(int, char**)
 
 
     // Our state
+    bool exit = true;
     bool show_demo_window = true;
     bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -444,6 +451,8 @@ int main(int, char**)
     std::string currentIpText = "";
     std::string currentPortText = "";
     std::string currentChatroomNameText = "";
+
+    currentColour = red;
 
     // Main loop
 #ifdef __EMSCRIPTEN__
@@ -467,10 +476,6 @@ int main(int, char**)
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-
-        //static float col1[3] = { 1.0f, 0.0f, 0.2f };
-        //ImGui::ColorEdit3("color 1", col1);
-
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
         ImGui::PushFont(font);
@@ -479,7 +484,7 @@ int main(int, char**)
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
 
         
-        bool exit = true;
+        
         bool listeningStatus = creator->GetListeningStatus();
         bool chatroomStatus = creator->GetChatroomStatus();
         bool getBindedStatus = creator->GetBindStatus();
@@ -497,6 +502,7 @@ int main(int, char**)
             
             // Gui Logic
             ErrorChecker();
+            PopupChecker();
             // Check for critical error
             if (criticalError)
             {
@@ -521,15 +527,13 @@ int main(int, char**)
                     CreateChatroom(sIp, sPort);
                     currentIpText = LanguageFileInitialiser::allTextsInApplication[8] + ": " + sIp;
                     currentPortText = LanguageFileInitialiser::allTextsInApplication[9] + ": " + sPort;
-
+                    currentStatus = LanguageFileInitialiser::allTextsInApplication[34];
+                    currentColour = yellow;
                 }
             }
             else if(!chatroomStatus)
             {
-
-                currentStatus = LanguageFileInitialiser::allTextsInApplication[34];
-                
-
+                ImGui::SeparatorText("Information");
             	ImGui::Text(currentIpText.c_str());
                 ImGui::Text(currentPortText.c_str());
                 static char chatroomName[30];
@@ -540,15 +544,19 @@ int main(int, char**)
                     creator->OpenChatroom();
                     chatroom->UpdateName(sChatroomName);
                     currentChatroomNameText = LanguageFileInitialiser::allTextsInApplication[36] + ": " + sChatroomName;
+                    currentStatus = LanguageFileInitialiser::allTextsInApplication[34];
+                    currentColour = green;
                 }
 
             }
             else
             {
+                ImGui::SeparatorText("Information");
                 ImGui::Text(currentIpText.c_str());
                 ImGui::Text(currentPortText.c_str());
                 ImGui::Text(currentChatroomNameText.c_str());
-                ImGui::SetNextWindowSizeConstraints(ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 1), ImVec2(FLT_MAX, (ImGui::GetWindowHeight() - 158)));
+                ImGui::SeparatorText("Console");
+                ImGui::SetNextWindowSizeConstraints(ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 1), ImVec2(FLT_MAX, (ImGui::GetWindowHeight() - 175)));
                 if (ImGui::BeginChild("ConstrainedChild", ImVec2(0.0f, 0.0f), 0))
                 {
                     for (std::string text : allConsoleTexts)
@@ -559,7 +567,10 @@ int main(int, char**)
                 }
                 ImGui::EndChild();
                 static char command[128] = "";
-                ImGui::InputText("Command", command, IM_ARRAYSIZE(command));
+                if(ImGui::InputText(LanguageFileInitialiser::charAllTextsInApplication[41], command, IM_ARRAYSIZE(command)))
+                {
+	                
+                }
             }
             
             
