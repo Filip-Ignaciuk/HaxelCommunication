@@ -241,6 +241,9 @@ void PopupChecker()
             if (ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[22], ImVec2(120, 0)))
             {
                 closeChatroomPopup = false;
+                creator->CloseChatroom();
+                currentStatus = LanguageFileInitialiser::allTextsInApplication[34];
+                currentColour = yellow;
                 ImGui::CloseCurrentPopup();
             }
             if (ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[23], ImVec2(120, 0)))
@@ -254,6 +257,27 @@ void PopupChecker()
     else if(createChatroomPopup)
     {
 	    
+    }
+    else if(closeSocketPopup)
+    {
+        ImGui::OpenPopup(LanguageFileInitialiser::charAllTextsInApplication[20]);
+
+        if (ImGui::BeginPopupModal(LanguageFileInitialiser::charAllTextsInApplication[20], NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+            if (ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[22], ImVec2(120, 0)))
+            {
+                closeChatroomPopup = false;
+                creator->CloseChatroom();
+                creator->CloseSocket();
+                creator->CreateSocket();
+                ImGui::CloseCurrentPopup();
+            }
+            if (ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[23], ImVec2(120, 0)))
+            {
+                closeChatroomPopup = false;
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+        }
     }
 }
 
@@ -313,10 +337,11 @@ void MenuBar()
                 }
                 if (ImGui::MenuItem(LanguageFileInitialiser::charAllTextsInApplication[18]))
                 {
-                    
+                    closeChatroomPopup = true;
                 }
                 if (ImGui::MenuItem(LanguageFileInitialiser::charAllTextsInApplication[19]))
                 {
+                    closeSocketPopup = true;
                 }
             }
             else if (creator->GetBindStatus())
@@ -328,14 +353,14 @@ void MenuBar()
                 }
                 if (ImGui::MenuItem(LanguageFileInitialiser::charAllTextsInApplication[19]))
                 {
-
+                    closeSocketPopup = true;
                 }
             }
             else
             {
                 if (ImGui::MenuItem(LanguageFileInitialiser::charAllTextsInApplication[10]))
                 {
-
+                    createChatroomPopup = true;
                 }
             }
             ImGui::EndMenu();

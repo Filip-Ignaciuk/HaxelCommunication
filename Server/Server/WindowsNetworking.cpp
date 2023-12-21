@@ -18,11 +18,12 @@ int WindowsNetworking::currentPort = 0;
 DWORD WINAPI WindowsNetworking::AcceptThread(LPVOID param)
 {
 	SOCKET acceptedSocket = accept(serverSocket, NULL, NULL);
-	if (acceptedSocket == INVALID_SOCKET)
+	if (acceptedSocket == INVALID_SOCKET || acceptedSocket == 4294967295)
 	{
 		WSACleanup();
+		isListening = false;
+		return 0;
 	}
-	isListening = false;
 
 	for(SOCKET socket : clientSockets)
 	{
@@ -170,12 +171,22 @@ void WindowsNetworking::CreateSocket()
 
 void WindowsNetworking::CloseSocket() 
 {
+	shutdown(serverSocket, 2);
 	if(!closesocket(serverSocket))
 	{
 		const Error ClosingSocketError(LanguageFileInitialiser::charAllTextsInApplication[28], 0);
 		ErrorHandler::AddError(ClosingSocketError);
 	}
-	
+	isBinded = false;
+	inChatroom = false;
+	serverSocket = INVALID_SOCKET;
+	for (int i = 0; i < 32; i++)
+	{
+		SOCKET& clientSocket = clientSockets[i];
+		shutdown(clientSocket, 2);
+		closesocket(clientSocket);
+		clientSocket = INVALID_SOCKET;
+	}
 	WSACleanup();
 }
 
