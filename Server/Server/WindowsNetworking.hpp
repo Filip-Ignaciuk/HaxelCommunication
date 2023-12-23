@@ -1,7 +1,6 @@
 #pragma once
 #include "stdafx.h"
 #include <WinSock2.h>
-#include <WS2tcpip.h>
 
 // Application Headers
 #include "Chatroom.hpp"

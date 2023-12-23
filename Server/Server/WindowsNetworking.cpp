@@ -3,6 +3,8 @@
 #include "BufferStandard.hpp"
 #include "Error.hpp"
 #include "ErrorHandler.hpp"
+#include <WS2tcpip.h>
+
 
 SOCKET WindowsNetworking::serverSocket = INVALID_SOCKET;
 SOCKET WindowsNetworking::clientSockets[32];
@@ -153,7 +155,7 @@ void WindowsNetworking::CreateSocket()
 	WSADATA wsaData;
 	if (WSAStartup(version, &wsaData))
 	{
-		const Error creatingSocketError(LanguageFileInitialiser::charAllTextsInApplication[26], 0);
+		const Error creatingSocketError(LanguageFileInitialiser::charAllTextsInApplication[25], 0);
 		ErrorHandler::AddError(creatingSocketError);
 		// WSAGetLastError()
 	}
@@ -163,7 +165,7 @@ void WindowsNetworking::CreateSocket()
 	if (serverSocket == INVALID_SOCKET)
 	{
 		WSACleanup();
-		const Error creatingSocketError(LanguageFileInitialiser::charAllTextsInApplication[27], 0);
+		const Error creatingSocketError(LanguageFileInitialiser::charAllTextsInApplication[26], 0);
 		ErrorHandler::AddError(creatingSocketError);
 	}
 
@@ -171,10 +173,12 @@ void WindowsNetworking::CreateSocket()
 
 void WindowsNetworking::CloseSocket() 
 {
-	shutdown(serverSocket, 2);
+	//int result = shutdown(serverSocket, 2);
+	//int error = WSAGetLastError(); // 10057
+	
 	if(!closesocket(serverSocket))
 	{
-		const Error ClosingSocketError(LanguageFileInitialiser::charAllTextsInApplication[28], 0);
+		const Error ClosingSocketError(LanguageFileInitialiser::charAllTextsInApplication[27], 0);
 		ErrorHandler::AddError(ClosingSocketError);
 	}
 	isBinded = false;

@@ -207,14 +207,14 @@ bool PortChecker(std::string& _port)
     return true;
 }
 
-void CreateChatroom(std::string& _ip, std::string& _port)
+bool CreateChatroom(std::string& _ip, std::string& _port)
 {
     const bool isIpValid = IpChecker(_ip);
     const bool isPortValid = PortChecker(_port);
     if(isIpValid && isPortValid)
     {
         creator->Bind(_ip, std::stoi(_port));
-
+        return true;
     }
     else
     {
@@ -228,6 +228,7 @@ void CreateChatroom(std::string& _ip, std::string& _port)
             Error invalidPortError(LanguageFileInitialiser::charAllTextsInApplication[17], 1);
             ErrorHandler::AddError(invalidPortError);
         }
+        return false;
     }
 }
 
@@ -265,15 +266,18 @@ void PopupChecker()
         if (ImGui::BeginPopupModal(LanguageFileInitialiser::charAllTextsInApplication[20], NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
             if (ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[22], ImVec2(120, 0)))
             {
-                closeChatroomPopup = false;
-                creator->CloseChatroom();
+                closeSocketPopup = false;
+                if(creator->GetChatroomStatus())
+                {
+                    creator->CloseChatroom();
+                }
                 creator->CloseSocket();
                 creator->CreateSocket();
                 ImGui::CloseCurrentPopup();
             }
             if (ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[23], ImVec2(120, 0)))
             {
-                closeChatroomPopup = false;
+                closeSocketPopup = false;
                 ImGui::CloseCurrentPopup();
             }
             ImGui::EndPopup();
@@ -479,6 +483,8 @@ int main(int, char**)
 
     currentColour = red;
 
+    int temp = 0;
+
     // Main loop
 #ifdef __EMSCRIPTEN__
     // For an Emscripten build we are disabling file-system access, so let's not attempt to do a fopen() of the imgui.ini file.
@@ -514,8 +520,6 @@ int main(int, char**)
         bool chatroomStatus = creator->GetChatroomStatus();
         bool getBindedStatus = creator->GetBindStatus();
 
-        
-
         // Receive data from chatroom
         if (!listeningStatus && chatroomStatus && getBindedStatus)
         {
@@ -549,7 +553,17 @@ int main(int, char**)
                 {
                     std::string sIp = ip;
                     std::string sPort = port;
-                    CreateChatroom(sIp, sPort);
+                    if(CreateChatroom(sIp, sPort))
+                    {
+                        for (char i = 0; i < 15; i++)
+                        {
+                            ip[i] = NULL;
+                        }
+                        for (char i = 0; i < 5; i++)
+                        {
+                            port[i] = NULL;
+                        }
+                    }
                     currentIpText = LanguageFileInitialiser::allTextsInApplication[8] + ": " + sIp;
                     currentPortText = LanguageFileInitialiser::allTextsInApplication[9] + ": " + sPort;
                     currentStatus = LanguageFileInitialiser::allTextsInApplication[34];
