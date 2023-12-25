@@ -6,7 +6,7 @@ class NetworkCalls
 public:
 	virtual void CreateSocket();
 	virtual void CloseSocket();
-	virtual void Connect(const std::string& _ip, const int _port);
+	virtual void Connect(const std::string& _ip, const int _port, std::string& _password);
 	virtual void Disconnect();
 
 	virtual void SendText(const std::string& _message);

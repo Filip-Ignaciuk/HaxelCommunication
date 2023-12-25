@@ -81,3 +81,19 @@ public:
 	BufferServerUpdateUser(User& _user);
 	User& GetUser();
 };
+
+class BufferDisconnect : public BufferNormal
+{
+private:
+
+public:
+	BufferDisconnect();
+};
+
+class BufferDisconnectServer : public BufferNormal
+{
+private:
+
+public:
+	BufferDisconnectServer();
+};

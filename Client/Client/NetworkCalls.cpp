@@ -2,7 +2,7 @@
 
 void NetworkCalls::CreateSocket(){}
 void NetworkCalls::CloseSocket(){}
-void NetworkCalls::Connect(const std::string& _ip, const int _port) {}
+void NetworkCalls::Connect(const std::string& _ip, const int _port, std::string& _password) {}
 void NetworkCalls::Disconnect(){}
 
 

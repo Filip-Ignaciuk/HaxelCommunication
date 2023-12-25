@@ -181,13 +181,13 @@ bool PortChecker(std::string& _port)
     return true;
 }
 
-void JoinChatroom(std::string& _ip, std::string& _port)
+void JoinChatroom(std::string& _ip, std::string& _port, std::string& _password)
 {
     const bool isIpValid = IpChecker(_ip);
     const bool isPortValid = PortChecker(_port);
     if(isIpValid && isPortValid)
     {
-        networkCalls->Connect(_ip, std::stoi(_port));
+        networkCalls->Connect(_ip, std::stoi(_port), _password);
     }
     else
     {
@@ -232,13 +232,16 @@ void ModalJoinChatroomGui()
     ImGui::Text("Chatroom");
     static char ip[14] = "";
     static char port[5] = "";
+    static char password[32] = "";
     ImGui::InputText("IP", ip, IM_ARRAYSIZE(ip));
     ImGui::InputText("Port", port, IM_ARRAYSIZE(port));
+    ImGui::InputText("Password", password, IM_ARRAYSIZE(password));
     if (ImGui::Button("Connect", ImVec2(120, 0)))
     {
         std::string guiIp = ip;
         std::string guiPort = port;
-        JoinChatroom(guiIp, guiPort);
+        std::string guiPassword = password;
+        JoinChatroom(guiIp, guiPort, guiPassword);
     }
 }
 
@@ -512,11 +515,14 @@ int main(int, char**)
                 ImGui::InputText("Ip", ip, IM_ARRAYSIZE(ip));
                 static char port[5] = "";
                 ImGui::InputText("Port", port, IM_ARRAYSIZE(port));
+                static char password[32] = "";
+                ImGui::InputText("Password", password, IM_ARRAYSIZE(password));
                 if(ImGui::Button("Connect"))
                 {
                     std::string sIp = ip;
                     std::string sPort = port;
-                    JoinChatroom(sIp, sPort);
+                    std::string sPassword = password;
+                    JoinChatroom(sIp, sPort, sPassword);
                 }
             }
 

@@ -16,6 +16,14 @@ void NetworkCallsCreator::CloseSocket() const
 	delete networkCalls;
 }
 
+
+void NetworkCallsCreator::Connect(const std::string& _ip, const int _port, std::string& _password)
+{
+	NetworkCalls* networkCalls = this->CreateNetworkCalls();
+	networkCalls->Connect(_ip, _port, _password);
+	delete networkCalls;
+}
+
 void NetworkCallsCreator::Disconnect() const
 {
 	NetworkCalls* networkCalls = this->CreateNetworkCalls();

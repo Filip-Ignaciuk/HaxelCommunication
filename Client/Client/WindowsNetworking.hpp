@@ -10,6 +10,7 @@ struct ConnectHolder
 {
 	const std::wstring ip;
 	const int port;
+	std::string password;
 };
 
 // Implementation of NetworkCalls in windows.
@@ -27,10 +28,13 @@ private:
 	static DWORD WINAPI ConnectThread(LPVOID param);
 	static DWORD WINAPI DisconnectThread(LPVOID param);
 
+	// Send
 	static DWORD WINAPI SendTextThread(LPVOID param);
 	static DWORD WINAPI UpdateUserThread(LPVOID param);
 
+	// Receive
 	static DWORD WINAPI ReceiveSendMessageThread(LPVOID param);
+	static DWORD WINAPI ReceiveConnect(LPVOID param);
 	static DWORD WINAPI ReceiveUserUpdateThread(LPVOID param);
 	static DWORD WINAPI ReceiveTextThread(LPVOID param);
 
@@ -43,7 +47,7 @@ public:
 	// Fundamental Procedures
 	void CreateSocket() override;
 	void CloseSocket() override;
-	void Connect(const std::string& _ip, int _port) override;
+	void Connect(const std::string& _ip, int _port, std::string& _password) override;
 	void Disconnect() override;
 
 	// Main Procedures

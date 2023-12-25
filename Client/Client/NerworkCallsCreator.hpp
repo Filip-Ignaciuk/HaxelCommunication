@@ -9,6 +9,7 @@ public:
 	virtual ~NetworkCallsCreator();
 	void CreateSocket() const;
 	void CloseSocket() const;
+	void Connect(const std::string& _ip, const int _port, std::string& _password);
 	void Disconnect() const;
 
 	// Main Procedures

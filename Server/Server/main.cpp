@@ -207,13 +207,18 @@ bool PortChecker(std::string& _port)
     return true;
 }
 
-bool CreateChatroom(std::string& _ip, std::string& _port)
+bool CreateChatroom(std::string& _ip, std::string& _port, std::string& _password)
 {
     const bool isIpValid = IpChecker(_ip);
     const bool isPortValid = PortChecker(_port);
     if(isIpValid && isPortValid)
     {
         creator->Bind(_ip, std::stoi(_port));
+        if(!_password.empty())
+        {
+            creator->GetChatroom()->AddPassword(_password);
+        }
+        
         return true;
     }
     else
@@ -549,13 +554,16 @@ int main(int, char**)
                 ImGui::Text(LanguageFileInitialiser::charAllTextsInApplication[7]);
                 static char ip[15];
                 static char port[5];
+                static char password[32] = "";
                 ImGui::InputText(LanguageFileInitialiser::charAllTextsInApplication[8], ip, IM_ARRAYSIZE(ip));
                 ImGui::InputText(LanguageFileInitialiser::charAllTextsInApplication[9], port, IM_ARRAYSIZE(port));
+                ImGui::InputText("Password", password, IM_ARRAYSIZE(password));
                 if (ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[10]))
                 {
                     std::string sIp = ip;
                     std::string sPort = port;
-                    if(CreateChatroom(sIp, sPort)) 
+                    std::string sPassword = password;
+                    if(CreateChatroom(sIp, sPort, sPassword))
                     {
                         for (char i = 0; i < 15; i++)
                         {

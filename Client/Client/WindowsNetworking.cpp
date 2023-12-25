@@ -25,10 +25,9 @@ DWORD WINAPI WindowsNetworking::ConnectThread(LPVOID param)
 	{
 		// Successful
 		isConnected = true;
-		std::string password = "";
-		BufferConnect BC(password);
-		int result = send(clientSocket, (char*)&BC, sizeof(BufferConnect), 0);
-
+		BufferConnect BC(CH->password);
+		int result = send(clientSocket, (char*)&BC, sizeof(BufferServerConnect), 0);
+		auto var = WSAGetLastError();
 
 	}
 	else
@@ -38,12 +37,41 @@ DWORD WINAPI WindowsNetworking::ConnectThread(LPVOID param)
 		ErrorHandler::AddError(ConnectionFaliure);
 
 	}
+	delete CH;
 	return 0;
 }
 
 DWORD WINAPI WindowsNetworking::DisconnectThread(LPVOID param)
 {
 	// Send disconnect message
+	BufferDisconnect BD;
+	send(clientSocket, (char*)&BD, sizeof(BufferDisconnect), 0);
+	shutdown(clientSocket, 2);
+	if (!closesocket(clientSocket))
+	{
+		const Error ClosingSocketError("Couldn't close socket.", 0);
+		ErrorHandler::AddError(ClosingSocketError);
+	}
+
+	WSACleanup();
+	WORD version = MAKEWORD(2, 2);
+	WSADATA wsaData;
+	if (WSAStartup(version, &wsaData))
+	{
+		const Error creatingSocketError("Couldn't create socket.", 0);
+		ErrorHandler::AddError(creatingSocketError);
+		// WSAGetLastError()
+	}
+
+
+	clientSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	if (clientSocket == INVALID_SOCKET)
+	{
+		WSACleanup();
+		const Error creatingSocketError("Couldn't create socket.", 0);
+		ErrorHandler::AddError(creatingSocketError);
+	}
+
 	return 0;
 }
 
@@ -72,6 +100,20 @@ DWORD WINAPI WindowsNetworking::ReceiveSendMessageThread(LPVOID param)
 	return 0;
 }
 
+DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
+{
+	BufferServerConnect* BSCPtr = (BufferServerConnect*)param;
+	if(BSCPtr->GetIsAccepted())
+	{
+		config::SetChatroom(BSCPtr->GetChatroom());
+	}
+	else
+	{
+		Error incorrectPassword("Incorrect Password for chatroom", 2);
+	}
+	return 0;
+}
+
 DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 {
 	isReceiving = true;
@@ -83,16 +125,17 @@ DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 	{
 
 	}
-	else if (BH->GetType() == 1)
+	else if (BH->GetType() == 2)
 	{
-		// Message Buffer
-		BufferSendMessage* BNPtr = (BufferSendMessage*)&buffer;
-		CreateThread(nullptr, 0, ReceiveSendMessageThread, BNPtr, 0, nullptr);
+		// BufferServerSendMessage
+		BufferServerSendMessage* BSSMPtr = (BufferServerSendMessage*)&buffer;
+		CreateThread(nullptr, 0, ReceiveSendMessageThread, BSSMPtr, 0, nullptr);
 	}
-	else if (BH->GetType() == 3)
+	else if (BH->GetType() == 4)
 	{
-		// Message Buffer
-		
+		// BufferConnectServer
+		BufferServerConnect* BSCPtr = (BufferServerConnect*)&buffer;
+		CreateThread(nullptr, 0, ReceiveConnect, BSCPtr, 0, nullptr);
 	}
 	isReceiving = false;
 	delete buffer;
@@ -129,33 +172,28 @@ void WindowsNetworking::CreateSocket()
 
 }
 
-void WindowsNetworking::CloseSocket() 
+void WindowsNetworking::CloseSocket()
 {
-	if(!closesocket(clientSocket))
+	if (!closesocket(clientSocket))
 	{
 		const Error ClosingSocketError("Couldn't close socket.", 0);
 		ErrorHandler::AddError(ClosingSocketError);
 	}
-	
+
 	WSACleanup();
 }
 
-void WindowsNetworking::Connect(const std::string& _ip, int _port) 
+void WindowsNetworking::Connect(const std::string& _ip, int _port, std::string& _password) 
 {
 	// Convert Ip to wide Ip
 	std::wstring wideIp = std::wstring(_ip.begin(), _ip.end());
-	ConnectHolder* CH = new ConnectHolder{ wideIp, _port };
-
-	DWORD threadId;
-	HANDLE handle;
-	handle = CreateThread(nullptr, 0, ConnectThread, CH, 0, &threadId);
+	ConnectHolder* CH = new ConnectHolder{ wideIp, _port, _password};
+	CreateThread(nullptr, 0, ConnectThread, CH, 0, nullptr);
 }
 
 void WindowsNetworking::Disconnect()
 {
-	DWORD threadId;
-	HANDLE handle;
-	handle = CreateThread(nullptr, 0, DisconnectThread, nullptr, 0, &threadId);
+	CreateThread(nullptr, 0, DisconnectThread, nullptr, 0, nullptr);
 }
 
 
@@ -163,25 +201,19 @@ void WindowsNetworking::SendText(const std::string& _message)
 {
 	// Allocate string on heap
 	std::string* message = const_cast<std::string*>(&_message);
-	DWORD threadId;
-	HANDLE handle;
-	handle = CreateThread(nullptr, 0, SendTextThread, message, 0, &threadId);
+	CreateThread(nullptr, 0, SendTextThread, message, 0, nullptr);
 }
 
 void WindowsNetworking::UpdateUser() 
 {
-	DWORD threadId;
-	HANDLE handle;
-	handle = CreateThread(nullptr, 0, UpdateUserThread, nullptr, 0, &threadId);
+	CreateThread(nullptr, 0, UpdateUserThread, nullptr, 0, nullptr);
 }
 
 void WindowsNetworking::Receive()  
 {
 	// Declare isReceiving here so that the computer doesn't create multiple threads quickly.
 	isReceiving = true;
-	DWORD threadId;
-	HANDLE handle;
-	handle = CreateThread(nullptr, 0, ReceiveThread, nullptr, 0, &threadId);
+	CreateThread(nullptr, 0, ReceiveThread, nullptr, 0, nullptr);
 }
 
 bool WindowsNetworking::GetReceivingStatus() { return isReceiving; }

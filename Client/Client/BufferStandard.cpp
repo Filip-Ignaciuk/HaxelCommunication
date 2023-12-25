@@ -41,3 +41,9 @@ User& BufferUpdateUser::GetUser() { return m_user; }
 // BufferServerUpdateUser
 BufferServerUpdateUser::BufferServerUpdateUser(User& _user) :BufferNormal(6), m_user(_user) {}
 User& BufferServerUpdateUser::GetUser() { return m_user; }
+
+// BufferDisconnect
+BufferDisconnect::BufferDisconnect() : BufferNormal(7) {}
+
+// BufferDisconnectServer
+BufferDisconnectServer::BufferDisconnectServer() : BufferNormal(8) {}

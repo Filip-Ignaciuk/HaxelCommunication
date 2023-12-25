@@ -31,6 +31,8 @@ private:
 
 	static Chatroom chatroom;
 
+	static Chatroom emptyChatroom;
+
 	static std::wstring currentWideIp;
 	static std::string currentIp;
 	static int currentPort;
