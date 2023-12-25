@@ -230,18 +230,18 @@ void ModalLeaveChatroomGui()
 void ModalJoinChatroomGui()
 {
     ImGui::Text("Chatroom");
-    static char ip[14] = "";
-    static char port[5] = "";
-    static char password[32] = "";
-    ImGui::InputText("IP", ip, IM_ARRAYSIZE(ip));
-    ImGui::InputText("Port", port, IM_ARRAYSIZE(port));
-    ImGui::InputText("Password", password, IM_ARRAYSIZE(password));
+    static char guiIp[14] = "";
+    static char guiPort[5] = "";
+    static char guiPassword[32] = "";
+    ImGui::InputText("IP", guiIp, IM_ARRAYSIZE(guiIp));
+    ImGui::InputText("Port", guiPort, IM_ARRAYSIZE(guiPort));
+    ImGui::InputText("Password", guiPassword, IM_ARRAYSIZE(guiPassword));
     if (ImGui::Button("Connect", ImVec2(120, 0)))
     {
-        std::string guiIp = ip;
-        std::string guiPort = port;
-        std::string guiPassword = password;
-        JoinChatroom(guiIp, guiPort, guiPassword);
+        std::string ip = guiIp;
+        std::string port = guiPort;
+        std::string password = guiPassword;
+        JoinChatroom(ip, port, password);
     }
 }
 
@@ -440,10 +440,6 @@ int main(int, char**)
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-
-
-        //static float col1[3] = { 1.0f, 0.0f, 0.2f };
-        //ImGui::ColorEdit3("color 1", col1);
 
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;

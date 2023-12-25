@@ -109,6 +109,7 @@ DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 	}
 	else
 	{
+		isConnected = false;
 		Error incorrectPassword("Incorrect Password for chatroom", 2);
 	}
 	return 0;
