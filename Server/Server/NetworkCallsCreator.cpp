@@ -35,6 +35,14 @@ void NetworkCallsCreator::Listen()
 	delete networkCalls;
 }
 
+void NetworkCallsCreator::Receive()
+{
+	NetworkCalls* networkCalls = this->CreateNetworkCalls();
+	networkCalls->Receive();
+	delete networkCalls;
+}
+
+
 
 Chatroom* NetworkCallsCreator::GetChatroom()
 {

@@ -3,10 +3,10 @@
 
 BufferNormal::BufferNormal() : m_type(0)
 {
-	
+
 }
 
-BufferNormal::BufferNormal(int _type) : m_type(_type){}
+BufferNormal::BufferNormal(int _type) : m_type(_type) {}
 
 BufferNormal::~BufferNormal() = default;
 

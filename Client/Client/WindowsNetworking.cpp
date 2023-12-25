@@ -30,7 +30,6 @@ DWORD WINAPI WindowsNetworking::ConnectThread(LPVOID param)
 		int result = send(clientSocket, (char*)&BC, sizeof(BufferConnect), 0);
 
 
-
 	}
 	else
 	{
@@ -75,26 +74,28 @@ DWORD WINAPI WindowsNetworking::ReceiveSendMessageThread(LPVOID param)
 
 DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 {
-	BufferNormal buffer;
-	recv(clientSocket, (char*)&buffer, sizeof(BufferNormal), 0);
-	isReceiving = false;
-	
-	if(!buffer.GetType())
+	isReceiving = true;
+	char* buffer = new char[sizeof(BufferServerConnect)];
+	// Use the largest possible class, so that we can accomidate everything.
+	int recievedBytes = recv(clientSocket, buffer, sizeof(BufferServerConnect), 0);
+	BufferNormal* BH = (BufferNormal*)buffer;
+	if (!BH->GetType())
+	{
+
+	}
+	else if (BH->GetType() == 1)
 	{
 		// Message Buffer
-		BufferNormal* BNPtr = &buffer;
-		DWORD threadId;
-		HANDLE handle;
-		handle = CreateThread(nullptr, 0, ReceiveSendMessageThread, BNPtr, 0, &threadId);
-		
-
+		BufferSendMessage* BNPtr = (BufferSendMessage*)&buffer;
+		CreateThread(nullptr, 0, ReceiveSendMessageThread, BNPtr, 0, nullptr);
 	}
-	else if(buffer.GetType() == 1)
+	else if (BH->GetType() == 3)
 	{
-		// 
+		// Message Buffer
+		
 	}
-
-	
+	isReceiving = false;
+	delete buffer;
 	return 0;
 }
 

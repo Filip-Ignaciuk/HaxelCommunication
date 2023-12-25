@@ -1,15 +1,17 @@
 #pragma once
 #include "stdafx.h"
 #include <WinSock2.h>
+#include <map>
 
 // Application Headers
+#include "BufferStandard.hpp"
 #include "Chatroom.hpp"
 #include "NetworkCalls.hpp"
 
-struct ConnectHolder
+struct RecieveConnectHolder
 {
-	std::wstring* ip;
-	int* port;
+	int socketPosition;
+	BufferConnect* bufferConnect;
 };
 
 // Implementation of NetworkCalls in windows.
@@ -19,6 +21,7 @@ private:
 	static SOCKET serverSocket;
 
 	static SOCKET clientSockets[32];
+	static bool clientRecieving[32];
 
 	static bool isListening;
 
@@ -41,9 +44,11 @@ private:
 	static DWORD WINAPI UpdateUserThread(LPVOID param);
 
 	static DWORD WINAPI ReceiveSendMessageThread(LPVOID param);
+	static DWORD WINAPI ReceiveConnect(LPVOID param);
 	static DWORD WINAPI ReceiveUserUpdateThread(LPVOID param);
 	static DWORD WINAPI ReceiveTextThread(LPVOID param);
 
+	static DWORD WINAPI ReceiveClients(LPVOID param);
 	static DWORD WINAPI ReceiveThread(LPVOID param);
 	
 	
@@ -55,10 +60,12 @@ public:
 	void CloseSocket() override;
 	void Bind(const std::string& _ip, int _port) override;
 	void Listen() override;
+	void Receive() override;
 	Chatroom* GetChatroom() override;
 	void OpenChatroom() override;
 	void CloseChatroom() override;
 	void Disconnect() override;
+	
 
 	// Main Procedures
 	void SendText(const std::string& _message) override;

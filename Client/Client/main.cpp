@@ -40,7 +40,7 @@ static void glfw_error_callback(int error, const char* description)
 // Client
 
 // Application
-NetworkCallsCreator creator;
+NetworkCallsCreator* creator;
 NetworkCalls* networkCalls;
 
 // Error Data
@@ -409,8 +409,8 @@ int main(int, char**)
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     // Setup Networking
-    creator = WindowsCallsCreator();
-    networkCalls = creator.CreateNetworkCalls();
+    creator = new WindowsCallsCreator();
+    networkCalls = creator->CreateNetworkCalls();
     networkCalls->CreateSocket();
 
     // Loading Configs
@@ -454,7 +454,7 @@ int main(int, char**)
         bool chatroomStatus = networkCalls->GetReceivingStatus();
 
         // Receive data from chatroom
-        if (!chatroomStatus)
+        if (chatroomStatus)
         {
             networkCalls->Receive();
         }

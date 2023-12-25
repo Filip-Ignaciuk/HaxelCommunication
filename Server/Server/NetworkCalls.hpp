@@ -1,4 +1,7 @@
 #pragma once
+#include <map>
+#include <WinSock2.h>
+
 #include "Chatroom.hpp"
 #include "string"
 
@@ -11,6 +14,7 @@ public:
 	virtual void CloseSocket();
 	virtual void Bind(const std::string& _ip, int _port);
 	virtual void Listen();
+	virtual void Receive();
 	virtual Chatroom* GetChatroom();
 	virtual void OpenChatroom();
 	virtual void CloseChatroom();

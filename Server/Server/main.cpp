@@ -520,6 +520,8 @@ int main(int, char**)
         bool chatroomStatus = creator->GetChatroomStatus();
         bool getBindedStatus = creator->GetBindStatus();
 
+        creator->Receive();
+
         // Receive data from chatroom
         if (!listeningStatus && chatroomStatus && getBindedStatus)
         {
@@ -553,7 +555,7 @@ int main(int, char**)
                 {
                     std::string sIp = ip;
                     std::string sPort = port;
-                    if(CreateChatroom(sIp, sPort))
+                    if(CreateChatroom(sIp, sPort)) 
                     {
                         for (char i = 0; i < 15; i++)
                         {
@@ -576,6 +578,7 @@ int main(int, char**)
             	ImGui::Text(currentIpText.c_str());
                 ImGui::Text(currentPortText.c_str());
                 static char chatroomName[30];
+                static char chatroomPassword[30];
                 ImGui::InputText(LanguageFileInitialiser::charAllTextsInApplication[36], chatroomName, IM_ARRAYSIZE(chatroomName));
                 if(ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[37]))
                 {

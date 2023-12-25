@@ -5,6 +5,7 @@ void NetworkCalls::CreateSocket(){}
 void NetworkCalls::CloseSocket(){}
 void NetworkCalls::Bind(const std::string& _ip, int _port){}
 void NetworkCalls::Listen() {}
+void NetworkCalls::Receive() {}
 Chatroom* NetworkCalls::GetChatroom() { return nullptr; }
 void NetworkCalls::OpenChatroom(){}
 void NetworkCalls::CloseChatroom(){}

@@ -8,6 +8,7 @@
 
 SOCKET WindowsNetworking::serverSocket = INVALID_SOCKET;
 SOCKET WindowsNetworking::clientSockets[32];
+bool WindowsNetworking::clientRecieving[32];
 bool WindowsNetworking::isListening = false;
 bool WindowsNetworking::isBinded = false;
 bool WindowsNetworking::inChatroom = false;
@@ -27,23 +28,19 @@ DWORD WINAPI WindowsNetworking::AcceptThread(LPVOID param)
 		return 0;
 	}
 
-	for(SOCKET socket : clientSockets)
+	for (int i = 0; i < 32; i++)
 	{
-		if(socket == INVALID_SOCKET)
+		if(clientSockets[i] == 0)
 		{
+			SOCKET& socket = clientSockets[i];
 			socket = acceptedSocket;
-			DWORD threadId;
-			HANDLE handle;
-			handle = CreateThread(nullptr, 0, ReceiveThread, nullptr, 0, &threadId);
 			Error acceptedSocketNotification(LanguageFileInitialiser::allTextsInApplication[39], 3);
 			ErrorHandler::AddError(acceptedSocketNotification);
 			return 0;
 		}
 	}
-
-	Error declindedSocketNotification(LanguageFileInitialiser::allTextsInApplication[40], 3);
-	ErrorHandler::AddError(declindedSocketNotification);
-	return 0;
+	
+	
 }
 
 DWORD WINAPI WindowsNetworking::ListenThread(LPVOID param)
@@ -55,11 +52,12 @@ DWORD WINAPI WindowsNetworking::ListenThread(LPVOID param)
 		Error listeningError("Error listening for clients", 0);
 		ErrorHandler::AddError(listeningError);
 	}
-	DWORD threadId;
-	HANDLE handle;
-	handle = CreateThread(nullptr, 0, AcceptThread, nullptr, 0, &threadId);
+	CreateThread(nullptr, 0, AcceptThread, nullptr, 0, nullptr);
 	return 0;
 }
+
+
+
 
 DWORD WINAPI WindowsNetworking::BindThread(LPVOID param)
 {
@@ -108,6 +106,8 @@ DWORD WINAPI WindowsNetworking::UpdateUserThread(LPVOID param)
 	return 0;
 }
 
+
+
 DWORD WINAPI WindowsNetworking::ReceiveSendMessageThread(LPVOID param)
 {
 	BufferSendMessage* BNPtr = (BufferSendMessage*)param;
@@ -116,31 +116,86 @@ DWORD WINAPI WindowsNetworking::ReceiveSendMessageThread(LPVOID param)
 	return 0;
 }
 
+DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
+{
+	RecieveConnectHolder* NCHPtr = (RecieveConnectHolder*)param;
+	int socketPosition = NCHPtr->socketPosition;
+	BufferConnect bC = *NCHPtr->bufferConnect;
+	delete NCHPtr;
+	if(chatroom.HasPassword())
+	{
+		if(NCHPtr->bufferConnect->GetPassword() == chatroom.GetPassword())
+		{
+			clientRecieving[socketPosition] = false;
+			Error error("Accepted User, correct password.", 3);
+			ErrorHandler::AddError(error);
+			delete NCHPtr;
+			return 0;
+		}
+		else
+		{
+			shutdown(clientSockets[socketPosition], 2);
+			clientSockets[socketPosition] = 0;
+			clientRecieving[socketPosition] = false;
+			Error error("Reject User, incorrect password.", 3);
+			ErrorHandler::AddError(error);
+			delete NCHPtr;
+			return 0;
+
+		}
+
+	}
+	BufferServerConnect BSC(true, chatroom);
+	send(clientSockets[socketPosition], (char*)&BSC, sizeof(BufferNormal), 0);
+	Error error("Accepted User.", 3);
+	ErrorHandler::AddError(error);
+	clientRecieving[NCHPtr->socketPosition] = false;
+	return 0;
+}
+
 DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 {
-	SOCKET* clientSocket = (SOCKET*)param;
-	BufferNormal buffer;
+	int socketPosition = (int)param;
+	SOCKET& clientSocket = clientSockets[socketPosition];
+	char* buffer = new char[sizeof(BufferServerConnect)];
 	// Use the largest possible class, so that we can accomidate everything.
-	int recievedBytes = recv(*clientSocket, (char*)&buffer, sizeof(BufferNormal), 0);
-	BufferNormal* BH = (BufferSendMessage*)&buffer;
+	int recievedBytes = recv(clientSocket, buffer, sizeof(BufferServerConnect), 0);
+	BufferNormal* BH = (BufferNormal*)buffer;
 	if (!BH->GetType())
 	{
-		return 0;
+
 	}
 	else if (BH->GetType() == 1)
 	{
 		// Message Buffer
 		BufferSendMessage* BNPtr = (BufferSendMessage*)&buffer;
-		DWORD threadId;
-		HANDLE handle;
-		handle = CreateThread(nullptr, 0, ReceiveSendMessageThread, BNPtr, 0, &threadId);
+		CreateThread(nullptr, 0, ReceiveSendMessageThread, BNPtr, 0, nullptr);
 	}
-
-
-	
+	else if (BH->GetType() == 3)
+	{
+		// Message Buffer
+		BufferConnect* BCPtr = (BufferConnect*)&buffer;
+		RecieveConnectHolder* NCHPtr = new RecieveConnectHolder() ;
+		NCHPtr->socketPosition = socketPosition;
+		NCHPtr->bufferConnect = BCPtr;
+		CreateThread(nullptr, 0, ReceiveConnect, NCHPtr, 0, nullptr);
+	}
+	clientRecieving[socketPosition] = false;
+	delete buffer;
 	return 0;
 }
 
+DWORD WINAPI WindowsNetworking::ReceiveClients(LPVOID param)
+{
+	for (int i = 0; i < 32; i++)
+	{
+		if (clientSockets[i] != 0 && !clientRecieving[i])
+		{
+			CreateThread(nullptr, 0, ReceiveThread, (LPVOID)i, 0, nullptr);
+		}
+	}
+	return 0;
+}
 
 // Outwards Facing Functions
 
@@ -201,18 +256,19 @@ void WindowsNetworking::Bind(const std::string& _ip, int _port)
 	currentWideIp = wideIp;
 	currentIp = _ip;
 	currentPort = _port;
-	DWORD threadId;
-	HANDLE handle;
-	handle = CreateThread(nullptr, 0, BindThread, nullptr, 0, &threadId);
+	CreateThread(nullptr, 0, BindThread, nullptr, 0, nullptr);
 }
 
 void WindowsNetworking::Listen()
 {
 	isListening = true;
-	DWORD threadId;
-	HANDLE handle;
-	handle = CreateThread(nullptr, 0, ListenThread, nullptr, 0, &threadId);
+	CreateThread(nullptr, 0, ListenThread, nullptr, 0,nullptr);
 
+}
+
+void WindowsNetworking::Receive()
+{
+	CreateThread(nullptr, 0, ReceiveClients, nullptr, 0, nullptr);
 }
 
 
@@ -239,9 +295,7 @@ void WindowsNetworking::CloseChatroom()
 
 void WindowsNetworking::Disconnect()
 {
-	DWORD threadId;
-	HANDLE handle;
-	handle = CreateThread(nullptr, 0, DisconnectThread, nullptr, 0, &threadId);
+	CreateThread(nullptr, 0, DisconnectThread, nullptr, 0, nullptr);
 }
 
 
@@ -249,16 +303,12 @@ void WindowsNetworking::SendText(const std::string& _message)
 {
 	// Allocate string on heap
 	std::string* message = const_cast<std::string*>(&_message);
-	DWORD threadId;
-	HANDLE handle;
-	handle = CreateThread(nullptr, 0, SendTextThread, message, 0, &threadId);
+	CreateThread(nullptr, 0, SendTextThread, message, 0, nullptr);
 }
 
 void WindowsNetworking::UpdateUser() 
 {
-	DWORD threadId;
-	HANDLE handle;
-	handle = CreateThread(nullptr, 0, UpdateUserThread, nullptr, 0, &threadId);
+	CreateThread(nullptr, 0, UpdateUserThread, nullptr, 0, nullptr);
 }
 
 

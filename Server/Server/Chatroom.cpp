@@ -3,6 +3,7 @@
 #include "ErrorHandler.hpp"
 #include "Languages.hpp"
 
+
 Chatroom::Chatroom() = default;
 
 Chatroom::Chatroom(std::string& _name) : m_name(_name)	{	}
@@ -62,9 +63,22 @@ void Chatroom::UpdateName(std::string& _name)
 	m_name = _name;
 }
 
+void Chatroom::AddPassword(std::string& _password)
+{
+	m_hasPassword = true;
+	m_password = _password;
+}
+
+
 User Chatroom::GetUser(int _position) const	{	return m_users[_position];	}
 
 std::vector<Message> Chatroom::GetMessages() const	{	return m_messages;	}
+
+bool Chatroom::HasPassword() const { return m_hasPassword; }
+
+std::string& Chatroom::GetPassword() { return m_password; }
+
+
 
 void Chatroom::UpdateMessages()
 {

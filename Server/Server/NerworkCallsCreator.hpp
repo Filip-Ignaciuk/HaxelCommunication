@@ -11,6 +11,7 @@ public:
 	void CloseSocket() const;
 	void Bind(const std::string& _ip, int _port) const;
 	void Listen();
+	void Receive();
 	Chatroom* GetChatroom();
 	void OpenChatroom();
 	void CloseChatroom();
