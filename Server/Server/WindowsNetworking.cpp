@@ -151,7 +151,7 @@ DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 	send(clientSockets[socketPosition], (char*)&BSC, sizeof(BufferNormal), 0);
 	Error error("Accepted User.", 3);
 	ErrorHandler::AddError(error);
-	clientRecieving[NCHPtr->socketPosition] = false;
+	clientRecieving[socketPosition] = false;
 	return 0;
 }
 
@@ -172,20 +172,19 @@ DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 	else if (BH->GetType() == 1)
 	{
 		// BufferSendMessage
-		BufferSendMessage* BSMPtr = (BufferSendMessage*)&BH;
+		BufferSendMessage* BSMPtr = (BufferSendMessage*)buffer;
 		CreateThread(nullptr, 0, ReceiveSendMessageThread, BSMPtr, 0, nullptr);
 	}
 	else if (BH->GetType() == 3)
 	{
 		// BufferConnect
-		BufferConnect* BSCPtr = (BufferConnect*)&BH;
+		BufferConnect* BSCPtr = (BufferConnect*)buffer;
 		RecieveConnectHolder* BCH = new RecieveConnectHolder();
 		BCH->bufferConnect = BSCPtr;
 		BCH->socketPosition = clientPosition;
 		CreateThread(nullptr, 0, ReceiveConnect, BCH, 0, nullptr);
 	}
 	clientRecievingStatus = false;
-	delete buffer;
 	return 0;
 }
 

@@ -3,11 +3,12 @@
 #include "BufferStandard.hpp"
 #include "Error.hpp"
 #include "ErrorHandler.hpp"
+#include <WS2tcpip.h>
 
 SOCKET WindowsNetworking::clientSocket = INVALID_SOCKET;
 bool WindowsNetworking::isReceiving = false;
-bool WindowsNetworking::isConnected = false;
 bool WindowsNetworking::inChatroom = false;
+Chatroom WindowsNetworking::chatroom;
 
 
 DWORD WINAPI WindowsNetworking::ConnectThread(LPVOID param)
@@ -15,6 +16,7 @@ DWORD WINAPI WindowsNetworking::ConnectThread(LPVOID param)
 	ConnectHolder* CH = (ConnectHolder*)param;
 	const std::wstring ip = CH->ip;
 	const int port = CH->port;
+	std::string password = CH->password;
 
 	sockaddr_in service;
 	service.sin_family = AF_INET;
@@ -24,11 +26,8 @@ DWORD WINAPI WindowsNetworking::ConnectThread(LPVOID param)
 	if (!connect(clientSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
 	{
 		// Successful
-		isConnected = true;
-		BufferConnect BC(CH->password);
-		int result = send(clientSocket, (char*)&BC, sizeof(BufferServerConnect), 0);
-		auto var = WSAGetLastError();
-
+		BufferConnect BC(password);
+		send(clientSocket, (char*)&BC, sizeof(BufferConnect), 0);
 	}
 	else
 	{
@@ -95,7 +94,7 @@ DWORD WINAPI WindowsNetworking::ReceiveSendMessageThread(LPVOID param)
 	BufferNormal bufferNormal = *bufferPointer;
 	delete bufferPointer;
 	BufferServerSendMessage& messageBuffer = dynamic_cast<BufferServerSendMessage&> (bufferNormal);
-	config::GetChatroom().AddMessage(messageBuffer.GetMessageObject());
+	chatroom.AddMessage(messageBuffer.GetMessageObject());
 	
 	return 0;
 }
@@ -105,11 +104,11 @@ DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 	BufferServerConnect* BSCPtr = (BufferServerConnect*)param;
 	if(BSCPtr->GetIsAccepted())
 	{
-		config::SetChatroom(BSCPtr->GetChatroom());
+		chatroom = BSCPtr->GetChatroom();
+		inChatroom = true;
 	}
 	else
 	{
-		isConnected = false;
 		Error incorrectPassword("Incorrect Password for chatroom", 2);
 	}
 	return 0;
@@ -218,5 +217,6 @@ void WindowsNetworking::Receive()
 }
 
 bool WindowsNetworking::GetReceivingStatus() { return isReceiving; }
-bool WindowsNetworking::GetConnectionStatus() {	return isConnected;	}
 bool WindowsNetworking::GetChatroomStatus() { return inChatroom; }
+Chatroom& WindowsNetworking::GetChatroom() { return chatroom; }
+

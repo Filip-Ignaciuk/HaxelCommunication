@@ -11,7 +11,7 @@ void NetworkCalls::UpdateUser() {}
 void NetworkCalls::Receive() {}
 
 bool NetworkCalls::GetReceivingStatus() { return false; }
-bool NetworkCalls::GetConnectionStatus() { return false; }
 bool NetworkCalls::GetChatroomStatus() { return false; }
+Chatroom& NetworkCalls::GetChatroom() { return emptyChatroom; }
 
 NetworkCalls::~NetworkCalls() = default;

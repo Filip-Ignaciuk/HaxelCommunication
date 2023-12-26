@@ -1,9 +1,6 @@
 #pragma once
 #include <string>
 
-#include "Chatroom.hpp"
-
-
 class config
 {
 private:
@@ -11,8 +8,6 @@ private:
 	static bool m_isInitialised;
 	static int m_currentWindow;
 	static int m_currentLanguage;
-
-	static Chatroom m_chatroom;
 
 	static void Initialise(const std::string& _txt);
 	static void InitFolders();
@@ -34,9 +29,6 @@ public:
 
 	static bool GetIsInitialised();
 	static int GetCurrentWindow();
-
-	static void SetChatroom(Chatroom& _chatroom);
-	static Chatroom& GetChatroom();
 
 	
 	

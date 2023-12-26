@@ -18,6 +18,8 @@
 #include "WindowsNetworking.hpp"
 #include "WindowsNetworkCallsCreator.hpp"
 
+#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
 // Your own project should not be affected, as you are likely to link with a newer binary of GLFW that is adequate for your version of Visual Studio.
@@ -55,7 +57,7 @@ bool finishedError = true;
 // Chatroom Info
 
 // We store all chatroom behaviour in the chatroom class, to organise and simplify our code.
-Chatroom& chatroom = config::GetChatroom();
+Chatroom& chatroom = creator->GetChatroom();
 MessageBuilder messageBuilder;
 
 
@@ -450,15 +452,16 @@ int main(int, char**)
 
         
         bool exit = true;
-        bool chatroomStatus = networkCalls->GetReceivingStatus();
+        bool receivingStatus = networkCalls->GetReceivingStatus();
+        bool chatroomStatus = networkCalls->GetChatroomStatus();
 
         // Receive data from chatroom
-        if (chatroomStatus)
+        if (receivingStatus)
         {
             networkCalls->Receive();
         }
 
-        if(networkCalls->GetChatroomStatus())
+        if(chatroomStatus)
         {
             ImGui::Begin("ChatRoom", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize );
             {

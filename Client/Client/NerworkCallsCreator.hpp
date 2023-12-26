@@ -18,6 +18,6 @@ public:
 	void Receive() const;
 
 	bool GetReceivingStatus();
-	bool GetConnectionStatus();
 	bool GetChatroomStatus();
+	Chatroom& GetChatroom();
 };

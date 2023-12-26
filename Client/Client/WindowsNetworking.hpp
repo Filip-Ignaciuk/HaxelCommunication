@@ -1,9 +1,10 @@
 #pragma once
 #include "stdafx.h"
 #include <WinSock2.h>
-#include <WS2tcpip.h>
+
 
 // Application Headers
+#include "Chatroom.hpp"
 #include "NetworkCalls.hpp"
 
 struct ConnectHolder
@@ -21,9 +22,9 @@ private:
 
 	static bool isReceiving;
 
-	static bool isConnected;
-
 	static bool inChatroom;
+
+	static Chatroom chatroom;
 
 	static DWORD WINAPI ConnectThread(LPVOID param);
 	static DWORD WINAPI DisconnectThread(LPVOID param);
@@ -57,7 +58,7 @@ public:
 
 	// Class Based
 	bool GetReceivingStatus() override;
-	bool GetConnectionStatus() override;
 	bool GetChatroomStatus() override;
+	Chatroom& GetChatroom() override;
 
 };

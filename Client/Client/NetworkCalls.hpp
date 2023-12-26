@@ -1,8 +1,13 @@
 #pragma once
+#include "Chatroom.hpp"
 #include "string"
+
+inline static Chatroom emptyChatroom;
 
 class NetworkCalls
 {
+
+
 public:
 	virtual void CreateSocket();
 	virtual void CloseSocket();
@@ -14,8 +19,8 @@ public:
 	virtual void Receive();
 
 	virtual bool GetReceivingStatus();
-	virtual bool GetConnectionStatus();
 	virtual bool GetChatroomStatus();
+	virtual Chatroom& GetChatroom();
 
 	virtual ~NetworkCalls();
 };

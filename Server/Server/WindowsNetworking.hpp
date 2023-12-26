@@ -1,7 +1,6 @@
 #pragma once
 #include "stdafx.h"
 #include <WinSock2.h>
-#include <map>
 
 // Application Headers
 #include "BufferStandard.hpp"
@@ -31,7 +30,6 @@ private:
 
 	static Chatroom chatroom;
 
-	static Chatroom emptyChatroom;
 
 	static std::wstring currentWideIp;
 	static std::string currentIp;

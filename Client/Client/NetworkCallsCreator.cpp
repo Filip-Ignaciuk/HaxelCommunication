@@ -58,17 +58,19 @@ bool NetworkCallsCreator::GetReceivingStatus()
 	delete networkCalls;
 	return result;
 }
-bool NetworkCallsCreator::GetConnectionStatus()
-{
-	NetworkCalls* networkCalls = this->CreateNetworkCalls();
-	bool result = networkCalls->GetConnectionStatus();
-	delete networkCalls;
-	return result;
-}
+
 bool NetworkCallsCreator::GetChatroomStatus()
 {
 	NetworkCalls* networkCalls = this->CreateNetworkCalls();
 	bool result = networkCalls->GetChatroomStatus();
+	delete networkCalls;
+	return result;
+}
+
+Chatroom& NetworkCallsCreator::GetChatroom()
+{
+	NetworkCalls* networkCalls = this->CreateNetworkCalls();
+	Chatroom& result = networkCalls->GetChatroom();
 	delete networkCalls;
 	return result;
 }
