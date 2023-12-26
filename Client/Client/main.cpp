@@ -57,7 +57,7 @@ bool finishedError = true;
 // Chatroom Info
 
 // We store all chatroom behaviour in the chatroom class, to organise and simplify our code.
-Chatroom& chatroom = creator->GetChatroom();
+Chatroom& chatroom = emptyChatroom;
 MessageBuilder messageBuilder;
 
 
@@ -454,9 +454,10 @@ int main(int, char**)
         bool exit = true;
         bool receivingStatus = networkCalls->GetReceivingStatus();
         bool chatroomStatus = networkCalls->GetChatroomStatus();
+        bool isConnected = networkCalls->GetConnectedStatus();
 
         // Receive data from chatroom
-        if (receivingStatus)
+        if (!receivingStatus && isConnected)
         {
             networkCalls->Receive();
         }

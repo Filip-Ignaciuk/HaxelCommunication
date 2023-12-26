@@ -67,6 +67,15 @@ bool NetworkCallsCreator::GetChatroomStatus()
 	return result;
 }
 
+bool NetworkCallsCreator::GetConnectedStatus()
+{
+	NetworkCalls* networkCalls = this->CreateNetworkCalls();
+	bool result = networkCalls->GetConnectedStatus();
+	delete networkCalls;
+	return result;
+}
+
+
 Chatroom& NetworkCallsCreator::GetChatroom()
 {
 	NetworkCalls* networkCalls = this->CreateNetworkCalls();

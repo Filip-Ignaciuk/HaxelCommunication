@@ -19,5 +19,6 @@ public:
 
 	bool GetReceivingStatus();
 	bool GetChatroomStatus();
+	bool GetConnectedStatus();
 	Chatroom& GetChatroom();
 };

@@ -20,6 +20,7 @@ public:
 
 	virtual bool GetReceivingStatus();
 	virtual bool GetChatroomStatus();
+	virtual bool GetConnectedStatus();
 	virtual Chatroom& GetChatroom();
 
 	virtual ~NetworkCalls();

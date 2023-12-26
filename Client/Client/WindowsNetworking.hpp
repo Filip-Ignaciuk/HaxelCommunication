@@ -22,6 +22,8 @@ private:
 
 	static bool isReceiving;
 
+	static bool isConnected;
+
 	static bool inChatroom;
 
 	static Chatroom chatroom;
@@ -59,6 +61,7 @@ public:
 	// Class Based
 	bool GetReceivingStatus() override;
 	bool GetChatroomStatus() override;
+	bool GetConnectedStatus() override;
 	Chatroom& GetChatroom() override;
 
 };

@@ -13,7 +13,6 @@ bool WindowsNetworking::isListening = false;
 bool WindowsNetworking::isBinded = false;
 bool WindowsNetworking::inChatroom = false;
 Chatroom WindowsNetworking::chatroom;
-Chatroom WindowsNetworking::emptyChatroom;
 
 std::wstring WindowsNetworking::currentWideIp = L"";
 std::string WindowsNetworking::currentIp = "";

@@ -8,6 +8,7 @@
 SOCKET WindowsNetworking::clientSocket = INVALID_SOCKET;
 bool WindowsNetworking::isReceiving = false;
 bool WindowsNetworking::inChatroom = false;
+bool WindowsNetworking::isConnected = false;
 Chatroom WindowsNetworking::chatroom;
 
 
@@ -28,6 +29,7 @@ DWORD WINAPI WindowsNetworking::ConnectThread(LPVOID param)
 		// Successful
 		BufferConnect BC(password);
 		send(clientSocket, (char*)&BC, sizeof(BufferConnect), 0);
+		isConnected = true;
 	}
 	else
 	{
@@ -71,6 +73,8 @@ DWORD WINAPI WindowsNetworking::DisconnectThread(LPVOID param)
 		ErrorHandler::AddError(creatingSocketError);
 	}
 
+	isConnected = false;
+
 	return 0;
 }
 
@@ -111,6 +115,7 @@ DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 	{
 		Error incorrectPassword("Incorrect Password for chatroom", 2);
 	}
+	delete BSCPtr;
 	return 0;
 }
 
@@ -128,17 +133,16 @@ DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 	else if (BH->GetType() == 2)
 	{
 		// BufferServerSendMessage
-		BufferServerSendMessage* BSSMPtr = (BufferServerSendMessage*)&buffer;
+		BufferServerSendMessage* BSSMPtr = (BufferServerSendMessage*)buffer;
 		CreateThread(nullptr, 0, ReceiveSendMessageThread, BSSMPtr, 0, nullptr);
 	}
 	else if (BH->GetType() == 4)
 	{
 		// BufferConnectServer
-		BufferServerConnect* BSCPtr = (BufferServerConnect*)&buffer;
+		BufferServerConnect* BSCPtr = (BufferServerConnect*)buffer;
 		CreateThread(nullptr, 0, ReceiveConnect, BSCPtr, 0, nullptr);
 	}
 	isReceiving = false;
-	delete buffer;
 	return 0;
 }
 
@@ -218,5 +222,7 @@ void WindowsNetworking::Receive()
 
 bool WindowsNetworking::GetReceivingStatus() { return isReceiving; }
 bool WindowsNetworking::GetChatroomStatus() { return inChatroom; }
+bool WindowsNetworking::GetConnectedStatus() { return isConnected; }
+
 Chatroom& WindowsNetworking::GetChatroom() { return chatroom; }
 
