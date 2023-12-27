@@ -93,6 +93,9 @@
     <ClCompile Include="BufferStandard.cpp">
       <Filter>Source Files\Networking</Filter>
     </ClCompile>
+    <ClCompile Include="Storage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Chatroom.hpp">
@@ -166,6 +169,9 @@
     </ClInclude>
     <ClInclude Include="WindowsNetworking.hpp">
       <Filter>Header Files\Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Storage.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

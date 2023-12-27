@@ -17,12 +17,12 @@ int BufferNormal::GetType() const
 }
 
 // BufferSendMessage
-BufferSendMessage::BufferSendMessage(Message& _message) :BufferNormal(1), m_message(_message) {}
-Message& BufferSendMessage::GetMessageObject() { return m_message; }
+BufferSendMessage::BufferSendMessage(std::string& _message) :BufferNormal(1), m_message(_message) {}
+std::string& BufferSendMessage::GetMessageObject() { return m_message; }
 
 // BufferServerSendMessage
-BufferServerSendMessage::BufferServerSendMessage(Message& _message) :BufferNormal(2), m_message(_message) {}
-Message& BufferServerSendMessage::GetMessageObject() { return m_message; }
+BufferServerSendMessage::BufferServerSendMessage(std::string& _message) :BufferNormal(2), m_message(_message) {}
+std::string& BufferServerSendMessage::GetMessageObject() { return m_message; }
 
 
 // BufferConnect
@@ -30,9 +30,9 @@ BufferConnect::BufferConnect(std::string& _message) :BufferNormal(3), m_password
 std::string BufferConnect::GetPassword() const { return m_password; }
 
 // BufferServerConnect
-BufferServerConnect::BufferServerConnect(int _isAccepted, Chatroom& _chatroom) :BufferNormal(4), m_isAccepted(_isAccepted), m_chatroom(_chatroom) {}
+BufferServerConnect::BufferServerConnect(int _isAccepted, std::string& _chatroomName) :BufferNormal(4), m_isAccepted(_isAccepted), m_name(_chatroomName) {}
 int BufferServerConnect::GetIsAccepted() const { return m_isAccepted; }
-Chatroom& BufferServerConnect::GetChatroom() { return m_chatroom; }
+std::string& BufferServerConnect::GetChatroomName() { return m_name; }
 
 // BufferUpdateUser
 BufferUpdateUser::BufferUpdateUser(User& _user) :BufferNormal(5), m_user(_user) {}

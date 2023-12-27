@@ -112,7 +112,7 @@ DWORD WINAPI WindowsNetworking::UpdateUserThread(LPVOID param)
 DWORD WINAPI WindowsNetworking::ReceiveSendMessageThread(LPVOID param)
 {
 	BufferSendMessage* BNPtr = (BufferSendMessage*)param;
-	chatroom.AddMessage(BNPtr->GetMessageObject());
+	BNPtr->GetMessageObject();
 	
 	return 0;
 }
@@ -127,7 +127,7 @@ DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 	{
 		if(NCHPtr->bufferConnect->GetPassword() == chatroom.GetPassword())
 		{
-			BufferServerConnect BSC(true, chatroom);
+			BufferServerConnect BSC(true, chatroom.GetChatroomName());
 			send(clientSockets[socketPosition], (char*)&BSC, sizeof(BufferNormal), 0);
 			clientRecieving[socketPosition] = false;
 			Error error("Accepted User, correct password.", 3);
@@ -135,7 +135,7 @@ DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 			delete NCHPtr;
 			return 0;
 		}
-		BufferServerConnect BSC(false, emptyChatroom);
+		BufferServerConnect BSC(false, emptyChatroom.GetChatroomName());
 		send(clientSockets[socketPosition], (char*)&BSC, sizeof(BufferNormal), 0);
 		shutdown(clientSockets[socketPosition], 2);
 		clientSockets[socketPosition] = 0;
@@ -146,7 +146,7 @@ DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 		return 0;
 
 	}
-	BufferServerConnect BSC(true, chatroom);
+	BufferServerConnect BSC(true, chatroom.GetChatroomName());
 	send(clientSockets[socketPosition], (char*)&BSC, sizeof(BufferNormal), 0);
 	Error error("Accepted User.", 3);
 	ErrorHandler::AddError(error);

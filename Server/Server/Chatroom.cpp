@@ -1,5 +1,4 @@
-#include "Chatroom.hpp"
-
+#include "Storage.hpp"
 #include "ErrorHandler.hpp"
 #include "Languages.hpp"
 
@@ -10,19 +9,19 @@ Chatroom::Chatroom(std::string& _name) : m_name(_name)	{	}
 
 void Chatroom::AddUser(User& _user)
 {
-	for (User user : m_users)
-	{
-		
-	}
+	
 }
 
 void Chatroom::AddMessage(Message& _message)
 {
+	
+
 	messageBuilder.Reset();
 	messageBuilder.AddMessage(_message);
 	//Change in accordance to the users settings
 
 	messageBuilder.GetFinalMessage();
+	
 }
 
 void Chatroom::UpdateUser(User& _oldUser, User& _newUser)
@@ -31,10 +30,10 @@ void Chatroom::UpdateUser(User& _oldUser, User& _newUser)
 
 	for (Message& message : m_messages)
 	{
-		User messageUser = message.GetUser();
+		int messageUser = message.GetUserPosition();
 		if (messageUser == _oldUser)
 		{
-			message.ChangeUser(_newUser);
+			message.ChangeUserPosition(_newUser);
 			hasMessagesChanged = true;
 		}
 	}
@@ -71,6 +70,8 @@ void Chatroom::AddPassword(std::string& _password)
 
 
 User Chatroom::GetUser(int _position) const	{	return m_users[_position];	}
+
+std::string& Chatroom::GetChatroomName() { return m_name; }
 
 std::vector<Message> Chatroom::GetMessages() const	{	return m_messages;	}
 

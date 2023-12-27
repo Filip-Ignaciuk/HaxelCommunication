@@ -4,7 +4,7 @@
 
 #pragma warning(disable : 4996)
 
-Message::Message(const std::string& _message, User& _user) : m_message(_message), m_user(_user) {  }
+Message::Message(const std::string& _message, int _userPosition) : m_message(_message), m_userPosition(_userPosition) {  }
 
 void Message::ChangeMainMessage(const std::string& _message)
 {
@@ -17,9 +17,9 @@ void Message::AddToMessage(const std::string& _message)
 }
 
 
-void Message::ChangeUser(User& _user) const
+void Message::ChangeUserPosition(int _userPosition)
 {
-	m_user = _user;
+	m_userPosition = _userPosition;
 }
 
 void Message::DeleteCompleteMessage()
@@ -38,9 +38,9 @@ std::string Message::GetMessageComplete() const
 	return m_completeMessage;
 }
 
-User& Message::GetUser()
+int Message::GetUserPosition() const
 {
-	return m_user;
+	return m_userPosition;
 }
 
 
@@ -56,13 +56,13 @@ MessageBuilder::~MessageBuilder()
 
 void MessageBuilder::Reset()
 {
-	this->m_Message = new Message("", emptyUser);
+	this->m_Message = new Message("", 0);
 }
 
 void MessageBuilder::AddMessage(Message& _message)
 {
 	this->m_Message->ChangeMainMessage(_message.GetMessageMain());
-	this->m_Message->ChangeUser(_message.GetUser());
+	this->m_Message->ChangeUserPosition(_message.GetUserPosition());
 }
 
 

@@ -27,20 +27,20 @@ public:
 class BufferSendMessage : public BufferNormal
 {
 private:
-	Message m_message;
+	std::string m_message;
 public:
-	BufferSendMessage(Message& _message);
-	Message& GetMessageObject();
+	BufferSendMessage(std::string& _message);
+	std::string& GetMessageObject();
 };
 
 
 class BufferServerSendMessage : public BufferNormal
 {
 private:
-	Message m_message;
+	std::string m_message;
 public:
-	BufferServerSendMessage(Message& _message);
-	Message& GetMessageObject();
+	BufferServerSendMessage(std::string& _message);
+	std::string& GetMessageObject();
 };
 
 class BufferConnect : public BufferNormal
@@ -56,11 +56,11 @@ class BufferServerConnect : public BufferNormal
 {
 private:
 	int m_isAccepted; // 2 - Requires password, 1 - Accepted, 0 - Not accepted.
-	Chatroom m_chatroom;
+	std::string m_name;
 public:
-	BufferServerConnect(int _isAccepted, Chatroom& _chatroom);
+	BufferServerConnect(int _isAccepted, std::string& _chatroomName);
 	int GetIsAccepted() const;
-	Chatroom& GetChatroom();
+	std::string& GetChatroomName();
 };
 
 class BufferUpdateUser : public BufferNormal

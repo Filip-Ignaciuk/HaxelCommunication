@@ -15,6 +15,7 @@
 #include "ErrorHandler.hpp"
 #include "GuiLanguage.hpp"
 #include "Languages.hpp"
+#include "Storage.hpp"
 
 #include "WindowsNetworking.hpp"
 #include "WindowsNetworkCallsCreator.hpp"
@@ -66,8 +67,7 @@ bool finishedError = true;
 // Chatroom Info
 
 // We store all chatroom behaviour in the chatroom class, to organise and simplify our code.
-Chatroom* chatroom;
-MessageBuilder messageBuilder;
+
 
 // Popups
 bool closeChatroomPopup = false;

@@ -108,7 +108,7 @@ DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 	BufferServerConnect* BSCPtr = (BufferServerConnect*)param;
 	if(BSCPtr->GetIsAccepted())
 	{
-		chatroom = BSCPtr->GetChatroom();
+		chatroom = BSCPtr->GetChatroomName();
 		inChatroom = true;
 	}
 	else

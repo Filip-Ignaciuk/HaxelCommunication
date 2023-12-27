@@ -2,14 +2,13 @@
 #include "string"
 #include "vector"
 
-
 #include "Message.hpp"
 #include "User.hpp"
+
 
 class Chatroom
 {
 private:
-	static inline MessageBuilder messageBuilder;
 	User m_users[32];
 	std::string m_name;
 	std::vector<Message> m_messages;
@@ -28,6 +27,7 @@ public:
 
 	// Get Elements
 	User GetUser(int _position) const;
+	std::string& GetChatroomName();
 	std::vector<Message> GetMessages() const;
 	bool HasPassword() const;
 	std::string& GetPassword();

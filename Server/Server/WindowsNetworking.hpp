@@ -1,8 +1,10 @@
 #pragma once
 #include "stdafx.h"
 #include <WinSock2.h>
+#include <queue>
 
 // Application Headers
+
 #include "BufferStandard.hpp"
 #include "Chatroom.hpp"
 #include "NetworkCalls.hpp"
@@ -21,6 +23,8 @@ private:
 
 	static SOCKET clientSockets[32];
 	static bool clientRecieving[32];
+	static bool clientUpdated[32];
+	static bool currentPosition[32];
 
 	static bool isListening;
 
