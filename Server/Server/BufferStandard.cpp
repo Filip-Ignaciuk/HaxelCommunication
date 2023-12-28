@@ -21,9 +21,9 @@ BufferSendMessage::BufferSendMessage(std::string& _message) :BufferNormal(1), m_
 std::string& BufferSendMessage::GetMessageObject() { return m_message; }
 
 // BufferServerSendMessage
-BufferServerSendMessage::BufferServerSendMessage(std::string& _message) :BufferNormal(2), m_message(_message) {}
+BufferServerSendMessage::BufferServerSendMessage(int _userPosition, std::string& _message) :BufferNormal(2), m_position(_userPosition), m_message(_message) {}
 std::string& BufferServerSendMessage::GetMessageObject() { return m_message; }
-
+int BufferServerSendMessage::GetPositionObject() { return m_position; }
 
 // BufferConnect
 BufferConnect::BufferConnect(std::string& _message) :BufferNormal(3), m_password(_message) {}
@@ -41,3 +41,9 @@ User& BufferUpdateUser::GetUser() { return m_user; }
 // BufferServerUpdateUser
 BufferServerUpdateUser::BufferServerUpdateUser(User& _user) :BufferNormal(6), m_user(_user) {}
 User& BufferServerUpdateUser::GetUser() { return m_user; }
+
+// BufferDisconnect
+BufferDisconnect::BufferDisconnect() : BufferNormal(7) {}
+
+// BufferServerDisconnect
+BufferServerDisconnect::BufferServerDisconnect() : BufferNormal(8) {}

@@ -75,10 +75,10 @@ void NetworkCallsCreator::Disconnect() const
 }
 
 
-void NetworkCallsCreator::SendText(const std::string& _message) const
+void NetworkCallsCreator::UpdateTexts()
 {
 	NetworkCalls* networkCalls = this->CreateNetworkCalls();
-	networkCalls->SendText(_message);
+	networkCalls->UpdateTexts();
 	delete networkCalls;
 }
 

@@ -18,7 +18,7 @@ public:
 	void Disconnect() const;
 
 	// Main Procedures
-	void SendText(const std::string& _message) const;
+	void UpdateTexts();
 	void UpdateUser() const;
 	// Class Based
 	bool GetListeningStatus() const;

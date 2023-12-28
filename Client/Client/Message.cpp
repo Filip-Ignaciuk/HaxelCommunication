@@ -4,11 +4,11 @@
 
 #pragma warning(disable : 4996)
 
-Message::Message(const std::string& _message, User& _user) : m_message(_message), m_user(_user) {  }
+Message::Message(const std::string& _originalMessage, int _userPosition) : m_originalMessage(_originalMessage), m_userPosition(_userPosition) {  }
 
-void Message::ChangeMainMessage(const std::string& _message)
+void Message::ChangeOriginalMessage(const std::string& _newOriginalMessage)
 {
-	m_message = _message;
+	m_originalMessage = _newOriginalMessage;
 }
 
 void Message::AddToMessage(const std::string& _message)
@@ -17,9 +17,9 @@ void Message::AddToMessage(const std::string& _message)
 }
 
 
-void Message::ChangeUser(User& _user) const
+void Message::ChangeUserPosition(int _userPosition)
 {
-	m_user = _user;
+	m_userPosition = _userPosition;
 }
 
 void Message::DeleteCompleteMessage()
@@ -28,9 +28,9 @@ void Message::DeleteCompleteMessage()
 }
 
 
-std::string Message::GetMessageMain() const
+std::string Message::GetOriginalMessage() const
 {
-	return m_message;
+	return m_originalMessage;
 }
 
 std::string Message::GetMessageComplete() const
@@ -38,9 +38,9 @@ std::string Message::GetMessageComplete() const
 	return m_completeMessage;
 }
 
-User& Message::GetUser()
+int Message::GetUserPosition() const
 {
-	return m_user;
+	return m_userPosition;
 }
 
 
@@ -56,14 +56,21 @@ MessageBuilder::~MessageBuilder()
 
 void MessageBuilder::Reset()
 {
-	this->m_Message = new Message("", emptyUser);
+	this->m_Message = new Message("", 0);
+}
+
+void MessageBuilder::AddMessage(int _userPosition, std::string& _message)
+{
+	this->m_Message->ChangeOriginalMessage(_message);
+	this->m_Message->ChangeUserPosition(_userPosition);
 }
 
 void MessageBuilder::AddMessage(Message& _message)
 {
-	this->m_Message->ChangeMainMessage(_message.GetMessageMain());
-	this->m_Message->ChangeUser(_message.GetUser());
+	this->m_Message->ChangeOriginalMessage(_message.GetOriginalMessage());
+	this->m_Message->ChangeUserPosition(_message.GetUserPosition());
 }
+
 
 
 void MessageBuilder::AddTime()
@@ -72,7 +79,7 @@ void MessageBuilder::AddTime()
 	auto currentTime = std::chrono::system_clock::now();
 	std::time_t finalTime = std::chrono::system_clock::to_time_t(currentTime);
 	std::string stringTime = std::string(std::ctime(&finalTime));
-	
+
 	this->m_Message->AddToMessage(stringTime + " ");
 }
 
@@ -93,27 +100,26 @@ void MessageBuilder::AddDateShort()
 }
 void MessageBuilder::AddId()
 {
-	this->m_Message->AddToMessage(m_Message->GetUser().GetId() +" ");
-	
+
 }
 
 void MessageBuilder::AddDisplayName()
 {
-	this->m_Message->AddToMessage(m_Message->GetUser().GetDisplayName() + " ");
+
 }
 
 
 Message* MessageBuilder::GetFinalMessage() const
 {
-	this->m_Message->AddToMessage(">> " + m_Message->GetMessageMain());
+	this->m_Message->AddToMessage(">> " + m_Message->GetOriginalMessage());
 	return m_Message;
 }
 
 Message& Message::operator=(const Message& _other)
 {
 	this->m_completeMessage = _other.m_completeMessage;
-	this->m_message = _other.m_message;
-	this->m_user = _other.m_user;
+	this->m_originalMessage = _other.m_originalMessage;
+	this->m_userPosition = _other.m_userPosition;
 	return *this;
 }
 

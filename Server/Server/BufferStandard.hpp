@@ -4,7 +4,7 @@
 // Application Headers
 #include "Chatroom.hpp"
 
-constexpr int bufferSize = 200;
+
 
 /* The standard allows for objects to be sent back and forth between a client and a server.
  * Each class has a notion starting with Buffer, and then the person who is sending the object.
@@ -37,10 +37,12 @@ public:
 class BufferServerSendMessage : public BufferNormal
 {
 private:
+	int m_position;
 	std::string m_message;
 public:
-	BufferServerSendMessage(std::string& _message);
+	BufferServerSendMessage(int _userPosition, std::string& _message);
 	std::string& GetMessageObject();
+	int GetPositionObject();
 };
 
 class BufferConnect : public BufferNormal
@@ -72,7 +74,6 @@ public:
 	User& GetUser();
 };
 
-
 class BufferServerUpdateUser : public BufferNormal
 {
 private:
@@ -81,3 +82,23 @@ public:
 	BufferServerUpdateUser(User& _user);
 	User& GetUser();
 };
+
+class BufferDisconnect : public BufferNormal
+{
+private:
+
+public:
+	BufferDisconnect();
+};
+
+class BufferServerDisconnect : public BufferNormal
+{
+private:
+
+public:
+	BufferServerDisconnect();
+};
+
+
+// Max Size
+constexpr int maxBufferSize = sizeof(BufferServerConnect);

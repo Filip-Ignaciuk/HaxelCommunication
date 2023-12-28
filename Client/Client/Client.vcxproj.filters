@@ -184,6 +184,9 @@
     <ClInclude Include="Error.hpp">
       <Filter>Header Files\ErrorHandling</Filter>
     </ClInclude>
+    <ClInclude Include="Storage.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

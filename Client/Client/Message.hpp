@@ -11,19 +11,19 @@ private:
 	// Complete message with all attributes
 	std::string m_completeMessage;
 	// Have original unedited message so that we can change it on the fly.
-	std::string m_message;
+	std::string m_originalMessage;
 	// Date we need for the message
-	User& m_user;
+	int m_userPosition;
 public:
-	Message(const std::string& _message, User& _user);
+	Message(const std::string& _message, int _userPosition);
 	void AddToMessage(const std::string& _message);
-	void ChangeMainMessage(const std::string& _message);
-	void ChangeUser(User& _user) const;
+	void ChangeOriginalMessage(const std::string& _message);
+	void ChangeUserPosition(int _userPosition);
 	void DeleteCompleteMessage();
 
-	std::string GetMessageMain() const;
+	std::string GetOriginalMessage() const;
 	std::string GetMessageComplete() const;
-	User& GetUser();
+	int GetUserPosition() const;
 
 	Message& operator=(const Message& _other);
 
@@ -32,7 +32,6 @@ public:
 class MessageBuilder
 {
 private:
-	inline static User emptyUser;
 	const inline static std::string weekdaysShort[7] = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
 	const inline static std::string weekdaysLong[7] = { "Monday", "Tuesday", "Wed", "Thu", "Fri", "Sat", "Sun" };
 	Message* m_Message;
@@ -40,6 +39,7 @@ public:
 	MessageBuilder();
 	~MessageBuilder();
 	void Reset();
+	void AddMessage(int _userPosition, std::string& _message);
 	void AddMessage(Message& _message);
 	void AddTime();
 	void AddDateLong();

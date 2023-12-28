@@ -1,39 +1,41 @@
-#include "Chatroom.hpp"
-
+#include "Storage.hpp"
 #include "ErrorHandler.hpp"
+#include "Languages.hpp"
+
 
 Chatroom::Chatroom() = default;
 
-Chatroom::Chatroom(std::string& _name) : m_name(_name)	{	}
+Chatroom::Chatroom(std::string& _name) : m_name(_name) {	}
 
-void Chatroom::AddUser(User& _user)
+void Chatroom::AddUser(int _userPosition, User& _user)
 {
-	for (User user : m_users)
-	{
-		
-	}
+	m_users[_userPosition] = _user;
 }
 
-void Chatroom::AddMessage(Message& _message)
+void Chatroom::AddMessage(int _userPosition, std::string& _message)
 {
+
 	messageBuilder.Reset();
-	messageBuilder.AddMessage(_message);
+	messageBuilder.AddMessage(_userPosition, _message);
 	//Change in accordance to the users settings
 
-	messageBuilder.GetFinalMessage();
+	m_messages.emplace_back(*messageBuilder.GetFinalMessage());
+	m_numberOfMessages++;
+
 }
 
-void Chatroom::UpdateUser(User& _oldUser, User& _newUser)
+void Chatroom::UpdateUser(int _oldUserPosition, User& _newUser)
 {
 	bool hasMessagesChanged = false;
 
+	m_users[_oldUserPosition] = _newUser;
+
 	for (Message& message : m_messages)
 	{
-		User messageUser = message.GetUser();
-		if (messageUser == _oldUser)
+		if (message.GetUserPosition() == _oldUserPosition)
 		{
-			message.ChangeUser(_newUser);
 			hasMessagesChanged = true;
+			break;
 		}
 	}
 
@@ -42,18 +44,8 @@ void Chatroom::UpdateUser(User& _oldUser, User& _newUser)
 		UpdateMessages();
 	}
 
-	for (User& user : m_users)
-	{
-		if (user == _oldUser)
-		{
-			user = _newUser;
-			return;
-		}
-		
-	}
-
-	const Error updateUserError("Tried to update non-existent User.", 1);
-	ErrorHandler::AddError(updateUserError);
+	//const Error updateUserError(LanguageFileInitialiser::charAllTextsInApplication[33], 1);
+	//ErrorHandler::AddError(updateUserError);
 }
 
 void Chatroom::UpdateName(std::string& _name)
@@ -61,9 +53,26 @@ void Chatroom::UpdateName(std::string& _name)
 	m_name = _name;
 }
 
-User Chatroom::GetUser(int _position) const	{	return m_users[_position];	}
+void Chatroom::AddPassword(std::string& _password)
+{
+	m_hasPassword = true;
+	m_password = _password;
+}
 
-std::vector<Message> Chatroom::GetMessages() const	{	return m_messages;	}
+
+User Chatroom::GetUser(int _position) const { return m_users[_position]; }
+
+std::string Chatroom::GetChatroomName() const { return m_name; }
+
+std::vector<Message>& Chatroom::GetMessages() { return m_messages; }
+
+int Chatroom::GetNumberOfMessages() const { return m_numberOfMessages; }
+
+bool Chatroom::HasPassword() const { return m_hasPassword; }
+
+std::string Chatroom::GetPassword() const { return m_password; }
+
+
 
 void Chatroom::UpdateMessages()
 {
@@ -72,8 +81,7 @@ void Chatroom::UpdateMessages()
 		messageBuilder.Reset();
 		messageBuilder.AddMessage(message);
 		//Change in accordance to the users settings
+
 		message = *messageBuilder.GetFinalMessage();
-
-
 	}
 }

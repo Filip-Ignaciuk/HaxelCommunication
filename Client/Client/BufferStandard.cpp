@@ -17,13 +17,13 @@ int BufferNormal::GetType() const
 }
 
 // BufferSendMessage
-BufferSendMessage::BufferSendMessage(Message& _message) :BufferNormal(1), m_message(_message) {}
-Message& BufferSendMessage::GetMessageObject() { return m_message; }
+BufferSendMessage::BufferSendMessage(std::string& _message) :BufferNormal(1), m_message(_message) {}
+std::string& BufferSendMessage::GetMessageObject() { return m_message; }
 
 // BufferServerSendMessage
-BufferServerSendMessage::BufferServerSendMessage(Message& _message) :BufferNormal(2), m_message(_message) {}
-Message& BufferServerSendMessage::GetMessageObject() { return m_message; }
-
+BufferServerSendMessage::BufferServerSendMessage(int _userPosition, std::string& _message) :BufferNormal(2), m_position(_userPosition), m_message(_message) {}
+std::string& BufferServerSendMessage::GetMessageObject() { return m_message; }
+int BufferServerSendMessage::GetPositionObject() { return m_position; }
 
 // BufferConnect
 BufferConnect::BufferConnect(std::string& _message) :BufferNormal(3), m_password(_message) {}
@@ -45,5 +45,5 @@ User& BufferServerUpdateUser::GetUser() { return m_user; }
 // BufferDisconnect
 BufferDisconnect::BufferDisconnect() : BufferNormal(7) {}
 
-// BufferDisconnectServer
-BufferDisconnectServer::BufferDisconnectServer() : BufferNormal(8) {}
+// BufferServerDisconnect
+BufferServerDisconnect::BufferServerDisconnect() : BufferNormal(8) {}

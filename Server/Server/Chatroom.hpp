@@ -12,6 +12,7 @@ private:
 	User m_users[32];
 	std::string m_name;
 	std::vector<Message> m_messages;
+	int m_numberOfMessages = 0;
 	bool m_hasPassword = false;
 	std::string m_password;
 public:
@@ -19,18 +20,19 @@ public:
 	Chatroom(std::string& _name);
 
 	// Add Elements
-	void AddUser(User& _user);
-	void AddMessage(Message& _message);
-	void UpdateUser(User& _oldUser, User& _newUser);
+	void AddUser(int _userPosition, User& _user);
+	void AddMessage(int _userPosition, std::string& _message);
+	void UpdateUser(int _oldUserPosition, User& _newUser);
 	void UpdateName(std::string& _name);
 	void AddPassword(std::string& _password);
 
 	// Get Elements
 	User GetUser(int _position) const;
-	std::string& GetChatroomName();
-	std::vector<Message> GetMessages() const;
+	std::string GetChatroomName() const;
+	std::vector<Message>& GetMessages();
+	int GetNumberOfMessages() const;
 	bool HasPassword() const;
-	std::string& GetPassword();
+	std::string GetPassword() const;
 
 	// Other
 	void UpdateMessages();

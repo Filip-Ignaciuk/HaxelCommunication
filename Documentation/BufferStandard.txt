@@ -7,8 +7,8 @@ For example BufferConnect is a class reserved for the client to send an object t
 1 - BufferSendMessage
 2 - BufferServerSendMessage
 3 - BufferConnect
-4 - BufferConnectServer
+4 - BufferServerConnect
 5 - BufferUpdateUser
 6 - BufferServerUpdateUser
 7 - BufferDisconnect
-8 - BufferDisconnectServer
+8 - BufferServerDisconnect

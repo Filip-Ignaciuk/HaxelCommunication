@@ -548,6 +548,8 @@ int main(int, char**)
             }
             // Gui
             MenuBar();
+            // Chatroom
+            creator->UpdateTexts();
 
             // Server Info
             if(!getBindedStatus)

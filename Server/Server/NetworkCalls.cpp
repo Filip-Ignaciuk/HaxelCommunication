@@ -12,7 +12,7 @@ void NetworkCalls::CloseChatroom(){}
 void NetworkCalls::Disconnect(){}
 
 
-void NetworkCalls::SendText(const std::string& _message) {}
+void NetworkCalls::UpdateTexts() {}
 void NetworkCalls::UpdateUser() {}
 
 bool NetworkCalls::GetListeningStatus() { return false; }

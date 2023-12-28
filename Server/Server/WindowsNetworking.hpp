@@ -9,11 +9,12 @@
 #include "Chatroom.hpp"
 #include "NetworkCalls.hpp"
 
-struct RecieveConnectHolder
-{
-	int socketPosition;
-	BufferConnect* bufferConnect;
-};
+	struct RecieveHolder
+	{
+		// Allows us to hold the data as well as the socket position.
+		int socketPosition;
+		char* buffer = new char[maxBufferSize];
+	};
 
 // Implementation of NetworkCalls in windows.
 class WindowsNetworking : public NetworkCalls
@@ -23,8 +24,7 @@ private:
 
 	static SOCKET clientSockets[32];
 	static bool clientRecieving[32];
-	static bool clientUpdated[32];
-	static bool currentPosition[32];
+	static int currentMessagePosition[32];
 
 	static bool isListening;
 
@@ -33,7 +33,6 @@ private:
 	static bool inChatroom;
 
 	static Chatroom chatroom;
-
 
 	static std::wstring currentWideIp;
 	static std::string currentIp;
@@ -72,7 +71,7 @@ public:
 	
 
 	// Main Procedures
-	void SendText(const std::string& _message) override;
+	void UpdateTexts();
 	void UpdateUser() override;
 
 	// Class Based

@@ -11,17 +11,17 @@ private:
 	// Complete message with all attributes
 	std::string m_completeMessage;
 	// Have original unedited message so that we can change it on the fly.
-	std::string m_message;
+	std::string m_originalMessage;
 	// Date we need for the message
 	int m_userPosition;
 public:
 	Message(const std::string& _message, int _userPosition);
 	void AddToMessage(const std::string& _message);
-	void ChangeMainMessage(const std::string& _message);
+	void ChangeOriginalMessage(const std::string& _message);
 	void ChangeUserPosition(int _userPosition);
 	void DeleteCompleteMessage();
 
-	std::string GetMessageMain() const;
+	std::string GetOriginalMessage() const;
 	std::string GetMessageComplete() const;
 	int GetUserPosition() const;
 
@@ -39,6 +39,7 @@ public:
 	MessageBuilder();
 	~MessageBuilder();
 	void Reset();
+	void AddMessage(int _userPosition, std::string& _message);
 	void AddMessage(Message& _message);
 	void AddTime();
 	void AddDateLong();

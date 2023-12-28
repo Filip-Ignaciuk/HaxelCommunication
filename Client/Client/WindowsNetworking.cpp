@@ -74,6 +74,8 @@ DWORD WINAPI WindowsNetworking::DisconnectThread(LPVOID param)
 	}
 
 	isConnected = false;
+	isReceiving = false;
+	inChatroom = false;
 
 	return 0;
 }
@@ -81,9 +83,10 @@ DWORD WINAPI WindowsNetworking::DisconnectThread(LPVOID param)
 DWORD WINAPI WindowsNetworking::SendTextThread(LPVOID param)
 {
 	std::string* message = (std::string*)param;
-
-
-
+	BufferSendMessage BSM(*message);
+	send(clientSocket, (char*)&BSM, sizeof(BufferSendMessage), 0);
+	// We don't add it to our chatroom as the message could potentially fail.
+	delete message;
 	return 0;
 }
 
@@ -94,11 +97,8 @@ DWORD WINAPI WindowsNetworking::UpdateUserThread(LPVOID param)
 
 DWORD WINAPI WindowsNetworking::ReceiveSendMessageThread(LPVOID param)
 {
-	BufferNormal* bufferPointer = (BufferNormal*)param;
-	BufferNormal bufferNormal = *bufferPointer;
-	delete bufferPointer;
-	BufferServerSendMessage& messageBuffer = dynamic_cast<BufferServerSendMessage&> (bufferNormal);
-	chatroom.AddMessage(messageBuffer.GetMessageObject());
+	BufferServerSendMessage* BSSMPtr = (BufferServerSendMessage*)param;
+	chatroom.AddMessage(BSSMPtr->GetPositionObject(), BSSMPtr->GetMessageObject());
 	
 	return 0;
 }
@@ -126,11 +126,8 @@ DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 	// Use the largest possible class, so that we can accomidate everything.
 	int recievedBytes = recv(clientSocket, buffer, sizeof(BufferServerConnect), 0);
 	BufferNormal* BH = (BufferNormal*)buffer;
-	if (!BH->GetType())
-	{
-
-	}
-	else if (BH->GetType() == 2)
+	
+	if (BH->GetType() == 2)
 	{
 		// BufferServerSendMessage
 		BufferServerSendMessage* BSSMPtr = (BufferServerSendMessage*)buffer;
@@ -141,6 +138,20 @@ DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 		// BufferConnectServer
 		BufferServerConnect* BSCPtr = (BufferServerConnect*)buffer;
 		CreateThread(nullptr, 0, ReceiveConnect, BSCPtr, 0, nullptr);
+	}
+	else if (BH->GetType() == 6)
+	{
+		// BufferServerUpdateUser
+		BufferServerUpdateUser* BSUUPtr = (BufferServerUpdateUser*)buffer;
+	}
+	else if (BH->GetType() == 6)
+	{
+		// BufferServerDisconnect
+		BufferServerDisconnect* BSDPtr = (BufferServerDisconnect*)buffer;
+	}
+	else
+	{
+		delete BH;
 	}
 	isReceiving = false;
 	return 0;

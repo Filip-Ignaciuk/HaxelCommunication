@@ -4,11 +4,13 @@
 #include "Error.hpp"
 #include "ErrorHandler.hpp"
 #include <WS2tcpip.h>
+#include <limits>
 
 
 SOCKET WindowsNetworking::serverSocket = INVALID_SOCKET;
 SOCKET WindowsNetworking::clientSockets[32];
 bool WindowsNetworking::clientRecieving[32];
+int WindowsNetworking::currentMessagePosition[32] = {std::numeric_limits<int>::max(), std::numeric_limits<int>::max(), };
 bool WindowsNetworking::isListening = false;
 bool WindowsNetworking::isBinded = false;
 bool WindowsNetworking::inChatroom = false;
@@ -95,9 +97,18 @@ DWORD WINAPI WindowsNetworking::DisconnectThread(LPVOID param)
 
 DWORD WINAPI WindowsNetworking::SendTextThread(LPVOID param)
 {
-	std::string* message = (std::string*)param;
-
-
+	int socketPosition = (int)param;
+	SOCKET clientSocket = clientSockets[socketPosition];
+	int& currentPos = currentMessagePosition[socketPosition];
+	std::vector<Message>& messages = chatroom.GetMessages();
+	while (currentPos != chatroom.GetNumberOfMessages())
+	{
+		Message currentMessage = messages[currentPos];
+		std::string originalMessage = currentMessage.GetOriginalMessage();
+		BufferServerSendMessage BSSM(currentMessage.GetUserPosition(), originalMessage);
+		send(clientSocket, (char*)&BSSM, sizeof(BufferServerSendMessage), 0);
+		currentPos++;
+	}
 
 	return 0;
 }
@@ -111,23 +122,29 @@ DWORD WINAPI WindowsNetworking::UpdateUserThread(LPVOID param)
 
 DWORD WINAPI WindowsNetworking::ReceiveSendMessageThread(LPVOID param)
 {
-	BufferSendMessage* BNPtr = (BufferSendMessage*)param;
-	BNPtr->GetMessageObject();
+	RecieveHolder* NCHPtr = (RecieveHolder*)param;
+	int socketPosition = NCHPtr->socketPosition;
+	BufferSendMessage BC = *(BufferSendMessage*)NCHPtr->buffer;
+	delete NCHPtr;
+	chatroom.AddMessage(socketPosition, BC.GetMessageObject());
+
 	
 	return 0;
 }
 
 DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 {
-	RecieveConnectHolder* NCHPtr = (RecieveConnectHolder*)param;
+	RecieveHolder* NCHPtr = (RecieveHolder*)param;
 	int socketPosition = NCHPtr->socketPosition;
-	BufferConnect bC = *NCHPtr->bufferConnect;
+	BufferConnect BC = *(BufferConnect*)NCHPtr->buffer;
 	delete NCHPtr;
+	std::string chatroomName = "";
 	if(chatroom.HasPassword())
 	{
-		if(NCHPtr->bufferConnect->GetPassword() == chatroom.GetPassword())
+		if(BC.GetPassword() == chatroom.GetPassword())
 		{
-			BufferServerConnect BSC(true, chatroom.GetChatroomName());
+			chatroomName = chatroom.GetChatroomName(); 
+			BufferServerConnect BSC(true, chatroomName);
 			send(clientSockets[socketPosition], (char*)&BSC, sizeof(BufferNormal), 0);
 			clientRecieving[socketPosition] = false;
 			Error error("Accepted User, correct password.", 3);
@@ -135,7 +152,7 @@ DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 			delete NCHPtr;
 			return 0;
 		}
-		BufferServerConnect BSC(false, emptyChatroom.GetChatroomName());
+		BufferServerConnect BSC(false, chatroomName);
 		send(clientSockets[socketPosition], (char*)&BSC, sizeof(BufferNormal), 0);
 		shutdown(clientSockets[socketPosition], 2);
 		clientSockets[socketPosition] = 0;
@@ -146,7 +163,8 @@ DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 		return 0;
 
 	}
-	BufferServerConnect BSC(true, chatroom.GetChatroomName());
+	chatroomName = chatroom.GetChatroomName();
+	BufferServerConnect BSC(true, chatroomName);
 	send(clientSockets[socketPosition], (char*)&BSC, sizeof(BufferNormal), 0);
 	Error error("Accepted User.", 3);
 	ErrorHandler::AddError(error);
@@ -160,28 +178,38 @@ DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 	SOCKET clientSocket = clientSockets[clientPosition];
 	bool& clientRecievingStatus = clientRecieving[clientPosition];
 	clientRecievingStatus = true;
-	char* buffer = new char[sizeof(BufferServerConnect)];
+	char* buffer = new char[maxBufferSize];
 	// Use the largest possible class, so that we can accomidate everything.
 	int recievedBytes = recv(clientSocket, buffer, sizeof(BufferServerConnect), 0);
 	BufferNormal* BH = (BufferNormal*)buffer;
-	if (!BH->GetType())
-	{
+	RecieveHolder* RH = new RecieveHolder();
+	RH->buffer = buffer;
+	RH->socketPosition = clientPosition;
 
-	}
-	else if (BH->GetType() == 1)
+	if (BH->GetType() == 1)
 	{
 		// BufferSendMessage
-		BufferSendMessage* BSMPtr = (BufferSendMessage*)buffer;
-		CreateThread(nullptr, 0, ReceiveSendMessageThread, BSMPtr, 0, nullptr);
+		CreateThread(nullptr, 0, ReceiveSendMessageThread, RH, 0, nullptr);
 	}
 	else if (BH->GetType() == 3)
 	{
 		// BufferConnect
-		BufferConnect* BSCPtr = (BufferConnect*)buffer;
-		RecieveConnectHolder* BCH = new RecieveConnectHolder();
-		BCH->bufferConnect = BSCPtr;
-		BCH->socketPosition = clientPosition;
-		CreateThread(nullptr, 0, ReceiveConnect, BCH, 0, nullptr);
+		CreateThread(nullptr, 0, ReceiveConnect, RH, 0, nullptr);
+	}
+	else if (BH->GetType() == 5)
+	{
+		// BufferUpdateUser
+
+	}
+	else if (BH->GetType() == 7)
+	{
+		// BufferDisconnect
+
+	}
+	else
+	{
+		// Invalid Buffer
+		delete RH;
 	}
 	clientRecievingStatus = false;
 	return 0;
@@ -301,11 +329,15 @@ void WindowsNetworking::Disconnect()
 }
 
 
-void WindowsNetworking::SendText(const std::string& _message) 
+void WindowsNetworking::UpdateTexts()
 {
-	// Allocate string on heap
-	std::string* message = const_cast<std::string*>(&_message);
-	CreateThread(nullptr, 0, SendTextThread, message, 0, nullptr);
+	for (int i = 0; i < 32; i++)
+	{
+		if(clientSockets[i] != 0 && currentMessagePosition[i] < chatroom.GetNumberOfMessages())
+		{
+			CreateThread(nullptr, 0, SendTextThread, (LPVOID)i, 0, nullptr);
+		}
+	}
 }
 
 void WindowsNetworking::UpdateUser() 

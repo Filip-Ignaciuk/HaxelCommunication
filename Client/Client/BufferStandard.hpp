@@ -27,20 +27,22 @@ public:
 class BufferSendMessage : public BufferNormal
 {
 private:
-	Message m_message;
+	std::string m_message;
 public:
-	BufferSendMessage(Message& _message);
-	Message& GetMessageObject();
+	BufferSendMessage(std::string& _message);
+	std::string& GetMessageObject();
 };
 
 
 class BufferServerSendMessage : public BufferNormal
 {
 private:
-	Message m_message;
+	int m_position;
+	std::string m_message;
 public:
-	BufferServerSendMessage(Message& _message);
-	Message& GetMessageObject();
+	BufferServerSendMessage(int _userPosition, std::string& _message);
+	std::string& GetMessageObject();
+	int GetPositionObject();
 };
 
 class BufferConnect : public BufferNormal
@@ -90,10 +92,10 @@ public:
 	BufferDisconnect();
 };
 
-class BufferDisconnectServer : public BufferNormal
+class BufferServerDisconnect : public BufferNormal
 {
 private:
 
 public:
-	BufferDisconnectServer();
+	BufferServerDisconnect();
 };

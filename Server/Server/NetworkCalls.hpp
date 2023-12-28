@@ -23,7 +23,7 @@ public:
 	virtual void CloseChatroom();
 	virtual void Disconnect();
 
-	virtual void SendText(const std::string& _message);
+	virtual void UpdateTexts();
 	virtual void UpdateUser();
 
 	virtual bool GetListeningStatus();
