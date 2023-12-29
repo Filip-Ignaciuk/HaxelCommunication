@@ -23,6 +23,7 @@ private:
 	static SOCKET serverSocket;
 
 	static SOCKET clientSockets[32];
+	static bool clientAccepted[32];
 	static bool clientRecieving[32];
 	static int currentMessagePosition[32];
 

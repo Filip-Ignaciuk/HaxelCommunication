@@ -9,8 +9,9 @@
 
 SOCKET WindowsNetworking::serverSocket = INVALID_SOCKET;
 SOCKET WindowsNetworking::clientSockets[32];
+bool WindowsNetworking::clientAccepted[32];
 bool WindowsNetworking::clientRecieving[32];
-int WindowsNetworking::currentMessagePosition[32] = {std::numeric_limits<int>::max(), std::numeric_limits<int>::max(), };
+int WindowsNetworking::currentMessagePosition[32];
 bool WindowsNetworking::isListening = false;
 bool WindowsNetworking::isBinded = false;
 bool WindowsNetworking::inChatroom = false;
@@ -101,7 +102,7 @@ DWORD WINAPI WindowsNetworking::SendTextThread(LPVOID param)
 	SOCKET clientSocket = clientSockets[socketPosition];
 	int& currentPos = currentMessagePosition[socketPosition];
 	std::vector<Message>& messages = chatroom.GetMessages();
-	while (currentPos != chatroom.GetNumberOfMessages())
+	while ((currentPos - 1) != chatroom.GetNumberOfMessages())
 	{
 		Message currentMessage = messages[currentPos];
 		std::string originalMessage = currentMessage.GetOriginalMessage();
@@ -149,6 +150,7 @@ DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 			clientRecieving[socketPosition] = false;
 			Error error("Accepted User, correct password.", 3);
 			ErrorHandler::AddError(error);
+			clientAccepted[socketPosition] = true;
 			delete NCHPtr;
 			return 0;
 		}
@@ -169,6 +171,7 @@ DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 	Error error("Accepted User.", 3);
 	ErrorHandler::AddError(error);
 	clientRecieving[socketPosition] = false;
+	clientAccepted[socketPosition] = true;
 	return 0;
 }
 
@@ -333,7 +336,7 @@ void WindowsNetworking::UpdateTexts()
 {
 	for (int i = 0; i < 32; i++)
 	{
-		if(clientSockets[i] != 0 && currentMessagePosition[i] < chatroom.GetNumberOfMessages())
+		if(clientSockets[i] != 0 && clientAccepted[i] && currentMessagePosition[i] < chatroom.GetNumberOfMessages())
 		{
 			CreateThread(nullptr, 0, SendTextThread, (LPVOID)i, 0, nullptr);
 		}
