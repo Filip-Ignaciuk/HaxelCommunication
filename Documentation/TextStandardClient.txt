@@ -1,0 +1,34 @@
+Critical
+Warning
+Information
+Cancel
+Invalid Ip
+Invalid Port
+Are you sure you would like to leave the chatroom?
+Yes
+No
+Chatroom
+IP
+Port
+Password
+Connect
+Settings
+Language
+Apperance
+Credit
+Leave Chatroom
+Join Chatroom
+User
+Edit User
+Message
+Chatroom info:
+Users
+Could not connect to desired ip. Check if your ip/port is correct.
+Failed to close socket.
+Failed to start WSA.
+Failed to create socket.
+Failed to create folders for language files.
+Failed to create folders for user files.
+Failed to change language, language not supported.
+Failed to create EnGB text file.
+Failed to read a language File that doesn't exist, regenerating file.
