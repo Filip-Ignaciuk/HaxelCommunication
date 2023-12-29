@@ -4,7 +4,6 @@
 #include "Error.hpp"
 #include "ErrorHandler.hpp"
 #include <WS2tcpip.h>
-#include <limits>
 
 
 SOCKET WindowsNetworking::serverSocket = INVALID_SOCKET;
@@ -146,28 +145,26 @@ DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 		{
 			chatroomName = chatroom.GetChatroomName(); 
 			BufferServerConnect BSC(true, chatroomName);
-			send(clientSockets[socketPosition], (char*)&BSC, sizeof(BufferNormal), 0);
+			send(clientSockets[socketPosition], (char*)&BSC, sizeof(BufferServerConnect), 0);
 			clientRecieving[socketPosition] = false;
 			Error error("Accepted User, correct password.", 3);
 			ErrorHandler::AddError(error);
 			clientAccepted[socketPosition] = true;
-			delete NCHPtr;
 			return 0;
 		}
 		BufferServerConnect BSC(false, chatroomName);
-		send(clientSockets[socketPosition], (char*)&BSC, sizeof(BufferNormal), 0);
+		send(clientSockets[socketPosition], (char*)&BSC, sizeof(BufferServerConnect), 0);
 		shutdown(clientSockets[socketPosition], 2);
 		clientSockets[socketPosition] = 0;
 		clientRecieving[socketPosition] = false;
 		Error error("Reject User, incorrect password.", 3);
 		ErrorHandler::AddError(error);
-		delete NCHPtr;
 		return 0;
 
 	}
 	chatroomName = chatroom.GetChatroomName();
 	BufferServerConnect BSC(true, chatroomName);
-	send(clientSockets[socketPosition], (char*)&BSC, sizeof(BufferNormal), 0);
+	send(clientSockets[socketPosition], (char*)&BSC, sizeof(BufferServerConnect), 0);
 	Error error("Accepted User.", 3);
 	ErrorHandler::AddError(error);
 	clientRecieving[socketPosition] = false;
@@ -310,11 +307,17 @@ Chatroom* WindowsNetworking::GetChatroom()
 	return &chatroom;
 }
 
-void WindowsNetworking::OpenChatroom()
+void WindowsNetworking::OpenChatroom(std::string& _chatroomName, std::string& _chatroomPassword)
 {
+	
 	inChatroom = true;
 	Chatroom emptyChatroom;
 	chatroom = emptyChatroom;
+	chatroom.UpdateName(_chatroomName);
+	if (!_chatroomPassword.empty())
+	{
+		chatroom.AddPassword(_chatroomPassword);
+	}
 }
 
 

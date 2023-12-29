@@ -13,7 +13,7 @@ public:
 	void Listen();
 	void Receive();
 	Chatroom* GetChatroom();
-	void OpenChatroom();
+	void OpenChatroom(std::string& _chatroomName, std::string& _chatroomPassword);
 	void CloseChatroom();
 	void Disconnect() const;
 

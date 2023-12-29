@@ -66,7 +66,7 @@ public:
 	void Listen() override;
 	void Receive() override;
 	Chatroom* GetChatroom() override;
-	void OpenChatroom() override;
+	void OpenChatroom(std::string& _chatroomName, std::string& _chatroomPassword) override;
 	void CloseChatroom() override;
 	void Disconnect() override;
 	

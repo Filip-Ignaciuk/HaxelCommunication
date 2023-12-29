@@ -209,18 +209,13 @@ bool PortChecker(std::string& _port)
     return true;
 }
 
-bool CreateChatroom(std::string& _ip, std::string& _port, std::string& _password)
+bool CreateBind(std::string& _ip, std::string& _port)
 {
     const bool isIpValid = IpChecker(_ip);
     const bool isPortValid = PortChecker(_port);
     if(isIpValid && isPortValid)
     {
         creator->Bind(_ip, std::stoi(_port));
-        if(!_password.empty())
-        {
-            creator->GetChatroom()->AddPassword(_password);
-        }
-        
         return true;
     }
     else
@@ -471,14 +466,13 @@ int main(int, char**)
 
     // Our state
     bool exit = true;
-    bool show_demo_window = true;
-    bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     // Setup Networking
     creator = new WindowsCallsCreator();
     creator->CreateSocket();
     chatroom = creator->GetChatroom();
+
 
     // Loading Configs
     config::StartConfigs();
@@ -558,16 +552,13 @@ int main(int, char**)
                 ImGui::Text(LanguageFileInitialiser::charAllTextsInApplication[7]);
                 static char ip[15];
                 static char port[5];
-                static char password[32] = "";
                 ImGui::InputText(LanguageFileInitialiser::charAllTextsInApplication[8], ip, IM_ARRAYSIZE(ip));
                 ImGui::InputText(LanguageFileInitialiser::charAllTextsInApplication[9], port, IM_ARRAYSIZE(port));
-                ImGui::InputText("Password", password, IM_ARRAYSIZE(password));
                 if (ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[10]))
                 {
                     std::string sIp = ip;
                     std::string sPort = port;
-                    std::string sPassword = password;
-                    if(CreateChatroom(sIp, sPort, sPassword))
+                    if(CreateBind(sIp, sPort))
                     {
                         for (char i = 0; i < 15; i++)
                         {
@@ -590,13 +581,14 @@ int main(int, char**)
             	ImGui::Text(currentIpText.c_str());
                 ImGui::Text(currentPortText.c_str());
                 static char chatroomName[30];
-                static char chatroomPassword[30];
+                static char chatroomPassword[32];
                 ImGui::InputText(LanguageFileInitialiser::charAllTextsInApplication[36], chatroomName, IM_ARRAYSIZE(chatroomName));
-                if(ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[37]))
+                ImGui::InputText("Password", chatroomPassword, IM_ARRAYSIZE(chatroomPassword));
+            	if(ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[37]))
                 {
                     std::string sChatroomName = chatroomName;
-                    creator->OpenChatroom();
-                    chatroom->UpdateName(sChatroomName);
+                    std::string sChatroomPassword = chatroomPassword;
+                    creator->OpenChatroom(sChatroomName, sChatroomPassword);
                     currentChatroomNameText = LanguageFileInitialiser::allTextsInApplication[36] + ": " + sChatroomName;
                     currentStatus = LanguageFileInitialiser::allTextsInApplication[34];
                     currentColour = green;

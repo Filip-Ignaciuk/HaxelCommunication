@@ -19,7 +19,7 @@ public:
 	virtual void Listen();
 	virtual void Receive();
 	virtual Chatroom* GetChatroom();
-	virtual void OpenChatroom();
+	virtual void OpenChatroom(std::string& _chatroomName, std::string& _chatroomPassword);
 	virtual void CloseChatroom();
 	virtual void Disconnect();
 

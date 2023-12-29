@@ -52,10 +52,10 @@ Chatroom* NetworkCallsCreator::GetChatroom()
 	return  result;
 }
 
-void NetworkCallsCreator::OpenChatroom()
+void NetworkCallsCreator::OpenChatroom(std::string& _chatroomName, std::string& _chatroomPassword)
 {
 	NetworkCalls* networkCalls = this->CreateNetworkCalls();
-	networkCalls->OpenChatroom();
+	networkCalls->OpenChatroom(_chatroomName, _chatroomPassword);
 	delete networkCalls;
 }
 
