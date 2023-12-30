@@ -6,7 +6,7 @@ void NetworkCalls::Connect(const std::string& _ip, const int _port, std::string&
 void NetworkCalls::Disconnect(){}
 
 
-void NetworkCalls::SendText(const std::string& _message) {}
+void NetworkCalls::SendText(std::string& _message) {}
 void NetworkCalls::UpdateUser() {}
 void NetworkCalls::Receive() {}
 

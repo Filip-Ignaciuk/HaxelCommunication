@@ -172,6 +172,38 @@ DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 	return 0;
 }
 
+DWORD WINAPI WindowsNetworking::ReceiveUserUpdateThread(LPVOID param)
+{
+	RecieveHolder* NCHPtr = (RecieveHolder*)param;
+	int socketPosition = NCHPtr->socketPosition;
+	BufferUpdateUser BC = *(BufferUpdateUser*)NCHPtr->buffer;
+	delete NCHPtr;
+
+	return 0;
+}
+
+DWORD WINAPI WindowsNetworking::ReceiveDisconnect(LPVOID param)
+{
+	RecieveHolder* NCHPtr = (RecieveHolder*)param;
+	int socketPosition = NCHPtr->socketPosition;
+	BufferDisconnect BC = *(BufferDisconnect*)NCHPtr->buffer;
+	delete NCHPtr;
+	
+	Error error("User: " + chatroom.GetUser(socketPosition).GetDisplayName() + ", disconnected", 3);
+	ErrorHandler::AddError(error);
+	SOCKET& clientSocket = clientSockets[socketPosition];
+	clientAccepted[socketPosition] = false;
+	clientRecieving[socketPosition] = false;
+	currentMessagePosition[socketPosition] = 0;
+	shutdown(clientSocket, 2);
+	closesocket(clientSocket);
+	clientSocket = 0;
+	
+	
+	return 0;
+}
+
+
 DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 {
 	int clientPosition = (int)param;
@@ -194,7 +226,6 @@ DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 	else if (BH->GetType() == 3)
 	{
 		// BufferConnect
-		CreateThread(nullptr, 0, ReceiveConnect, RH, 0, nullptr);
 	}
 	else if (BH->GetType() == 5)
 	{
@@ -204,6 +235,7 @@ DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 	else if (BH->GetType() == 7)
 	{
 		// BufferDisconnect
+		CreateThread(nullptr, 0, ReceiveDisconnect, RH, 0, nullptr);
 
 	}
 	else
@@ -215,13 +247,43 @@ DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 	return 0;
 }
 
-DWORD WINAPI WindowsNetworking::ReceiveClients(LPVOID param)
+DWORD WINAPI WindowsNetworking::ReceiveVerifyThread(LPVOID param)
+{
+	int socketPosition = (int)param;
+	char* buffer = new char[maxBufferSize];
+	int recievedBytes = recv(clientSockets[socketPosition], buffer, sizeof(BufferServerConnect), 0);
+	BufferNormal* BH = (BufferNormal*)buffer;
+	if(BH->GetType() == 3)
+	{
+		RecieveHolder* RH = new RecieveHolder();
+		RH->buffer = buffer;
+		RH->socketPosition = socketPosition;
+		CreateThread(nullptr, 0, ReceiveConnect, RH, 0, nullptr);
+		return 0;
+	}
+
+	std::string emptyString = "";
+	BufferServerConnect BSC(false, emptyString);
+	send(clientSockets[socketPosition], (char*)&BSC, sizeof(BufferServerConnect), 0);
+	shutdown(clientSockets[socketPosition], 2);
+	clientSockets[socketPosition] = 0;
+	clientRecieving[socketPosition] = false;
+	Error error("Reject User, incorrect password.", 3);
+	ErrorHandler::AddError(error);
+	return 0;
+}
+
+DWORD WINAPI WindowsNetworking::ReceiveClientsThread(LPVOID param)
 {
 	for (int i = 0; i < 32; i++)
 	{
-		if (clientSockets[i] != 0 && !clientRecieving[i])
+		if (clientSockets[i] != 0 && !clientRecieving[i] && clientAccepted[i])
 		{
 			CreateThread(nullptr, 0, ReceiveThread, (LPVOID)i, 0, nullptr);
+		}
+		else if (clientSockets[i] != 0 && !clientRecieving[i])
+		{
+			CreateThread(nullptr, 0, ReceiveVerifyThread, (LPVOID)i, 0, nullptr);
 		}
 	}
 	return 0;
@@ -298,7 +360,7 @@ void WindowsNetworking::Listen()
 
 void WindowsNetworking::Receive()
 {
-	CreateThread(nullptr, 0, ReceiveClients, nullptr, 0, nullptr);
+	CreateThread(nullptr, 0, ReceiveClientsThread, nullptr, 0, nullptr);
 }
 
 

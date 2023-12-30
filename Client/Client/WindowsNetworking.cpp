@@ -18,11 +18,19 @@ DWORD WINAPI WindowsNetworking::ConnectThread(LPVOID param)
 	const std::wstring ip = CH->ip;
 	const int port = CH->port;
 	std::string password = CH->password;
+	
+	// Send disconnect message
 
 	sockaddr_in service;
 	service.sin_family = AF_INET;
 	service.sin_port = htons(port);
 	InetPtonW(AF_INET, ip.c_str(), &service.sin_addr.S_un.S_addr);
+	Chatroom emptyChatroom;
+	chatroom = emptyChatroom;
+	isReceiving = false;
+	inChatroom = false;
+	isConnected = false;
+	
 
 	if (!connect(clientSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
 	{
@@ -45,32 +53,11 @@ DWORD WINAPI WindowsNetworking::ConnectThread(LPVOID param)
 DWORD WINAPI WindowsNetworking::DisconnectThread(LPVOID param)
 {
 	// Send disconnect message
-	BufferDisconnect BD;
-	send(clientSocket, (char*)&BD, sizeof(BufferDisconnect), 0);
-	shutdown(clientSocket, 2);
-	if (!closesocket(clientSocket))
+	if(inChatroom && isConnected)
 	{
-		const Error ClosingSocketError("Couldn't close socket.", 0);
-		ErrorHandler::AddError(ClosingSocketError);
-	}
-
-	WSACleanup();
-	WORD version = MAKEWORD(2, 2);
-	WSADATA wsaData;
-	if (WSAStartup(version, &wsaData))
-	{
-		const Error creatingSocketError("Couldn't create socket.", 0);
-		ErrorHandler::AddError(creatingSocketError);
-		// WSAGetLastError()
-	}
-
-
-	clientSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if (clientSocket == INVALID_SOCKET)
-	{
-		WSACleanup();
-		const Error creatingSocketError("Couldn't create socket.", 0);
-		ErrorHandler::AddError(creatingSocketError);
+		BufferDisconnect BD;
+		send(clientSocket, (char*)&BD, sizeof(BufferDisconnect), 0);
+		shutdown(clientSocket, 2);
 	}
 
 	isConnected = false;
@@ -106,6 +93,7 @@ DWORD WINAPI WindowsNetworking::ReceiveSendMessageThread(LPVOID param)
 DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 {
 	BufferServerConnect* BSCPtr = (BufferServerConnect*)param;
+	
 	if(BSCPtr->GetIsAccepted())
 	{
 		chatroom = BSCPtr->GetChatroomName();
@@ -114,8 +102,9 @@ DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 	else
 	{
 		Error incorrectPassword("Incorrect Password for chatroom", 2);
+		
 	}
-	delete BSCPtr;
+	delete param;
 	return 0;
 }
 
@@ -125,33 +114,31 @@ DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 	char* buffer = new char[sizeof(BufferServerConnect)];
 	// Use the largest possible class, so that we can accomidate everything.
 	int recievedBytes = recv(clientSocket, buffer, sizeof(BufferServerConnect), 0);
-	BufferNormal* BH = (BufferNormal*)buffer;
+	BufferNormal BH = *(BufferNormal*)buffer;
 	
-	if (BH->GetType() == 2)
+	if (BH.GetType() == 2)
 	{
 		// BufferServerSendMessage
-		BufferServerSendMessage* BSSMPtr = (BufferServerSendMessage*)buffer;
-		CreateThread(nullptr, 0, ReceiveSendMessageThread, BSSMPtr, 0, nullptr);
+		CreateThread(nullptr, 0, ReceiveSendMessageThread, buffer, 0, nullptr);
 	}
-	else if (BH->GetType() == 4)
+	else if (BH.GetType() == 4)
 	{
 		// BufferConnectServer
-		BufferServerConnect* BSCPtr = (BufferServerConnect*)buffer;
-		CreateThread(nullptr, 0, ReceiveConnect, BSCPtr, 0, nullptr);
+		CreateThread(nullptr, 0, ReceiveConnect, buffer, 0, nullptr);
 	}
-	else if (BH->GetType() == 6)
+	else if (BH.GetType() == 6)
 	{
 		// BufferServerUpdateUser
 		BufferServerUpdateUser* BSUUPtr = (BufferServerUpdateUser*)buffer;
 	}
-	else if (BH->GetType() == 6)
+	else if (BH.GetType() == 6)
 	{
 		// BufferServerDisconnect
 		BufferServerDisconnect* BSDPtr = (BufferServerDisconnect*)buffer;
 	}
 	else
 	{
-		delete BH;
+
 	}
 	isReceiving = false;
 	return 0;
@@ -212,10 +199,10 @@ void WindowsNetworking::Disconnect()
 }
 
 
-void WindowsNetworking::SendText(const std::string& _message) 
+void WindowsNetworking::SendText(std::string& _message) 
 {
 	// Allocate string on heap
-	std::string* message = const_cast<std::string*>(&_message);
+	std::string* message = &_message;
 	CreateThread(nullptr, 0, SendTextThread, message, 0, nullptr);
 }
 

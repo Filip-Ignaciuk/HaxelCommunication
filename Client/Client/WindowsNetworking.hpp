@@ -54,7 +54,7 @@ public:
 	void Disconnect() override;
 
 	// Main Procedures
-	void SendText(const std::string& _message) override;
+	void SendText(std::string& _message) override;
 	void UpdateUser() override;
 	void Receive() override;
 

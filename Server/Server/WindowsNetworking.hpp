@@ -47,13 +47,16 @@ private:
 	static DWORD WINAPI SendTextThread(LPVOID param);
 	static DWORD WINAPI UpdateUserThread(LPVOID param);
 
+	// All possible receives
 	static DWORD WINAPI ReceiveSendMessageThread(LPVOID param);
 	static DWORD WINAPI ReceiveConnect(LPVOID param);
 	static DWORD WINAPI ReceiveUserUpdateThread(LPVOID param);
-	static DWORD WINAPI ReceiveTextThread(LPVOID param);
+	static DWORD WINAPI ReceiveDisconnect(LPVOID param);
 
-	static DWORD WINAPI ReceiveClients(LPVOID param);
 	static DWORD WINAPI ReceiveThread(LPVOID param);
+	static DWORD WINAPI ReceiveVerifyThread(LPVOID param);
+	static DWORD WINAPI ReceiveClientsThread(LPVOID param);
+
 	
 	
 public:

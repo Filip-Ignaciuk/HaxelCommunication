@@ -14,7 +14,7 @@ public:
 	virtual void Connect(const std::string& _ip, const int _port, std::string& _password);
 	virtual void Disconnect();
 
-	virtual void SendText(const std::string& _message);
+	virtual void SendText(std::string& _message);
 	virtual void UpdateUser();
 	virtual void Receive();
 

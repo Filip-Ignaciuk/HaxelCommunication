@@ -13,7 +13,7 @@ public:
 	void Disconnect() const;
 
 	// Main Procedures
-	void SendText(const std::string& _message) const;
+	void SendText(std::string& _message) const;
 	void UpdateUser() const;
 	void Receive() const;
 

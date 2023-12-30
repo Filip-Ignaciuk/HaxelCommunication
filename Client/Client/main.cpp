@@ -189,6 +189,7 @@ void JoinChatroom(std::string& _ip, std::string& _port, std::string& _password)
     const bool isPortValid = PortChecker(_port);
     if(isIpValid && isPortValid)
     {
+        networkCalls->Disconnect();
         networkCalls->Connect(_ip, std::stoi(_port), _password);
     }
     else
@@ -215,18 +216,26 @@ void JoinChatroom(std::string& _ip, std::string& _port, std::string& _password)
 
 void ModalLeaveChatroomGui()
 {
-    ImGui::Text("Are you sure you would like to leave the chatroom?");
-    if (ImGui::Button("Yes", ImVec2(120, 0)))
+    ImGui::OpenPopup("Leave Chatroom");
+
+    if (ImGui::BeginPopupModal("Leave Chatroom", NULL, ImGuiWindowFlags_AlwaysAutoResize)) 
     {
-    
-        ImGui::CloseCurrentPopup();
-    }
-    if (ImGui::Button("No", ImVec2(120, 0)))
-    {
-    
-        ImGui::CloseCurrentPopup();
+        ImGui::Text("Are you sure you would like to leave the chatroom?");
+        if (ImGui::Button("Yes", ImVec2(120, 0)))
+        {
+            creator->Disconnect();
+            ImGui::CloseCurrentPopup();
+        }
+        if (ImGui::Button("No", ImVec2(120, 0)))
+        {
+
+            ImGui::CloseCurrentPopup();
+        }
     }
     ImGui::EndPopup();
+
+    
+ 
 }
 
 void ModalJoinChatroomGui()
@@ -291,7 +300,7 @@ void MenuBar()
         {
             if (networkCalls->GetChatroomStatus())
             {
-                if (ImGui::BeginMenu("Leave Chatroom"))
+                if (ImGui::MenuItem("Leave Chatroom"))
                 {
                     ModalLeaveChatroomGui();
                     ImGui::EndMenu();
@@ -488,7 +497,11 @@ int main(int, char**)
                 }
                 ImGui::EndChild();
                 static char str0[128] = "";
-                ImGui::InputText("Message", str0, IM_ARRAYSIZE(str0));
+                if(ImGui::InputText("Message", str0, IM_ARRAYSIZE(str0)))
+                {
+                    std::string text = str0;
+                    creator->SendText(text);
+                }
             }
             
 
@@ -591,6 +604,9 @@ int main(int, char**)
     EMSCRIPTEN_MAINLOOP_END;
 #endif
 
+    creator->Disconnect();
+    delete creator;
+    delete networkCalls;
     // Cleanup
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
