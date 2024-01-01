@@ -14,6 +14,7 @@
 #include "User.hpp"
 #include "ErrorHandler.hpp"
 #include "GuiLanguage.hpp"
+#include "Storage.hpp"
 
 #include "WindowsNetworking.hpp"
 #include "WindowsNetworkCallsCreator.hpp"
@@ -57,8 +58,6 @@ bool finishedError = true;
 // Chatroom Info
 
 // We store all chatroom behaviour in the chatroom class, to organise and simplify our code.
-Chatroom& chatroom = emptyChatroom;
-MessageBuilder messageBuilder;
 
 
 // GUI Logic
@@ -260,7 +259,7 @@ void PopulateUsers()
 {
     for (int i = 0; i < 31; i++)
     {
-        User user = chatroom.GetUser(i);
+        User user = chatroom->GetUser(i);
 
     }
 }
@@ -426,6 +425,7 @@ int main(int, char**)
     creator = new WindowsCallsCreator();
     networkCalls = creator->CreateNetworkCalls();
     networkCalls->CreateSocket();
+    chatroom = &networkCalls->GetChatroom();
 
     // Loading Configs
     config::StartConfigs();
@@ -488,7 +488,7 @@ int main(int, char**)
                 ImGui::SetNextWindowSizeConstraints(ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 1), ImVec2(FLT_MAX, (ImGui::GetWindowHeight() - 92)));
                 if (ImGui::BeginChild("ConstrainedChild", ImVec2(0.0f, 0.0f), 0))
                 {
-                    std::vector<Message> messages = chatroom.GetMessages();
+                    std::vector<Message> messages = chatroom->GetMessages();
                     for(Message message : messages)
                     {
                         ImGui::Text(message.GetMessageComplete().c_str());
@@ -497,7 +497,8 @@ int main(int, char**)
                 }
                 ImGui::EndChild();
                 static char str0[128] = "";
-                if(ImGui::InputText("Message", str0, IM_ARRAYSIZE(str0)))
+                ImGui::InputText("Message", str0, IM_ARRAYSIZE(str0));
+                if(ImGui::Button("Send"))
                 {
                     std::string text = str0;
                     creator->SendText(text);
@@ -554,7 +555,7 @@ int main(int, char**)
                 {
                     for (int row = 0; row < 32; row++)
                     {
-                        User user = chatroom.GetUser(row);
+                        User user = chatroom->GetUser(row);
                         ImGui::TableNextRow();
                         for (int column = 0; column < 2; column++)
                         {

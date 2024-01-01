@@ -31,7 +31,7 @@ void NetworkCallsCreator::Disconnect() const
 	delete networkCalls;
 }
 
-void NetworkCallsCreator::SendText(std::string& _message) const
+void NetworkCallsCreator::SendText(std::string _message) const
 {
 	NetworkCalls* networkCalls = this->CreateNetworkCalls();
 	networkCalls->SendText(_message);

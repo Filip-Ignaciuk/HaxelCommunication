@@ -111,9 +111,9 @@ DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 {
 	isReceiving = true;
-	char* buffer = new char[sizeof(BufferServerConnect)];
+	char* buffer = new char[sizeof(BufferUpdateUser)];
 	// Use the largest possible class, so that we can accomidate everything.
-	int recievedBytes = recv(clientSocket, buffer, sizeof(BufferServerConnect), 0);
+	int recievedBytes = recv(clientSocket, buffer, sizeof(BufferUpdateUser), 0);
 	BufferNormal BH = *(BufferNormal*)buffer;
 	
 	if (BH.GetType() == 2)
@@ -199,10 +199,9 @@ void WindowsNetworking::Disconnect()
 }
 
 
-void WindowsNetworking::SendText(std::string& _message) 
+void WindowsNetworking::SendText(std::string _message) 
 {
-	// Allocate string on heap
-	std::string* message = &_message;
+	std::string* message = new std::string(_message);
 	CreateThread(nullptr, 0, SendTextThread, message, 0, nullptr);
 }
 

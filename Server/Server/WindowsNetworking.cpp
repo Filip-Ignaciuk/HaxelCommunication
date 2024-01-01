@@ -101,7 +101,7 @@ DWORD WINAPI WindowsNetworking::SendTextThread(LPVOID param)
 	SOCKET clientSocket = clientSockets[socketPosition];
 	int& currentPos = currentMessagePosition[socketPosition];
 	std::vector<Message>& messages = chatroom.GetMessages();
-	while ((currentPos - 1) != chatroom.GetNumberOfMessages())
+	while (currentPos != chatroom.GetNumberOfMessages())
 	{
 		Message currentMessage = messages[currentPos];
 		std::string originalMessage = currentMessage.GetOriginalMessage();
