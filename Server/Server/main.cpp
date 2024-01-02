@@ -631,10 +631,31 @@ int main(int, char**)
         
         ImGui::Begin(LanguageFileInitialiser::charAllTextsInApplication[2], &exit, ImGuiWindowFlags_MenuBar);
         {
-        
+            if (ImGui::BeginTable(LanguageFileInitialiser::charAllTextsInApplication[2], 3))
+            {
+                ImGui::TableNextRow();
+                for (int column = 0; column < 2; column++)
+                {
+                    ImGui::TableSetColumnIndex(column);
+                    if (!column)
+                    {
+                        ImGui::Text("User");
+
+                        continue;
+                    }
+                    ImGui::Text("Id");
+
+                }
+
+            	ImGui::EndTable();
+
+            }
+
+            
             
             if (ImGui::BeginTable(LanguageFileInitialiser::charAllTextsInApplication[2], 3) && chatroomStatus)
             {
+
                 for (int row = 0; row < 32; row++)
                 {
                     User user = chatroom->GetUser(row);
@@ -644,10 +665,11 @@ int main(int, char**)
                         ImGui::TableSetColumnIndex(column);
                         if (!column)
                         {
+                            
                             ImGui::Text(user.GetDisplayName().c_str());
                             continue;
                         }
-            
+                        
                         ImGui::Text(user.GetId().c_str());
                     }
                 }
