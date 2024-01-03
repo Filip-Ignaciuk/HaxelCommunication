@@ -25,7 +25,6 @@ DWORD WINAPI WindowsNetworking::AcceptThread(LPVOID param)
 	SOCKET acceptedSocket = accept(serverSocket, NULL, NULL);
 	if (acceptedSocket == INVALID_SOCKET || acceptedSocket == 4294967295)
 	{
-		WSACleanup();
 		isListening = false;
 		return 0;
 	}
@@ -304,13 +303,15 @@ void WindowsNetworking::CreateSocket()
 	WSADATA wsaData;
 	if (WSAStartup(version, &wsaData))
 	{
+		WSACleanup();
 		const Error creatingSocketError(LanguageFileInitialiser::charAllTextsInApplication[25], 0);
 		ErrorHandler::AddError(creatingSocketError);
-		// WSAGetLastError()
+		return;
 	}
-
+	
 
 	serverSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	int result = WSAGetLastError();
 	if (serverSocket == INVALID_SOCKET)
 	{
 		WSACleanup();
@@ -322,24 +323,29 @@ void WindowsNetworking::CreateSocket()
 
 void WindowsNetworking::CloseSocket() 
 {
-	//int result = shutdown(serverSocket, 2);
-	//int error = WSAGetLastError(); // 10057
-	
-	if(!closesocket(serverSocket))
+	isBinded = false;
+	inChatroom = false;
+	isListening = false;
+	for (int i = 0; i < 32; i++)
+	{
+		if(clientSockets[i] != 0)
+		{
+			SOCKET& clientSocket = clientSockets[i];
+			shutdown(clientSocket, 2);
+			closesocket(clientSocket);
+			clientSocket = INVALID_SOCKET;
+		}
+		clientAccepted[i] = false;
+		clientRecieving[i] = false;
+		
+	}
+	shutdown(serverSocket, 2);
+	if(closesocket(serverSocket))
 	{
 		const Error ClosingSocketError(LanguageFileInitialiser::charAllTextsInApplication[27], 0);
 		ErrorHandler::AddError(ClosingSocketError);
 	}
-	isBinded = false;
-	inChatroom = false;
 	serverSocket = INVALID_SOCKET;
-	for (int i = 0; i < 32; i++)
-	{
-		SOCKET& clientSocket = clientSockets[i];
-		shutdown(clientSocket, 2);
-		closesocket(clientSocket);
-		clientSocket = INVALID_SOCKET;
-	}
 	WSACleanup();
 }
 
@@ -365,7 +371,11 @@ void WindowsNetworking::Listen()
 
 void WindowsNetworking::Receive()
 {
-	CreateThread(nullptr, 0, ReceiveClientsThread, nullptr, 0, nullptr);
+	if(isBinded)
+	{
+		CreateThread(nullptr, 0, ReceiveClientsThread, nullptr, 0, nullptr);
+
+	}
 }
 
 
@@ -390,6 +400,7 @@ void WindowsNetworking::OpenChatroom(std::string& _chatroomName, std::string& _c
 
 void WindowsNetworking::CloseChatroom()
 {
+	Disconnect();
 	Chatroom emptyChatroom;
 	chatroom = emptyChatroom;
 	inChatroom = false;

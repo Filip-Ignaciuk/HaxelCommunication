@@ -45,6 +45,7 @@ static void glfw_error_callback(int error, const char* description)
 
 // Application
 NetworkCallsCreator* creator;
+NetworkCalls* networkCalls;
 std::vector<std::string> allConsoleTexts;
 
 // Status
@@ -215,7 +216,7 @@ bool CreateBind(std::string& _ip, std::string& _port)
     const bool isPortValid = PortChecker(_port);
     if(isIpValid && isPortValid)
     {
-        creator->Bind(_ip, std::stoi(_port));
+        networkCalls->Bind(_ip, std::stoi(_port));
         return true;
     }
     else
@@ -244,7 +245,7 @@ void PopupChecker()
             if (ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[22], ImVec2(120, 0)))
             {
                 closeChatroomPopup = false;
-                creator->CloseChatroom();
+                networkCalls->CloseChatroom();
                 currentStatus = LanguageFileInitialiser::allTextsInApplication[34];
                 currentColour = yellow;
                 ImGui::CloseCurrentPopup();
@@ -269,12 +270,16 @@ void PopupChecker()
             if (ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[22], ImVec2(120, 0)))
             {
                 closeSocketPopup = false;
-                if(creator->GetChatroomStatus())
+                if(networkCalls->GetChatroomStatus())
                 {
-                    creator->CloseChatroom();
+                    networkCalls->CloseChatroom();
                 }
-                creator->CloseSocket();
-                creator->CreateSocket();
+                networkCalls->CloseSocket();
+                networkCalls->CreateSocket();
+                currentStatus = LanguageFileInitialiser::allTextsInApplication[35];
+                currentColour = red;
+                std::vector<std::string> emptyVector;
+                allConsoleTexts = emptyVector;
                 ImGui::CloseCurrentPopup();
             }
             if (ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[23], ImVec2(120, 0)))
@@ -333,12 +338,22 @@ void MenuBar()
 
         if (ImGui::BeginMenu(LanguageFileInitialiser::charAllTextsInApplication[1]))
         {
-            if (creator->GetChatroomStatus())
+            if (networkCalls->GetChatroomStatus())
             {
                 if (ImGui::BeginMenu(LanguageFileInitialiser::charAllTextsInApplication[1]))
                 {
-                    ImGui::Text("Socket Information:");
-                    ImGui::Text("Chatroom Information:");
+                    ImGui::SeparatorText("Socket Information");
+                    std::string ip = networkCalls->GetCurrentIp();
+                    std::string ipText = "Ip: " + ip;
+                    ImGui::Text(ipText.c_str());
+                    std::string port = std::to_string(networkCalls->GetCurrentPort());
+                    std::string portText = "Port: " + port;
+                    ImGui::Text(portText.c_str());
+                    ImGui::SeparatorText("Chatroom Information");
+                    std::string chatroomNameText = "Chatroom name: " + chatroom->GetChatroomName();
+                    ImGui::Text(chatroomNameText.c_str());
+                    std::string chatroomPasswordText = "Chatroom password: " + chatroom->GetPassword();
+                    ImGui::Text(chatroomPasswordText.c_str());
                     ImGui::EndMenu();
                 }
                 if (ImGui::MenuItem(LanguageFileInitialiser::charAllTextsInApplication[18]))
@@ -350,11 +365,17 @@ void MenuBar()
                     closeSocketPopup = true;
                 }
             }
-            else if (creator->GetBindStatus())
+            else if (networkCalls->GetBindStatus())
             {
                 if (ImGui::BeginMenu(LanguageFileInitialiser::charAllTextsInApplication[1]))
                 {
-                    ImGui::Text("Socket Information:");
+                    ImGui::SeparatorText("Socket Information");
+                    std::string ip = networkCalls->GetCurrentIp();
+                    std::string ipText = "Ip: " + ip;
+                    ImGui::Text(ipText.c_str());
+                    std::string port = std::to_string(networkCalls->GetCurrentPort());
+                    std::string portText = "Port: " + port;
+                    ImGui::Text(portText.c_str());
                     ImGui::EndMenu();
                 }
                 if (ImGui::MenuItem(LanguageFileInitialiser::charAllTextsInApplication[19]))
@@ -470,7 +491,8 @@ int main(int, char**)
 
     // Setup Networking
     creator = new WindowsCallsCreator();
-    creator->CreateSocket();
+    networkCalls = creator->CreateNetworkCalls();
+    networkCalls->CreateSocket();
     chatroom = creator->GetChatroom();
 
 
@@ -517,21 +539,23 @@ int main(int, char**)
 
         
         
-        bool listeningStatus = creator->GetListeningStatus();
-        bool chatroomStatus = creator->GetChatroomStatus();
-        bool getBindedStatus = creator->GetBindStatus();
+        bool listeningStatus = networkCalls->GetListeningStatus();
+        bool chatroomStatus = networkCalls->GetChatroomStatus();
+        bool getBindedStatus = networkCalls->GetBindStatus();
 
         // Receive data from chatroom
-        creator->Receive();
+        networkCalls->Receive();
 
-        creator->Listen();
+        networkCalls->Listen();
+
+        // Gui Logic
+        ErrorChecker();
+        PopupChecker();
 
         ImGui::Begin(LanguageFileInitialiser::charAllTextsInApplication[1], &exit, ImGuiWindowFlags_MenuBar);
         {
             
-            // Gui Logic
-            ErrorChecker();
-            PopupChecker();
+            
             // Check for critical error
             if (criticalError)
             {
@@ -540,7 +564,7 @@ int main(int, char**)
             // Gui
             MenuBar();
             // Chatroom
-            creator->UpdateTexts();
+            networkCalls->UpdateTexts();
 
             // Server Info
             if(!getBindedStatus)
@@ -585,7 +609,7 @@ int main(int, char**)
                 {
                     std::string sChatroomName = chatroomName;
                     std::string sChatroomPassword = chatroomPassword;
-                    creator->OpenChatroom(sChatroomName, sChatroomPassword);
+                    networkCalls->OpenChatroom(sChatroomName, sChatroomPassword);
                     currentChatroomNameText = LanguageFileInitialiser::allTextsInApplication[36] + ": " + sChatroomName;
                     currentStatus = LanguageFileInitialiser::allTextsInApplication[34];
                     currentColour = green;
@@ -709,6 +733,10 @@ int main(int, char**)
 
     glfwDestroyWindow(window);
     glfwTerminate();
+
+    networkCalls->CloseChatroom();
+    delete networkCalls;
+    delete creator;
 
     return 0;
 }

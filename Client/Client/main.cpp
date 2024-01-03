@@ -602,6 +602,8 @@ int main(int, char**)
         {
             ImGui::Begin("Edit User", &wantsEditUser, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse);
             {
+                std::string currentUserName;
+                ImGui::Text();
                 static ImVec4 userColour;
                 static bool ref_color = false;
                 static ImVec4 ref_color_v(1.0f, 0.0f, 1.0f, 0.5f);

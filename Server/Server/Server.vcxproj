@@ -180,7 +180,6 @@
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="NetworkCalls.cpp" />
     <ClCompile Include="NetworkCallsCreator.cpp" />
-    <ClCompile Include="Storage.cpp" />
     <ClCompile Include="User.cpp" />
     <ClCompile Include="WindowsNetworkCallsCreator.cpp" />
     <ClCompile Include="WindowsNetworking.cpp" />
