@@ -39,8 +39,9 @@ BufferUpdateUser::BufferUpdateUser(User& _user) :BufferNormal(5), m_user(_user) 
 User& BufferUpdateUser::GetUser() { return m_user; }
 
 // BufferServerUpdateUser
-BufferServerUpdateUser::BufferServerUpdateUser(User& _user) :BufferNormal(6), m_user(_user) {}
+BufferServerUpdateUser::BufferServerUpdateUser(User& _user, int _position) :BufferNormal(6), m_user(_user), m_position(_position) {}
 User& BufferServerUpdateUser::GetUser() { return m_user; }
+int BufferServerUpdateUser::GetPosition() const { return m_position; }
 
 // BufferDisconnect
 BufferDisconnect::BufferDisconnect() : BufferNormal(7) {}

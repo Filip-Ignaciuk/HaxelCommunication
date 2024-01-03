@@ -108,6 +108,24 @@ DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 	return 0;
 }
 
+DWORD WINAPI WindowsNetworking::ReceiveUserUpdateThread(LPVOID param)
+{
+	BufferServerUpdateUser* BSUUPtr = (BufferServerUpdateUser*)param;
+	chatroom.UpdateUser(BSUUPtr->GetPosition(), BSUUPtr->GetUser());
+
+	delete param;
+	return 0;
+}
+
+DWORD WINAPI WindowsNetworking::ReceiveServerDisconnectThread(LPVOID param)
+{
+	inChatroom = false;
+	isConnected = false;
+	isReceiving = false;
+	shutdown(clientSocket, 2);
+	return 0;
+}
+
 DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 {
 	isReceiving = true;
@@ -129,12 +147,15 @@ DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 	else if (BH.GetType() == 6)
 	{
 		// BufferServerUpdateUser
-		BufferServerUpdateUser* BSUUPtr = (BufferServerUpdateUser*)buffer;
+		CreateThread(nullptr, 0, ReceiveUserUpdateThread, buffer, 0, nullptr);
+
 	}
 	else if (BH.GetType() == 6)
 	{
 		// BufferServerDisconnect
-		BufferServerDisconnect* BSDPtr = (BufferServerDisconnect*)buffer;
+		delete buffer;
+		CreateThread(nullptr, 0, ReceiveUserUpdateThread, buffer, 0, nullptr);
+
 	}
 	else
 	{
@@ -212,9 +233,12 @@ void WindowsNetworking::UpdateUser()
 
 void WindowsNetworking::Receive()  
 {
-	// Declare isReceiving here so that the computer doesn't create multiple threads quickly.
-	isReceiving = true;
-	CreateThread(nullptr, 0, ReceiveThread, nullptr, 0, nullptr);
+	if (!isReceiving && isConnected)
+	{
+		isReceiving = true;
+		CreateThread(nullptr, 0, ReceiveThread, nullptr, 0, nullptr);
+	}
+	
 }
 
 bool WindowsNetworking::GetReceivingStatus() { return isReceiving; }

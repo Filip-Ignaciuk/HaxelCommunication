@@ -14,6 +14,7 @@
 #include "User.hpp"
 #include "ErrorHandler.hpp"
 #include "GuiLanguage.hpp"
+#include "Languages.hpp"
 #include "Storage.hpp"
 
 #include "WindowsNetworking.hpp"
@@ -61,6 +62,8 @@ bool finishedError = true;
 
 
 // GUI Logic
+
+static bool wantsEditUser = false;
 
 // Error Logic
 void ErrorChecker()
@@ -303,24 +306,29 @@ void MenuBar()
                 {
                     ModalLeaveChatroomGui();
                     ImGui::EndMenu();
+
                 }
+
             }
             else
             {
                 if (ImGui::BeginMenu("Join Chatroom"))
                 {
                     ModalJoinChatroomGui();
-                	ImGui::EndMenu();
+                    ImGui::EndMenu();
+
                 }
+
             }
             ImGui::EndMenu();
+
         }
 
         if (ImGui::BeginMenu("User"))
         {
             if (ImGui::MenuItem("Edit User"))
             {
-                ImGui::EndMenu();
+                wantsEditUser = true;
             }
             ImGui::EndMenu();
         }
@@ -417,8 +425,6 @@ int main(int, char**)
 
 
     // Our state
-    bool show_demo_window = true;
-    bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     // Setup Networking
@@ -466,10 +472,7 @@ int main(int, char**)
         bool isConnected = networkCalls->GetConnectedStatus();
 
         // Receive data from chatroom
-        if (!receivingStatus && isConnected)
-        {
-            networkCalls->Receive();
-        }
+        networkCalls->Receive();
 
         if(chatroomStatus)
         {
@@ -547,35 +550,69 @@ int main(int, char**)
 
         }
 
+        ImGui::Begin("Users", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
         {
 
-            ImGui::Begin("Users", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+            if (ImGui::BeginTable(LanguageFileInitialiser::charAllTextsInApplication[2], 3))
             {
-                if (ImGui::BeginTable("Users", 3) && chatroomStatus)
+                ImGui::TableNextRow();
+                for (int column = 0; column < 2; column++)
                 {
-                    for (int row = 0; row < 32; row++)
+                    ImGui::TableSetColumnIndex(column);
+                    if (!column)
                     {
-                        User user = chatroom->GetUser(row);
-                        ImGui::TableNextRow();
-                        for (int column = 0; column < 2; column++)
-                        {
-                            ImGui::TableSetColumnIndex(column);
-                            if (!column)
-                            {
-                                ImGui::Text(user.GetDisplayName().c_str());
-                                continue;
-                            }
+                        ImGui::Text("User");
 
-                            ImGui::Text(user.GetId().c_str());
-                        }
+                        continue;
                     }
+                    ImGui::Text("Id");
 
                 }
+
                 ImGui::EndTable();
+
             }
-            
-        	ImGui::End();
+
+            if (ImGui::BeginTable("Users", 3) && chatroomStatus)
+            {
+                for (int row = 0; row < 32; row++)
+                {
+                    User user = chatroom->GetUser(row);
+                    ImGui::TableNextRow();
+                    for (int column = 0; column < 2; column++)
+                    {
+                        ImGui::TableSetColumnIndex(column);
+                        if (!column)
+                        {
+                            ImGui::Text(user.GetDisplayName().c_str());
+                            continue;
+                        }
+
+                        ImGui::Text(user.GetId().c_str());
+                    }
+                }
+
+            }
+            ImGui::EndTable();
         }
+
+        ImGui::End();
+
+        if(wantsEditUser)
+        {
+            ImGui::Begin("Edit User", &wantsEditUser, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse);
+            {
+                static ImVec4 userColour;
+                static bool ref_color = false;
+                static ImVec4 ref_color_v(1.0f, 0.0f, 1.0f, 0.5f);
+                ImGui::SetNextItemWidth(20.0f);
+                ImGui::ColorPicker4("User Colour", (float*)&userColour, ImGuiColorEditFlags_NoAlpha | ImGuiColorEditFlags_DisplayRGB, ref_color ? &ref_color_v.x : NULL);
+
+            }
+            ImGui::End();
+        }
+
+
 
         ImGui::PopFont();
         // Rendering

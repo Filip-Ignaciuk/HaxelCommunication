@@ -521,13 +521,10 @@ int main(int, char**)
         bool chatroomStatus = creator->GetChatroomStatus();
         bool getBindedStatus = creator->GetBindStatus();
 
+        // Receive data from chatroom
         creator->Receive();
 
-        // Receive data from chatroom
-        if (!listeningStatus && chatroomStatus && getBindedStatus)
-        {
-            creator->Listen();
-        }
+        creator->Listen();
 
         ImGui::Begin(LanguageFileInitialiser::charAllTextsInApplication[1], &exit, ImGuiWindowFlags_MenuBar);
         {
@@ -651,7 +648,6 @@ int main(int, char**)
 
             }
 
-            
             
             if (ImGui::BeginTable(LanguageFileInitialiser::charAllTextsInApplication[2], 3) && chatroomStatus)
             {

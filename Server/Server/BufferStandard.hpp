@@ -78,9 +78,12 @@ class BufferServerUpdateUser : public BufferNormal
 {
 private:
 	User m_user;
+	int m_position;
+
 public:
-	BufferServerUpdateUser(User& _user);
+	BufferServerUpdateUser(User& _user, int _position);
 	User& GetUser();
+	int GetPosition() const;
 };
 
 class BufferDisconnect : public BufferNormal

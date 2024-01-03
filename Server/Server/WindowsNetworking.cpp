@@ -128,7 +128,6 @@ DWORD WINAPI WindowsNetworking::ReceiveSendMessageThread(LPVOID param)
 	delete NCHPtr;
 	chatroom.AddMessage(socketPosition, BC.GetMessageObject());
 
-	
 	return 0;
 }
 
@@ -178,6 +177,7 @@ DWORD WINAPI WindowsNetworking::ReceiveUserUpdateThread(LPVOID param)
 	int socketPosition = NCHPtr->socketPosition;
 	BufferUpdateUser BC = *(BufferUpdateUser*)NCHPtr->buffer;
 	delete NCHPtr;
+	chatroom.UpdateUser(socketPosition, BC.GetUser());
 
 	return 0;
 }
@@ -226,10 +226,12 @@ DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 	else if (BH->GetType() == 3)
 	{
 		// BufferConnect
+		delete RH;
 	}
 	else if (BH->GetType() == 5)
 	{
 		// BufferUpdateUser
+		CreateThread(nullptr, 0, ReceiveUserUpdateThread, RH, 0, nullptr);
 
 	}
 	else if (BH->GetType() == 7)
@@ -353,8 +355,11 @@ void WindowsNetworking::Bind(const std::string& _ip, int _port)
 
 void WindowsNetworking::Listen()
 {
-	isListening = true;
-	CreateThread(nullptr, 0, ListenThread, nullptr, 0,nullptr);
+	if (!isListening && inChatroom && isBinded)
+	{
+		isListening = true;
+		CreateThread(nullptr, 0, ListenThread, nullptr, 0, nullptr);
+	}
 
 }
 

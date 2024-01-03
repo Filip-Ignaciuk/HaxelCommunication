@@ -7,11 +7,6 @@ Chatroom::Chatroom() = default;
 
 Chatroom::Chatroom(std::string& _name) : m_name(_name) {	}
 
-void Chatroom::AddUser(int _userPosition, User& _user)
-{
-	m_users[_userPosition] = _user;
-}
-
 void Chatroom::AddMessage(int _userPosition, std::string& _message)
 {
 

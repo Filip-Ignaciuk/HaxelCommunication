@@ -20,7 +20,6 @@ public:
 	Chatroom(std::string& _name);
 
 	// Add Elements
-	void AddUser(int _userPosition, User& _user);
 	void AddMessage(int _userPosition, std::string& _message);
 	void UpdateUser(int _oldUserPosition, User& _newUser);
 	void UpdateName(std::string& _name);
