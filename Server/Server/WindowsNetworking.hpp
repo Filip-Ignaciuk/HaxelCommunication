@@ -20,12 +20,15 @@
 class WindowsNetworking : public NetworkCalls
 {
 private:
+	const static int numberOfClients = 32;
+
 	static SOCKET serverSocket;
 
-	static SOCKET clientSockets[32];
-	static bool clientAccepted[32];
-	static bool clientRecieving[32];
-	static int currentMessagePosition[32];
+	static SOCKET clientSockets[numberOfClients];
+	static bool clientAccepted[numberOfClients];
+	static bool clientRecieving[numberOfClients];
+	static int currentMessagePosition[numberOfClients];
+	static bool clientUserNotUpdated[numberOfClients];
 
 	static bool isListening;
 
@@ -57,7 +60,7 @@ private:
 	static DWORD WINAPI ReceiveVerifyThread(LPVOID param);
 	static DWORD WINAPI ReceiveClientsThread(LPVOID param);
 
-	
+	static bool isOnline();
 	
 public:
 	WindowsNetworking();
@@ -75,8 +78,8 @@ public:
 	
 
 	// Main Procedures
-	void UpdateTexts();
-	void UpdateUser() override;
+	void UpdateTexts() override;
+	void UpdateUsers() override;
 
 	// Class Based
 	bool GetListeningStatus() override;

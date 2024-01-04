@@ -24,7 +24,7 @@ public:
 	virtual void Disconnect();
 
 	virtual void UpdateTexts();
-	virtual void UpdateUser();
+	virtual void UpdateUsers();
 
 	virtual bool GetListeningStatus();
 	virtual bool GetBindStatus();

@@ -5,12 +5,12 @@
 #include "ErrorHandler.hpp"
 #include <WS2tcpip.h>
 
-
 SOCKET WindowsNetworking::serverSocket = INVALID_SOCKET;
-SOCKET WindowsNetworking::clientSockets[32];
-bool WindowsNetworking::clientAccepted[32];
-bool WindowsNetworking::clientRecieving[32];
-int WindowsNetworking::currentMessagePosition[32];
+SOCKET WindowsNetworking::clientSockets[numberOfClients];
+bool WindowsNetworking::clientAccepted[numberOfClients];
+bool WindowsNetworking::clientRecieving[numberOfClients];
+int WindowsNetworking::currentMessagePosition[numberOfClients];
+bool WindowsNetworking::clientUserNotUpdated[numberOfClients];
 bool WindowsNetworking::isListening = false;
 bool WindowsNetworking::isBinded = false;
 bool WindowsNetworking::inChatroom = false;
@@ -29,7 +29,7 @@ DWORD WINAPI WindowsNetworking::AcceptThread(LPVOID param)
 		return 0;
 	}
 
-	for (int i = 0; i < 32; i++)
+	for (int i = 0; i < numberOfClients; i++)
 	{
 		if(clientSockets[i] == 0)
 		{
@@ -41,6 +41,8 @@ DWORD WINAPI WindowsNetworking::AcceptThread(LPVOID param)
 			return 0;
 		}
 	}
+	Error rejectedSocketNotification("Reached maximum capacity for clients", 3);
+	ErrorHandler::AddError(rejectedSocketNotification);
 	isListening = false;
 	return 0;
 	
@@ -115,6 +117,12 @@ DWORD WINAPI WindowsNetworking::SendTextThread(LPVOID param)
 
 DWORD WINAPI WindowsNetworking::UpdateUserThread(LPVOID param)
 {
+	int socketPosition = (int)param;
+	User updatedUser = chatroom.GetUser(socketPosition);
+	BufferServerUpdateUser BSUU(updatedUser, socketPosition);
+	send(clientSockets[socketPosition], (char*)&BSUU, sizeof(BufferServerUpdateUser), 0);
+
+
 	return 0;
 }
 
@@ -178,6 +186,7 @@ DWORD WINAPI WindowsNetworking::ReceiveUserUpdateThread(LPVOID param)
 	BufferUpdateUser BC = *(BufferUpdateUser*)NCHPtr->buffer;
 	delete NCHPtr;
 	chatroom.UpdateUser(socketPosition, BC.GetUser());
+	clientUserNotUpdated[socketPosition] = true;
 
 	return 0;
 }
@@ -210,9 +219,9 @@ DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 	SOCKET clientSocket = clientSockets[clientPosition];
 	bool& clientRecievingStatus = clientRecieving[clientPosition];
 	clientRecievingStatus = true;
-	char* buffer = new char[maxBufferSize];
+	char* buffer = new char[sizeof(BufferServerUpdateUser)];
 	// Use the largest possible class, so that we can accomidate everything.
-	int recievedBytes = recv(clientSocket, buffer, sizeof(BufferServerConnect), 0);
+	int recievedBytes = recv(clientSocket, buffer, sizeof(BufferServerUpdateUser), 0);
 	BufferNormal* BH = (BufferNormal*)buffer;
 	RecieveHolder* RH = new RecieveHolder();
 	RH->buffer = buffer;
@@ -277,7 +286,7 @@ DWORD WINAPI WindowsNetworking::ReceiveVerifyThread(LPVOID param)
 
 DWORD WINAPI WindowsNetworking::ReceiveClientsThread(LPVOID param)
 {
-	for (int i = 0; i < 32; i++)
+	for (int i = 0; i < numberOfClients; i++)
 	{
 		if (clientSockets[i] != 0 && !clientRecieving[i] && clientAccepted[i])
 		{
@@ -289,6 +298,15 @@ DWORD WINAPI WindowsNetworking::ReceiveClientsThread(LPVOID param)
 		}
 	}
 	return 0;
+}
+
+bool WindowsNetworking::isOnline()
+{
+	if(isBinded && inChatroom)
+	{
+		return true;
+	}
+	return false;
 }
 
 // Outwards Facing Functions
@@ -327,7 +345,7 @@ void WindowsNetworking::CloseSocket()
 	isBinded = false;
 	inChatroom = false;
 	isListening = false;
-	for (int i = 0; i < 32; i++)
+	for (int i = 0; i < numberOfClients; i++)
 	{
 		if(clientSockets[i] != 0)
 		{
@@ -416,18 +434,32 @@ void WindowsNetworking::Disconnect()
 
 void WindowsNetworking::UpdateTexts()
 {
-	for (int i = 0; i < 32; i++)
+	if (isOnline())
 	{
-		if(clientSockets[i] != 0 && clientAccepted[i] && currentMessagePosition[i] < chatroom.GetNumberOfMessages())
+		for (int i = 0; i < numberOfClients; i++)
 		{
-			CreateThread(nullptr, 0, SendTextThread, (LPVOID)i, 0, nullptr);
+			if (clientSockets[i] != 0 && clientAccepted[i] && currentMessagePosition[i] < chatroom.GetNumberOfMessages())
+			{
+				CreateThread(nullptr, 0, SendTextThread, (LPVOID)i, 0, nullptr);
+			}
 		}
 	}
+	
 }
 
-void WindowsNetworking::UpdateUser() 
+void WindowsNetworking::UpdateUsers()
 {
-	CreateThread(nullptr, 0, UpdateUserThread, nullptr, 0, nullptr);
+	if(isOnline())
+	{
+		for (int i = 0; i < numberOfClients; i++)
+		{
+			if (clientSockets[i] != 0 && clientAccepted[i] && clientUserNotUpdated[i])
+			{
+				CreateThread(nullptr, 0, UpdateUserThread, (LPVOID)i, 0, nullptr);
+			}
+		}
+	}
+	
 }
 
 

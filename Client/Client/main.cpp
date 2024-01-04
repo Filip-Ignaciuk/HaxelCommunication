@@ -645,12 +645,15 @@ int main(int, char**)
                 ImGui::SeparatorText("User Aesthetics");
                 static ImVec4 userColour;
                 static bool ref_color = false;
-                static ImVec4 ref_color_v(1.0f, 0.0f, 1.0f, 0.5f);
+                static ImVec4 ref_color_v(1.0f, 0.0f, 1.0f, 1.0f);
                 ImGui::SetNextItemWidth(200.0f);
                 ImGui::ColorPicker4("Text Colour", (float*)&userColour, ImGuiColorEditFlags_NoAlpha | ImGuiColorEditFlags_DisplayRGB, ref_color ? &ref_color_v.x : NULL);
 
                 if(ImGui::Button("Save Changes"))
                 {
+                    std::string name = userName;
+                    clientUser.SetDisplayName(name);
+                    clientUser.SetUserColour(userColour);
                     networkCalls->UpdateUser(clientUser);
                 }
             }

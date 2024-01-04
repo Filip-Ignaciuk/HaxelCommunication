@@ -72,40 +72,43 @@ DWORD WINAPI WindowsNetworking::DisconnectThread(LPVOID param)
 
 DWORD WINAPI WindowsNetworking::SendTextThread(LPVOID param)
 {
-	std::string* message = (std::string*)param;
-	BufferSendMessage BSM(*message);
+	std::string message = *(std::string*)param;
+	char* buffer = (char*)param;
+	delete[] buffer;
+	BufferSendMessage BSM(message);
 	send(clientSocket, (char*)&BSM, sizeof(BufferSendMessage), 0);
 	// We don't add it to our chatroom as the message could potentially fail.
-	delete message;
 	return 0;
 }
 
 DWORD WINAPI WindowsNetworking::UpdateUserThread(LPVOID param)
 {
-	User* userPtr = (User*)param;
-	User user = *userPtr;
-	BufferUpdateUser BUUPtr(user);
+	BufferUpdateUser BUUPtr(currentUser);
 	send(clientSocket, (char*)&BUUPtr, sizeof(BufferUpdateUser), 0);
 
-	delete userPtr;
 	return 0;
 }
 
 DWORD WINAPI WindowsNetworking::ReceiveSendMessageThread(LPVOID param)
 {
-	BufferServerSendMessage* BSSMPtr = (BufferServerSendMessage*)param;
-	chatroom.AddMessage(BSSMPtr->GetPositionObject(), BSSMPtr->GetMessageObject());
+	BufferServerSendMessage BSSM = *(BufferServerSendMessage*)param;
+	char* buffer = (char*)param;
+	delete[] buffer;
+
+	chatroom.AddMessage(BSSM.GetPositionObject(), BSSM.GetMessageObject());
 	
 	return 0;
 }
 
 DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 {
-	BufferServerConnect* BSCPtr = (BufferServerConnect*)param;
-	
-	if(BSCPtr->GetIsAccepted())
+	BufferServerConnect BSC = *(BufferServerConnect*)param;
+	char* buffer = (char*)param;
+	delete[] buffer;
+
+	if(BSC.GetIsAccepted())
 	{
-		chatroom = BSCPtr->GetChatroomName();
+		chatroom = BSC.GetChatroomName();
 		inChatroom = true;
 	}
 	else
@@ -113,20 +116,20 @@ DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 		Error incorrectPassword("Incorrect Password for chatroom", 2);
 		
 	}
-	delete param;
 	return 0;
 }
 
 DWORD WINAPI WindowsNetworking::ReceiveUserUpdateThread(LPVOID param)
 {
-	BufferServerUpdateUser* BSUUPtr = (BufferServerUpdateUser*)param;
-	if (BSUUPtr->GetUser() == currentUser)
+	BufferServerUpdateUser BSUU = *(BufferServerUpdateUser*)param;
+	char* buffer = (char*)param;
+	delete[] buffer;
+	if (BSUU.GetUser() == currentUser)
 	{
 		hasUpdatedUser = true;
 	}
-	chatroom.UpdateUser(BSUUPtr->GetPosition(), BSUUPtr->GetUser());
+	chatroom.UpdateUser(BSUU.GetPosition(), BSUU.GetUser());
 
-	delete param;
 	return 0;
 }
 
@@ -142,9 +145,9 @@ DWORD WINAPI WindowsNetworking::ReceiveServerDisconnectThread(LPVOID param)
 DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 {
 	isReceiving = true;
-	char* buffer = new char[sizeof(BufferUpdateUser)];
+	char* buffer = new char[sizeof(BufferServerUpdateUser)];
 	// Use the largest possible class, so that we can accomidate everything.
-	int recievedBytes = recv(clientSocket, buffer, sizeof(BufferUpdateUser), 0);
+	int recievedBytes = recv(clientSocket, buffer, sizeof(BufferServerUpdateUser), 0);
 	BufferNormal BH = *(BufferNormal*)buffer;
 	
 	if (BH.GetType() == 2)
@@ -248,8 +251,7 @@ void WindowsNetworking::SendText(std::string _message)
 void WindowsNetworking::UpdateUser(User& _user) 
 {
 	currentUser = _user;
-	User* user = &_user;
-	CreateThread(nullptr, 0, UpdateUserThread, user, 0, nullptr);
+	CreateThread(nullptr, 0, UpdateUserThread, nullptr, 0, nullptr);
 }
 
 void WindowsNetworking::Receive()  

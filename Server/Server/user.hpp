@@ -1,13 +1,8 @@
-
 #pragma once
 #include <string>
 
-struct ColourHolder
-{
-	float colourR;
-	float colourG;
-	float colourB;
-};
+#include "imgui.h"
+
 
 struct IDGenerator
 {
@@ -19,13 +14,11 @@ class User
 private:
 	std::string m_id;
 	std::string m_displayName;
-	float m_userColourR;
-	float m_userColourG;
-	float m_userColourB;
+	ImVec4 m_UserColour;
 
 public:
 	User();
-	User(const std::string& _displayName, const std::string& _id, const float _userColourR, const float _userColourG, const float _userColourB);
+	User(const std::string& _displayName, const std::string& _id, ImVec4 _userColour);
 
 	void SetId(const std::string& _id);
 	std::string GetId() const;
@@ -33,7 +26,8 @@ public:
 	std::string GetDisplayName() const;
 	void SetDisplayName(const std::string& _displayName);
 
-	ColourHolder GetUserColour() const;
+	ImVec4 GetUserColour() const;
+	void SetUserColour(ImVec4& _newUserColour);
 
 	friend bool operator==(User& _user1, User& _user2);
 

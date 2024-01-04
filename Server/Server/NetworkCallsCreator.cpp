@@ -83,10 +83,10 @@ void NetworkCallsCreator::UpdateTexts()
 }
 
 
-void NetworkCallsCreator::UpdateUser() const
+void NetworkCallsCreator::UpdateUsers()
 {
 	NetworkCalls* networkCalls = this->CreateNetworkCalls();
-	networkCalls->UpdateUser();
+	networkCalls->UpdateUsers();
 	delete networkCalls;
 }
 

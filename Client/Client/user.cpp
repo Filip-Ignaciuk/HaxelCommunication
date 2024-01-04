@@ -2,7 +2,7 @@
 
 User::User() = default;
 
-User::User(const std::string& _displayName, const std::string& _id, float _userColourR, float _userColourG, float _userColourB) : m_displayName(_displayName), m_id(_id), m_userColourR(_userColourR), m_userColourG(_userColourG), m_userColourB(_userColourB)
+User::User(const std::string& _displayName, const std::string& _id, ImVec4 _userColour) : m_displayName(_displayName), m_id(_id), m_UserColour(_userColour)
 {
 
 }
@@ -28,15 +28,20 @@ void User::SetDisplayName(const std::string& _displayName)
 	m_displayName = _displayName;
 }
 
-ColourHolder User::GetUserColour() const
+ImVec4 User::GetUserColour() const
 {
-	ColourHolder CH = { m_userColourR, m_userColourG, m_userColourB };
-	return CH;
+	return m_UserColour;
 }
+
+void User::SetUserColour(ImVec4& _newUserColour)
+{
+	m_UserColour = _newUserColour;
+}
+
 
 bool operator==(User& _user1, User& _user2)
 {
-	if(_user1.m_id != _user2.m_id || _user1.m_displayName != _user2.m_displayName || _user1.m_userColourR != _user2.m_userColourR || _user1.m_userColourG != _user2.m_userColourG || _user1.m_userColourB != _user2.m_userColourB)
+	if (_user1.m_id != _user2.m_id || _user1.m_displayName != _user2.m_displayName || _user1.m_UserColour.x != _user2.m_UserColour.x || _user1.m_UserColour.y != _user2.m_UserColour.y || _user1.m_UserColour.z != _user2.m_UserColour.z)
 	{
 		return false;
 	}

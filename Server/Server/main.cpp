@@ -543,10 +543,11 @@ int main(int, char**)
         bool chatroomStatus = networkCalls->GetChatroomStatus();
         bool getBindedStatus = networkCalls->GetBindStatus();
 
-        // Receive data from chatroom
+        // Networking
         networkCalls->Receive();
-
         networkCalls->Listen();
+        networkCalls->UpdateTexts();
+        networkCalls->UpdateUsers();
 
         // Gui Logic
         ErrorChecker();
@@ -563,8 +564,7 @@ int main(int, char**)
             }
             // Gui
             MenuBar();
-            // Chatroom
-            networkCalls->UpdateTexts();
+            
 
             // Server Info
             if(!getBindedStatus)

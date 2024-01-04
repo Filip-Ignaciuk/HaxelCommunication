@@ -104,4 +104,4 @@ public:
 
 
 // Max Size
-constexpr int maxBufferSize = sizeof(BufferServerConnect);
+constexpr int maxBufferSize = sizeof(BufferServerUpdateUser);

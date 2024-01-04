@@ -19,7 +19,7 @@ public:
 
 	// Main Procedures
 	void UpdateTexts();
-	void UpdateUser() const;
+	void UpdateUsers();
 	// Class Based
 	bool GetListeningStatus() const;
 	bool GetBindStatus() const;
