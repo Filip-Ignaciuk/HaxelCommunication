@@ -44,8 +44,10 @@ static void glfw_error_callback(int error, const char* description)
 // Client
 
 // Application
+
 NetworkCallsCreator* creator;
 NetworkCalls* networkCalls;
+
 
 // Error Data
 
@@ -59,11 +61,16 @@ bool finishedError = true;
 // Chatroom Info
 
 // We store all chatroom behaviour in the chatroom class, to organise and simplify our code.
-
+static User clientUser;
 
 // GUI Logic
 
 static bool wantsEditUser = false;
+static bool isUpdated = false;
+
+static ImVec4 green{ 0.0f, 1.0f, 0.0f, 1.0f };
+static ImVec4 red{ 1.0f, 0.0f, 0.0f ,1.0f };
+
 
 // Error Logic
 void ErrorChecker()
@@ -192,6 +199,8 @@ void JoinChatroom(std::string& _ip, std::string& _port, std::string& _password)
     if(isIpValid && isPortValid)
     {
         networkCalls->Disconnect();
+        networkCalls->CloseSocket();
+        networkCalls->CreateSocket();
         networkCalls->Connect(_ip, std::stoi(_port), _password);
     }
     else
@@ -326,10 +335,25 @@ void MenuBar()
 
         if (ImGui::BeginMenu("User"))
         {
-            if (ImGui::MenuItem("Edit User"))
+            if(wantsEditUser)
             {
-                wantsEditUser = true;
+                if (ImGui::MenuItem("Save Changes"))
+                {
+                    wantsEditUser = true;
+                }
+                if(ImGui::MenuItem("Close Edit User Panel"))
+                {
+                    wantsEditUser = false;
+                }
             }
+            else
+            {
+                if (ImGui::MenuItem("Edit User"))
+                {
+                    wantsEditUser = true;
+                }
+            }
+            
             ImGui::EndMenu();
         }
 
@@ -603,13 +627,32 @@ int main(int, char**)
             ImGui::Begin("Edit User", &wantsEditUser, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse);
             {
                 std::string currentUserName;
-                ImGui::Text();
+                ImGui::SeparatorText("User Information");
+                if(isUpdated)
+                {
+                    ImGui::TextColored(green, "Updated With Chatroom");
+                }
+                else
+                {
+                    ImGui::TextColored(red, "Not Updated with Chatroom");
+
+                }
+                std::string userNameText = "User name: " + clientUser.GetDisplayName();
+                ImGui::Text(userNameText.c_str());
+                static char userName[14] = "";
+                ImGui::InputText("Name", userName, IM_ARRAYSIZE(userName));
+
+                ImGui::SeparatorText("User Aesthetics");
                 static ImVec4 userColour;
                 static bool ref_color = false;
                 static ImVec4 ref_color_v(1.0f, 0.0f, 1.0f, 0.5f);
-                ImGui::SetNextItemWidth(20.0f);
-                ImGui::ColorPicker4("User Colour", (float*)&userColour, ImGuiColorEditFlags_NoAlpha | ImGuiColorEditFlags_DisplayRGB, ref_color ? &ref_color_v.x : NULL);
+                ImGui::SetNextItemWidth(200.0f);
+                ImGui::ColorPicker4("Text Colour", (float*)&userColour, ImGuiColorEditFlags_NoAlpha | ImGuiColorEditFlags_DisplayRGB, ref_color ? &ref_color_v.x : NULL);
 
+                if(ImGui::Button("Save Changes"))
+                {
+                    networkCalls->UpdateUser(clientUser);
+                }
             }
             ImGui::End();
         }

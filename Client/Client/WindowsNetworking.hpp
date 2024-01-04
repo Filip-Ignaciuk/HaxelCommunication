@@ -26,6 +26,10 @@ private:
 
 	static bool inChatroom;
 
+	static bool hasUpdatedUser;
+
+	static User currentUser;
+
 	static Chatroom chatroom;
 
 	static DWORD WINAPI ConnectThread(LPVOID param);
@@ -55,13 +59,14 @@ public:
 
 	// Main Procedures
 	void SendText(std::string _message) override;
-	void UpdateUser() override;
+	void UpdateUser(User& _user) override;
 	void Receive() override;
 
 	// Class Based
 	bool GetReceivingStatus() override;
 	bool GetChatroomStatus() override;
 	bool GetConnectedStatus() override;
+	bool GetUpdatedUserStatus() override;
 	Chatroom& GetChatroom() override;
 
 };

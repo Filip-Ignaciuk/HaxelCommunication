@@ -15,13 +15,16 @@ public:
 	virtual void Disconnect();
 
 	virtual void SendText(std::string _message);
-	virtual void UpdateUser();
+	virtual void UpdateUser(User& _user);
 	virtual void Receive();
 
 	virtual bool GetReceivingStatus();
 	virtual bool GetChatroomStatus();
 	virtual bool GetConnectedStatus();
+	virtual bool GetUpdatedUserStatus();
+
 	virtual Chatroom& GetChatroom();
+
 
 	virtual ~NetworkCalls();
 };

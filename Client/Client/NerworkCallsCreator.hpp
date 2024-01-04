@@ -14,11 +14,12 @@ public:
 
 	// Main Procedures
 	void SendText(std::string _message) const;
-	void UpdateUser() const;
-	void Receive() const;
+	void UpdateUser(User& _user) const;
+	void Receive();
 
 	bool GetReceivingStatus();
 	bool GetChatroomStatus();
 	bool GetConnectedStatus();
+	bool GetUpdatedUserStatus();
 	Chatroom& GetChatroom();
 };

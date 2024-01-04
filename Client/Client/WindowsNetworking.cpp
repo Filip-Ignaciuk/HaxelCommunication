@@ -7,8 +7,10 @@
 
 SOCKET WindowsNetworking::clientSocket = INVALID_SOCKET;
 bool WindowsNetworking::isReceiving = false;
-bool WindowsNetworking::inChatroom = false;
 bool WindowsNetworking::isConnected = false;
+bool WindowsNetworking::inChatroom = false;
+bool WindowsNetworking::hasUpdatedUser = false;
+User WindowsNetworking::currentUser;
 Chatroom WindowsNetworking::chatroom;
 
 
@@ -42,6 +44,7 @@ DWORD WINAPI WindowsNetworking::ConnectThread(LPVOID param)
 	else
 	{
 		// UnSuccessful
+		int result = WSAGetLastError();
 		const Error ConnectionFaliure("Could not connect to desired ip. Check if your ip/port is correct.", 1);
 		ErrorHandler::AddError(ConnectionFaliure);
 
@@ -57,9 +60,9 @@ DWORD WINAPI WindowsNetworking::DisconnectThread(LPVOID param)
 	{
 		BufferDisconnect BD;
 		send(clientSocket, (char*)&BD, sizeof(BufferDisconnect), 0);
-		shutdown(clientSocket, 2);
+		
 	}
-
+	shutdown(clientSocket, 2);
 	isConnected = false;
 	isReceiving = false;
 	inChatroom = false;
@@ -79,6 +82,12 @@ DWORD WINAPI WindowsNetworking::SendTextThread(LPVOID param)
 
 DWORD WINAPI WindowsNetworking::UpdateUserThread(LPVOID param)
 {
+	User* userPtr = (User*)param;
+	User user = *userPtr;
+	BufferUpdateUser BUUPtr(user);
+	send(clientSocket, (char*)&BUUPtr, sizeof(BufferUpdateUser), 0);
+
+	delete userPtr;
 	return 0;
 }
 
@@ -111,6 +120,10 @@ DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 DWORD WINAPI WindowsNetworking::ReceiveUserUpdateThread(LPVOID param)
 {
 	BufferServerUpdateUser* BSUUPtr = (BufferServerUpdateUser*)param;
+	if (BSUUPtr->GetUser() == currentUser)
+	{
+		hasUpdatedUser = true;
+	}
 	chatroom.UpdateUser(BSUUPtr->GetPosition(), BSUUPtr->GetUser());
 
 	delete param;
@@ -197,13 +210,19 @@ void WindowsNetworking::CreateSocket()
 
 void WindowsNetworking::CloseSocket()
 {
-	if (!closesocket(clientSocket))
+	if (clientSocket != INVALID_SOCKET)
 	{
-		const Error ClosingSocketError("Couldn't close socket.", 0);
-		ErrorHandler::AddError(ClosingSocketError);
+		if (closesocket(clientSocket))
+		{
+			const Error ClosingSocketError("Couldn't close socket.", 0);
+			int result = WSAGetLastError();
+			ErrorHandler::AddError(ClosingSocketError);
+		}
+		WSACleanup();
+		clientSocket = INVALID_SOCKET;
+
 	}
 
-	WSACleanup();
 }
 
 void WindowsNetworking::Connect(const std::string& _ip, int _port, std::string& _password) 
@@ -226,9 +245,11 @@ void WindowsNetworking::SendText(std::string _message)
 	CreateThread(nullptr, 0, SendTextThread, message, 0, nullptr);
 }
 
-void WindowsNetworking::UpdateUser() 
+void WindowsNetworking::UpdateUser(User& _user) 
 {
-	CreateThread(nullptr, 0, UpdateUserThread, nullptr, 0, nullptr);
+	currentUser = _user;
+	User* user = &_user;
+	CreateThread(nullptr, 0, UpdateUserThread, user, 0, nullptr);
 }
 
 void WindowsNetworking::Receive()  
@@ -244,6 +265,7 @@ void WindowsNetworking::Receive()
 bool WindowsNetworking::GetReceivingStatus() { return isReceiving; }
 bool WindowsNetworking::GetChatroomStatus() { return inChatroom; }
 bool WindowsNetworking::GetConnectedStatus() { return isConnected; }
+bool WindowsNetworking::GetUpdatedUserStatus() { return hasUpdatedUser; }
 
 Chatroom& WindowsNetworking::GetChatroom() { return chatroom; }
 

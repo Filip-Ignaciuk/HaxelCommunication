@@ -38,14 +38,14 @@ void NetworkCallsCreator::SendText(std::string _message) const
 	delete networkCalls;
 }
 
-void NetworkCallsCreator::UpdateUser() const
+void NetworkCallsCreator::UpdateUser(User& _user) const
 {
 	NetworkCalls* networkCalls = this->CreateNetworkCalls();
-	networkCalls->UpdateUser();
+	networkCalls->UpdateUser(_user);
 	delete networkCalls;
 }
 
-void NetworkCallsCreator::Receive() const
+void NetworkCallsCreator::Receive()
 {
 	NetworkCalls* networkCalls = this->CreateNetworkCalls();
 	networkCalls->Receive();
@@ -80,6 +80,14 @@ Chatroom& NetworkCallsCreator::GetChatroom()
 {
 	NetworkCalls* networkCalls = this->CreateNetworkCalls();
 	Chatroom& result = networkCalls->GetChatroom();
+	delete networkCalls;
+	return result;
+}
+
+bool NetworkCallsCreator::GetUpdatedUserStatus()
+{
+	NetworkCalls* networkCalls = this->CreateNetworkCalls();
+	bool result = networkCalls->GetUpdatedUserStatus();
 	delete networkCalls;
 	return result;
 }

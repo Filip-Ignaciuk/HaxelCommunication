@@ -6,6 +6,8 @@
 class ErrorHandler
 {
 private:
+	// We use this bool to prevent any heap corruption.
+	static bool isQueueInUse;
 	static bool hasErrors;
 	static std::queue<Error> m_errors;
 

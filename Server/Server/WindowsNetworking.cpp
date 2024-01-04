@@ -37,10 +37,11 @@ DWORD WINAPI WindowsNetworking::AcceptThread(LPVOID param)
 			socket = acceptedSocket;
 			Error acceptedSocketNotification(LanguageFileInitialiser::allTextsInApplication[39], 3);
 			ErrorHandler::AddError(acceptedSocketNotification);
+			isListening = false;
 			return 0;
 		}
 	}
-
+	isListening = false;
 	return 0;
 	
 }
