@@ -2,8 +2,6 @@
 #include "Chatroom.hpp"
 #include "string"
 
-inline static Chatroom emptyChatroom;
-
 class NetworkCalls
 {
 

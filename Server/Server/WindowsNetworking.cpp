@@ -200,6 +200,8 @@ DWORD WINAPI WindowsNetworking::ReceiveDisconnect(LPVOID param)
 	
 	Error error("User: " + chatroom.GetUser(socketPosition).GetDisplayName() + ", disconnected", 3);
 	ErrorHandler::AddError(error);
+	User EmtpyUser;
+	chatroom.UpdateUser(socketPosition, EmtpyUser);
 	SOCKET& clientSocket = clientSockets[socketPosition];
 	clientAccepted[socketPosition] = false;
 	clientRecieving[socketPosition] = false;

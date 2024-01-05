@@ -60,7 +60,6 @@ DWORD WINAPI WindowsNetworking::DisconnectThread(LPVOID param)
 	{
 		BufferDisconnect BD;
 		send(clientSocket, (char*)&BD, sizeof(BufferDisconnect), 0);
-		
 	}
 	shutdown(clientSocket, 2);
 	isConnected = false;
@@ -83,8 +82,12 @@ DWORD WINAPI WindowsNetworking::SendTextThread(LPVOID param)
 
 DWORD WINAPI WindowsNetworking::UpdateUserThread(LPVOID param)
 {
-	BufferUpdateUser BUUPtr(currentUser);
-	send(clientSocket, (char*)&BUUPtr, sizeof(BufferUpdateUser), 0);
+	if(inChatroom && isConnected)
+	{
+		BufferUpdateUser BUUPtr(currentUser);
+		send(clientSocket, (char*)&BUUPtr, sizeof(BufferUpdateUser), 0);
+		
+	}
 
 	return 0;
 }
@@ -110,6 +113,10 @@ DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 	{
 		chatroom = BSC.GetChatroomName();
 		inChatroom = true;
+
+		// Send User Information
+		BufferUpdateUser BUUPtr(currentUser);
+		send(clientSocket, (char*)&BUUPtr, sizeof(BufferUpdateUser), 0);
 	}
 	else
 	{
@@ -191,6 +198,10 @@ WindowsNetworking::WindowsNetworking()
 
 void WindowsNetworking::CreateSocket()
 {
+	while (isConnected || inChatroom || isReceiving || clientSocket != INVALID_SOCKET)
+	{
+
+	}
 	WORD version = MAKEWORD(2, 2);
 	WSADATA wsaData;
 	if (WSAStartup(version, &wsaData))
@@ -213,6 +224,10 @@ void WindowsNetworking::CreateSocket()
 
 void WindowsNetworking::CloseSocket()
 {
+	while (isConnected || inChatroom || isReceiving)
+	{
+		
+	}
 	if (clientSocket != INVALID_SOCKET)
 	{
 		if (closesocket(clientSocket))

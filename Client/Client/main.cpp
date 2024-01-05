@@ -68,8 +68,13 @@ static User clientUser;
 static bool wantsEditUser = false;
 static bool isUpdated = false;
 
-static ImVec4 green{ 0.0f, 1.0f, 0.0f, 1.0f };
+static ImVec4 white{ 1,1,1,1 };
 static ImVec4 red{ 1.0f, 0.0f, 0.0f ,1.0f };
+static ImVec4 yellow{ 1.0f, 1.0f, 0.0f , 1.0f };
+static ImVec4 green{ 0.0f, 1.0f, 0.0f, 1.0f };
+
+// Popups
+bool leaveChatroomPopup = false;
 
 
 // Error Logic
@@ -223,33 +228,7 @@ void JoinChatroom(std::string& _ip, std::string& _port, std::string& _password)
 
 // GUI Constructs
 
-
-
-void ModalLeaveChatroomGui()
-{
-    ImGui::OpenPopup("Leave Chatroom");
-
-    if (ImGui::BeginPopupModal("Leave Chatroom", NULL, ImGuiWindowFlags_AlwaysAutoResize)) 
-    {
-        ImGui::Text("Are you sure you would like to leave the chatroom?");
-        if (ImGui::Button("Yes", ImVec2(120, 0)))
-        {
-            creator->Disconnect();
-            ImGui::CloseCurrentPopup();
-        }
-        if (ImGui::Button("No", ImVec2(120, 0)))
-        {
-
-            ImGui::CloseCurrentPopup();
-        }
-    }
-    ImGui::EndPopup();
-
-    
- 
-}
-
-void ModalJoinChatroomGui()
+void JoinChatroomGui()
 {
     ImGui::Text("Chatroom");
     static char guiIp[14] = "";
@@ -266,6 +245,36 @@ void ModalJoinChatroomGui()
         JoinChatroom(ip, port, password);
     }
 }
+
+void PopupChecker()
+{
+	if(leaveChatroomPopup)
+	{
+        ImGui::OpenPopup("Leave Chatroom");
+
+        if (ImGui::BeginPopupModal("Leave Chatroom", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            ImGui::Text("Are you sure you would like to leave the chatroom?");
+            if (ImGui::Button("Yes", ImVec2(120, 0)))
+            {
+                leaveChatroomPopup = false;
+                networkCalls->Disconnect();
+                networkCalls->CloseSocket();
+                networkCalls->CreateSocket();
+                *chatroom = emptyChatroom;
+                ImGui::CloseCurrentPopup();
+            }
+            if (ImGui::Button("No", ImVec2(120, 0)))
+            {
+                leaveChatroomPopup = false;
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+
+        }
+	}
+}
+
 
 void PopulateUsers()
 {
@@ -313,9 +322,7 @@ void MenuBar()
             {
                 if (ImGui::MenuItem("Leave Chatroom"))
                 {
-                    ModalLeaveChatroomGui();
-                    ImGui::EndMenu();
-
+                    leaveChatroomPopup = true;
                 }
 
             }
@@ -323,7 +330,7 @@ void MenuBar()
             {
                 if (ImGui::BeginMenu("Join Chatroom"))
                 {
-                    ModalJoinChatroomGui();
+                    JoinChatroomGui();
                     ImGui::EndMenu();
 
                 }
@@ -498,17 +505,20 @@ int main(int, char**)
         // Receive data from chatroom
         networkCalls->Receive();
 
+        // Check for critical error
+        if (criticalError)
+        {
+            break;
+        }
+        // Gui Logic
+        ErrorChecker();
+        PopupChecker();
+
         if(chatroomStatus)
         {
             ImGui::Begin("ChatRoom", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize );
             {
-                // Check for critical error
-                if(criticalError)
-                {
-                    break;
-                }
-                // Gui Logic
-                ErrorChecker();
+                
 
                 // Gui
                 MenuBar();
@@ -528,7 +538,7 @@ int main(int, char**)
                 if(ImGui::Button("Send"))
                 {
                     std::string text = str0;
-                    creator->SendText(text);
+                    networkCalls->SendText(text);
                 }
             }
             
@@ -628,13 +638,18 @@ int main(int, char**)
             {
                 std::string currentUserName;
                 ImGui::SeparatorText("User Information");
+                isUpdated = networkCalls->GetUpdatedUserStatus();
                 if(isUpdated)
                 {
-                    ImGui::TextColored(green, "Updated With Chatroom");
+                    ImGui::TextColored(green, "Updated with chatroom.");
+                }
+                else if(!chatroomStatus && !isConnected)
+                {
+                    ImGui::TextColored(white, "Currently not in chatroom.");
                 }
                 else
                 {
-                    ImGui::TextColored(red, "Not Updated with Chatroom");
+                    ImGui::TextColored(red, "Not updated with chatroom.");
 
                 }
                 std::string userNameText = "User name: " + clientUser.GetDisplayName();
@@ -655,6 +670,7 @@ int main(int, char**)
                     clientUser.SetDisplayName(name);
                     clientUser.SetUserColour(userColour);
                     networkCalls->UpdateUser(clientUser);
+                    
                 }
             }
             ImGui::End();

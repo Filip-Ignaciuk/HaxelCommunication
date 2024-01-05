@@ -71,9 +71,10 @@ bool finishedError = true;
 
 
 // Popups
-bool closeChatroomPopup = false;
-bool createChatroomPopup = false;
-bool closeSocketPopup = false;
+static bool closeChatroomPopup = false;
+static bool createChatroomPopup = false;
+static bool closeSocketPopup = false;
+static bool creditPopup = false;
 
 // GUI Logic
 
@@ -290,6 +291,19 @@ void PopupChecker()
             ImGui::EndPopup();
         }
     }
+    else if(creditPopup)
+    {
+        ImGui::OpenPopup(LanguageFileInitialiser::charAllTextsInApplication[20]);
+
+        if (ImGui::BeginPopupModal(LanguageFileInitialiser::charAllTextsInApplication[20], NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+            if (ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[22], ImVec2(120, 0)))
+            {
+                creditPopup = false;
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+        }
+    }
 }
 
 
@@ -325,12 +339,12 @@ void MenuBar()
             }
             if (ImGui::MenuItem(LanguageFileInitialiser::charAllTextsInApplication[5]))
             {
-                ImGui::EndMenu();
+
             }
 
             if (ImGui::MenuItem(LanguageFileInitialiser::charAllTextsInApplication[6]))
             {
-                ImGui::EndMenu();
+                creditPopup = true;
             }
 
             ImGui::EndMenu();

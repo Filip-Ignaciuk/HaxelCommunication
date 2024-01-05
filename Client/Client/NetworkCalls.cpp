@@ -1,4 +1,5 @@
 #include "NetworkCalls.hpp"
+#include "Storage.hpp"
 
 void NetworkCalls::CreateSocket(){}
 void NetworkCalls::CloseSocket(){}

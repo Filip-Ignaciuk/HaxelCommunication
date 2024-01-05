@@ -20,7 +20,7 @@ void Chatroom::AddMessage(int _userPosition, std::string& _message)
 }
 
 void Chatroom::UpdateUser(int _oldUserPosition, User& _newUser)
-{
+{ 
 	bool hasMessagesChanged = false;
 
 	m_users[_oldUserPosition] = _newUser;
