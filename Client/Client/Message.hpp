@@ -37,6 +37,11 @@ private:
 	const inline static std::string weekdaysShort[7] = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
 	const inline static std::string weekdaysLong[7] = { "Monday", "Tuesday", "Wed", "Thu", "Fri", "Sat", "Sun" };
 	std::vector<int> style;
+	void AddTime();
+	void AddDateLong();
+	void AddDateShort();
+	void AddId();
+	void AddDisplayName();
 	Message* m_Message;
 public:
 	MessageBuilder();
@@ -44,11 +49,8 @@ public:
 	void Reset();
 	void AddMessage(int _userPosition, std::string& _message);
 	void AddMessage(Message& _message);
-	void AddTime();
-	void AddDateLong();
-	void AddDateShort();
-	void AddId();
-	void AddDisplayName();
+	void BuildFromStyle();
+	
 	Message* GetFinalMessage() const;
 
 	std::vector<int>& GetStyle();

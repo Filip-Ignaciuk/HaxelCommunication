@@ -185,7 +185,9 @@ DWORD WINAPI WindowsNetworking::ReceiveUserUpdateThread(LPVOID param)
 	int socketPosition = NCHPtr->socketPosition;
 	BufferUpdateUser BC = *(BufferUpdateUser*)NCHPtr->buffer;
 	delete NCHPtr;
-	chatroom.UpdateUser(socketPosition, BC.GetUser());
+	User user = BC.GetUser();
+	user.SetId(std::to_string(socketPosition));
+	chatroom.UpdateUser(socketPosition, user);
 	clientUserNotUpdated[socketPosition] = true;
 
 	return 0;

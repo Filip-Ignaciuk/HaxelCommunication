@@ -13,7 +13,7 @@ void Chatroom::AddMessage(int _userPosition, std::string& _message)
 	messageBuilder.Reset();
 	messageBuilder.AddMessage(_userPosition, _message);
 	//Change in accordance to the users settings
-
+	messageBuilder.BuildFromStyle();
 	m_messages.emplace_back(*messageBuilder.GetFinalMessage());
 	m_numberOfMessages++;
 
@@ -55,7 +55,17 @@ void Chatroom::AddPassword(std::string& _password)
 }
 
 
-User Chatroom::GetUser(int _position) const { return m_users[_position]; }
+User Chatroom::GetUser(int _position) const
+{
+	if(_position != 77)
+	{
+		return m_users[_position];
+	}
+	else
+	{
+		return clientUser;
+	}
+}
 
 std::string Chatroom::GetChatroomName() const { return m_name; }
 
@@ -76,6 +86,7 @@ void Chatroom::UpdateMessages()
 		messageBuilder.Reset();
 		messageBuilder.AddMessage(message);
 		//Change in accordance to the users settings
+		messageBuilder.BuildFromStyle();
 
 		message = *messageBuilder.GetFinalMessage();
 	}

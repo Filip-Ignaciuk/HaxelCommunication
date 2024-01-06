@@ -2,6 +2,8 @@
 
 #include <chrono>
 
+#include "Storage.hpp"
+
 #pragma warning(disable : 4996)
 
 Message::Message(const std::string& _originalMessage, int _userPosition) : m_originalMessage(_originalMessage), m_userPosition(_userPosition) {  }
@@ -53,25 +55,6 @@ MessageBuilder::~MessageBuilder()
 	delete m_Message;
 }
 
-void MessageBuilder::Reset()
-{
-	this->m_Message = new Message("", 0);
-}
-
-void MessageBuilder::AddMessage(int _userPosition, std::string& _message)
-{
-	this->m_Message->ChangeOriginalMessage(_message);
-	this->m_Message->ChangeUserPosition(_userPosition);
-}
-
-void MessageBuilder::AddMessage(Message& _message)
-{
-	this->m_Message->ChangeOriginalMessage(_message.GetOriginalMessage());
-	this->m_Message->ChangeUserPosition(_message.GetUserPosition());
-}
-
-
-
 void MessageBuilder::AddTime()
 {
 
@@ -99,14 +82,63 @@ void MessageBuilder::AddDateShort()
 }
 void MessageBuilder::AddId()
 {
+	// Lol
+	this->m_Message->AddToMessage(chatroom->GetUser(m_Message->GetUserPosition()).GetId() + " ");
 
 }
 
 void MessageBuilder::AddDisplayName()
 {
-
+	this->m_Message->AddToMessage(chatroom->GetUser(m_Message->GetUserPosition()).GetDisplayName() + " ");
 }
 
+void MessageBuilder::Reset()
+{
+	this->m_Message = new Message("", 0);
+}
+
+void MessageBuilder::AddMessage(int _userPosition, std::string& _message)
+{
+	this->m_Message->ChangeOriginalMessage(_message);
+	this->m_Message->ChangeUserPosition(_userPosition);
+}
+
+void MessageBuilder::AddMessage(Message& _message)
+{
+	this->m_Message->ChangeOriginalMessage(_message.GetOriginalMessage());
+	this->m_Message->ChangeUserPosition(_message.GetUserPosition());
+}
+
+void MessageBuilder::BuildFromStyle()
+{
+	for (int num : style)
+	{
+		if(!num)
+		{
+			
+		}
+		else if(num == 1)
+		{
+			AddDisplayName();
+		}
+		else if (num == 2)
+		{
+			AddId();
+		}
+		else if (num == 3)
+		{
+			AddDateShort();
+		}
+		else if (num == 4)
+		{
+			AddDateLong();
+		}
+		else if (num == 5)
+		{
+			AddTime();
+		}
+	}
+}
 
 Message* MessageBuilder::GetFinalMessage() const
 {

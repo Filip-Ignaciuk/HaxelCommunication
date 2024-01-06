@@ -61,7 +61,7 @@ bool finishedError = true;
 // Chatroom Info
 
 // We store all chatroom behaviour in the chatroom class, to organise and simplify our code.
-static User clientUser;
+
 
 // GUI Logic
 
@@ -287,7 +287,7 @@ void PopulateUsers()
 
 // Menu Bar
 
-Message exampleMessage("It's Cold.", 0);
+std::string origialMessage = "It's Cold.";
 std::vector<int>& style = messageBuilder.GetStyle();
 static bool wantsDisplayName;
 static bool wantsId;
@@ -315,7 +315,13 @@ void MenuBar()
             {
                 if (ImGui::BeginMenu("Message"))
                 {
-                    ImGui::Text()
+                    
+                    Message exampleMessage(origialMessage, std::stoi(clientUser.GetId()));
+                    messageBuilder.Reset();
+                    messageBuilder.AddMessage(exampleMessage.GetUserPosition(), origialMessage);
+                    messageBuilder.BuildFromStyle();
+                    Message* finalMessage = messageBuilder.GetFinalMessage();
+                    ImGui::Text(finalMessage->GetMessageComplete().c_str());
                     ImGui::SameLine();
                     if(ImGui::Checkbox("Display Name", &wantsDisplayName))
                     {
@@ -583,6 +589,7 @@ int main(int, char**)
     networkCalls = creator->CreateNetworkCalls();
     networkCalls->CreateSocket();
     chatroom = &networkCalls->GetChatroom();
+    clientUser.SetId("77");
 
     // Loading Configs
     config::StartConfigs();
