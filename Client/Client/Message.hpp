@@ -2,6 +2,8 @@
 #include <string>
 
 // Application Headers
+#include <vector>
+
 #include "User.hpp"
 
 
@@ -34,6 +36,7 @@ class MessageBuilder
 private:
 	const inline static std::string weekdaysShort[7] = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
 	const inline static std::string weekdaysLong[7] = { "Monday", "Tuesday", "Wed", "Thu", "Fri", "Sat", "Sun" };
+	std::vector<int> style;
 	Message* m_Message;
 public:
 	MessageBuilder();
@@ -47,4 +50,6 @@ public:
 	void AddId();
 	void AddDisplayName();
 	Message* GetFinalMessage() const;
+
+	std::vector<int>& GetStyle();
 };

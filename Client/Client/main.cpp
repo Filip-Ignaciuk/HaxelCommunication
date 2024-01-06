@@ -287,6 +287,14 @@ void PopulateUsers()
 
 // Menu Bar
 
+Message exampleMessage("It's Cold.", 0);
+std::vector<int>& style = messageBuilder.GetStyle();
+static bool wantsDisplayName;
+static bool wantsId;
+static bool wantsDateShort;
+static bool wantsDateLong;
+static bool wantsTime;
+
 void MenuBar()
 {
     if (ImGui::BeginMenuBar())
@@ -303,14 +311,125 @@ void MenuBar()
                 ImGui::EndMenu();
 
             }
-            if (ImGui::MenuItem("Apperance"))
+            if (ImGui::BeginMenu("Apperance"))
             {
+                if (ImGui::BeginMenu("Message"))
+                {
+                    ImGui::Text()
+                    ImGui::SameLine();
+                    if(ImGui::Checkbox("Display Name", &wantsDisplayName))
+                    {
+	                    if(wantsDisplayName)
+	                    {
+                            style.emplace_back(1);
+
+	                    }
+                        else
+                        {
+                            
+	                        for (int i = 0; i < style.size(); i++)
+	                        {
+                                if (style[i] == 1)
+                                {
+                                    style.erase(style.begin()+i);
+                                    break;
+                                }
+	                        }
+
+                        }
+                    }
+                    ImGui::SameLine();
+                    if(ImGui::Checkbox("Id", &wantsId))
+                    {
+                        if (wantsId)
+                        {
+                            style.emplace_back(2);
+                        }
+                        else
+                        {
+                            for (int i = 0; i < style.size(); i++)
+                            {
+                                if (style[i] == 2)
+                                {
+                                    style.erase(style.begin() + i);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    ImGui::SameLine();
+                    if(ImGui::Checkbox("Short Date", &wantsDateShort))
+                    {
+                        if (wantsDateShort)
+                        {
+                            style.emplace_back(3);
+                        }
+                        else
+                        {
+                            for (int i = 0; i < style.size(); i++)
+                            {
+                                if (style[i] == 3)
+                                {
+                                    style.erase(style.begin() + i);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    ImGui::SameLine();
+                    if(ImGui::Checkbox("Long Date", &wantsDateLong))
+                    {
+                        if (wantsDateLong)
+                        {
+                            style.emplace_back(4);
+                        }
+                        else
+                        {
+                            for (int i = 0; i < style.size(); i++)
+                            {
+                                if (style[i] == 4)
+                                {
+                                    style.erase(style.begin() + i);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    ImGui::SameLine();
+                    if(ImGui::Checkbox("Time", &wantsTime))
+                    {
+                        if (wantsTime)
+                        {
+                            style.emplace_back(5);
+                        }
+                        else
+                        {
+                            for (int i = 0; i < style.size(); i++)
+                            {
+                                if (style[i] == 5)
+                                {
+                                    style.erase(style.begin() + i);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    if(ImGui::Button("SaveChanges"))
+                    {
+                        chatroom->UpdateMessages();
+                    }
+                    ImGui::EndMenu();
+
+                }
+
                 ImGui::EndMenu();
+
             }
 
             if (ImGui::MenuItem("Credit"))
             {
-                ImGui::EndMenu();
+
             }
 
             ImGui::EndMenu();
@@ -363,6 +482,7 @@ void MenuBar()
             
             ImGui::EndMenu();
         }
+        
 
     }
     ImGui::EndMenuBar();

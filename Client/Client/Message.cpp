@@ -43,7 +43,6 @@ int Message::GetUserPosition() const
 	return m_userPosition;
 }
 
-
 MessageBuilder::MessageBuilder()
 {
 	this->Reset();
@@ -114,6 +113,12 @@ Message* MessageBuilder::GetFinalMessage() const
 	this->m_Message->AddToMessage(">> " + m_Message->GetOriginalMessage());
 	return m_Message;
 }
+
+std::vector<int>& MessageBuilder::GetStyle()
+{
+	return style;
+}
+
 
 Message& Message::operator=(const Message& _other)
 {
