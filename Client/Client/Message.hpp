@@ -6,7 +6,6 @@
 
 #include "User.hpp"
 
-
 class Message
 {
 private:
@@ -43,15 +42,15 @@ private:
 	void AddId();
 	void AddDisplayName();
 	Message* m_Message;
+	User m_currentUser;
 public:
 	MessageBuilder();
 	~MessageBuilder();
 	void Reset();
-	void AddMessage(int _userPosition, std::string& _message);
+	void AddMessage(int _userPosition, std::string& _message, User _user);
 	void AddMessage(Message& _message);
 	void BuildFromStyle();
 	
 	Message* GetFinalMessage() const;
-
 	std::vector<int>& GetStyle();
 };

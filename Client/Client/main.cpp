@@ -15,7 +15,6 @@
 #include "ErrorHandler.hpp"
 #include "GuiLanguage.hpp"
 #include "Languages.hpp"
-#include "Storage.hpp"
 
 #include "WindowsNetworking.hpp"
 #include "WindowsNetworkCallsCreator.hpp"
@@ -59,6 +58,12 @@ const char* latestErrorMessage = "";
 bool finishedError = true;
 
 // Chatroom Info
+static User clientUser;
+
+static inline Chatroom emptyChatroom;
+static inline Chatroom* chatroom;
+static inline MessageBuilder messageBuilder;
+
 
 // We store all chatroom behaviour in the chatroom class, to organise and simplify our code.
 
@@ -318,7 +323,7 @@ void MenuBar()
                     
                     Message exampleMessage(origialMessage, std::stoi(clientUser.GetId()));
                     messageBuilder.Reset();
-                    messageBuilder.AddMessage(exampleMessage.GetUserPosition(), origialMessage);
+                    messageBuilder.AddMessage(exampleMessage.GetUserPosition(), origialMessage, clientUser);
                     messageBuilder.BuildFromStyle();
                     Message* finalMessage = messageBuilder.GetFinalMessage();
                     ImGui::Text(finalMessage->GetMessageComplete().c_str());
@@ -590,6 +595,7 @@ int main(int, char**)
     networkCalls->CreateSocket();
     chatroom = &networkCalls->GetChatroom();
     clientUser.SetId("77");
+    chatroom->SetClientUser(&clientUser);
 
     // Loading Configs
     config::StartConfigs();
@@ -794,9 +800,12 @@ int main(int, char**)
                 if(ImGui::Button("Save Changes"))
                 {
                     std::string name = userName;
+                    
                     clientUser.SetDisplayName(name);
                     clientUser.SetUserColour(userColour);
                     networkCalls->UpdateUser(clientUser);
+                    chatroom->SetClientUser(&clientUser);
+
                     
                 }
             }

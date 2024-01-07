@@ -1,5 +1,4 @@
 #include "NetworkCalls.hpp"
-#include "Storage.hpp"
 
 void NetworkCalls::CreateSocket(){}
 void NetworkCalls::CloseSocket(){}
@@ -16,6 +15,6 @@ bool NetworkCalls::GetChatroomStatus() { return false; }
 bool NetworkCalls::GetConnectedStatus() { return false; }
 bool NetworkCalls::GetUpdatedUserStatus() { return false; }
 
-Chatroom& NetworkCalls::GetChatroom() { return emptyChatroom; }
+Chatroom& NetworkCalls::GetChatroom() { return *new Chatroom(); }
 
 NetworkCalls::~NetworkCalls() = default;

@@ -1,8 +1,7 @@
-#include "Storage.hpp"
-#include "ErrorHandler.hpp"
-#include "Languages.hpp"
 
 
+
+#include "Chatroom.hpp"
 Chatroom::Chatroom() = default;
 
 Chatroom::Chatroom(std::string& _name) : m_name(_name) {	}
@@ -11,7 +10,7 @@ void Chatroom::AddMessage(int _userPosition, std::string& _message)
 {
 
 	messageBuilder.Reset();
-	messageBuilder.AddMessage(_userPosition, _message);
+	messageBuilder.AddMessage(_userPosition, _message, GetUser(_userPosition));
 	//Change in accordance to the users settings
 	messageBuilder.BuildFromStyle();
 	m_messages.emplace_back(*messageBuilder.GetFinalMessage());
@@ -55,16 +54,13 @@ void Chatroom::AddPassword(std::string& _password)
 }
 
 
-User Chatroom::GetUser(int _position) const
+User Chatroom::GetUser(int _position)
 {
 	if(_position != 77)
 	{
 		return m_users[_position];
 	}
-	else
-	{
-		return clientUser;
-	}
+	return *m_clientUser;
 }
 
 std::string Chatroom::GetChatroomName() const { return m_name; }
@@ -84,10 +80,16 @@ void Chatroom::UpdateMessages()
 	for (Message& message : m_messages)
 	{
 		messageBuilder.Reset();
-		messageBuilder.AddMessage(message);
+		std::string originalMessage = message.GetOriginalMessage();
+		messageBuilder.AddMessage(message.GetUserPosition(), originalMessage, GetUser(message.GetUserPosition()));
 		//Change in accordance to the users settings
 		messageBuilder.BuildFromStyle();
 
 		message = *messageBuilder.GetFinalMessage();
 	}
+}
+
+void Chatroom::SetClientUser(User* _User)
+{
+	m_clientUser = _User;
 }

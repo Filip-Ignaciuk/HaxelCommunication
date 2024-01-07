@@ -9,6 +9,8 @@
 class Chatroom
 {
 private:
+	MessageBuilder messageBuilder;
+	User* m_clientUser;
 	User m_users[32];
 	std::string m_name;
 	std::vector<Message> m_messages;
@@ -26,7 +28,7 @@ public:
 	void AddPassword(std::string& _password);
 
 	// Get Elements
-	User GetUser(int _position) const;
+	User GetUser(int _position);
 	std::string GetChatroomName() const;
 	std::vector<Message>& GetMessages();
 	int GetNumberOfMessages() const;
@@ -35,5 +37,6 @@ public:
 
 	// Other
 	void UpdateMessages();
+	void SetClientUser(User* _User);
 
 };
