@@ -661,7 +661,9 @@ int main(int, char**)
                     std::vector<Message> messages = chatroom->GetMessages();
                     for(Message message : messages)
                     {
-                        ImGui::Text(message.GetMessageComplete().c_str());
+                        
+                        
+                        ImGui::TextColored(chatroom->GetUser(message.GetUserPosition()).GetUserColour(),message.GetMessageComplete().c_str());
                     }
                     
                 }
@@ -802,6 +804,7 @@ int main(int, char**)
                     std::string name = userName;
                     
                     clientUser.SetDisplayName(name);
+                    userColour.w = 1.0f;
                     clientUser.SetUserColour(userColour);
                     networkCalls->UpdateUser(clientUser);
                     chatroom->SetClientUser(&clientUser);

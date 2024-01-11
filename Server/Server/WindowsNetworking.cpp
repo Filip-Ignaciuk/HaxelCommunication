@@ -135,6 +135,8 @@ DWORD WINAPI WindowsNetworking::ReceiveSendMessageThread(LPVOID param)
 	BufferSendMessage BC = *(BufferSendMessage*)NCHPtr->buffer;
 	delete NCHPtr;
 	chatroom.AddMessage(socketPosition, BC.GetMessageObject());
+	Error recievedMessageNotification(BC.GetMessageObject(), 3);
+	ErrorHandler::AddError(recievedMessageNotification);
 
 	return 0;
 }
