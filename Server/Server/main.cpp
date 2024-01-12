@@ -238,6 +238,7 @@ bool CreateBind(std::string& _ip, std::string& _port)
 
 void PopupChecker()
 {
+    // Checks for popups
 	if (closeChatroomPopup)
 	{
         ImGui::OpenPopup(LanguageFileInitialiser::charAllTextsInApplication[20]);
