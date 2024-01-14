@@ -11,10 +11,6 @@ void NetworkCalls::OpenChatroom(std::string& _chatroomName, std::string& _chatro
 void NetworkCalls::CloseChatroom(){}
 void NetworkCalls::Disconnect(){}
 
-
-void NetworkCalls::UpdateTexts() {}
-void NetworkCalls::UpdateUsers() {}
-
 bool NetworkCalls::GetListeningStatus() { return false; }
 bool NetworkCalls::GetBindStatus() { return false; }
 bool NetworkCalls::GetChatroomStatus() { return false; }

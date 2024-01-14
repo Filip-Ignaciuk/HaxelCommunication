@@ -23,9 +23,6 @@ public:
 	virtual void CloseChatroom();
 	virtual void Disconnect();
 
-	virtual void UpdateTexts();
-	virtual void UpdateUsers();
-
 	virtual bool GetListeningStatus();
 	virtual bool GetBindStatus();
 	virtual bool GetChatroomStatus();

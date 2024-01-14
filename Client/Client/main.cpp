@@ -595,7 +595,11 @@ int main(int, char**)
     networkCalls->CreateSocket();
     chatroom = &networkCalls->GetChatroom();
     clientUser.SetId("77");
+    clientUser.SetUserColour(white);
+    clientUser.SetDisplayName("Deguy");
     chatroom->SetClientUser(&clientUser);
+    networkCalls->UpdateUser(clientUser);
+
 
     // Loading Configs
     config::StartConfigs();
@@ -662,8 +666,8 @@ int main(int, char**)
                     for(Message message : messages)
                     {
                         
-                        
-                        ImGui::TextColored(chatroom->GetUser(message.GetUserPosition()).GetUserColour(),message.GetMessageComplete().c_str());
+                        ImVec4 userColour = chatroom->GetUser(message.GetUserPosition()).GetUserColour();
+                        ImGui::TextColored(userColour,message.GetMessageComplete().c_str());
                     }
                     
                 }

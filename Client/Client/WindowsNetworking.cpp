@@ -103,7 +103,7 @@ DWORD WINAPI WindowsNetworking::ReceiveSendMessageThread(LPVOID param)
 	return 0;
 }
 
-DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
+DWORD WINAPI WindowsNetworking::ReceiveConnectThread(LPVOID param)
 {
 	BufferServerConnect BSC = *(BufferServerConnect*)param;
 	char* buffer = (char*)param;
@@ -165,7 +165,7 @@ DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 	else if (BH.GetType() == 4)
 	{
 		// BufferConnectServer
-		CreateThread(nullptr, 0, ReceiveConnect, buffer, 0, nullptr);
+		CreateThread(nullptr, 0, ReceiveConnectThread, buffer, 0, nullptr);
 	}
 	else if (BH.GetType() == 6)
 	{
@@ -176,13 +176,13 @@ DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 	else if (BH.GetType() == 6)
 	{
 		// BufferServerDisconnect
-		delete buffer;
+		delete[] buffer;
 		CreateThread(nullptr, 0, ReceiveUserUpdateThread, buffer, 0, nullptr);
 
 	}
 	else
 	{
-
+		delete[] buffer;
 	}
 	isReceiving = false;
 	return 0;

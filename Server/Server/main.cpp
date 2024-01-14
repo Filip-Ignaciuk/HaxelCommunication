@@ -561,8 +561,6 @@ int main(int, char**)
         // Networking
         networkCalls->Receive();
         networkCalls->Listen();
-        networkCalls->UpdateTexts();
-        networkCalls->UpdateUsers();
 
         // Gui Logic
         ErrorChecker();

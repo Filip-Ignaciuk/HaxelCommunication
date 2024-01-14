@@ -17,9 +17,6 @@ public:
 	void CloseChatroom();
 	void Disconnect() const;
 
-	// Main Procedures
-	void UpdateTexts();
-	void UpdateUsers();
 	// Class Based
 	bool GetListeningStatus() const;
 	bool GetBindStatus() const;

@@ -10,7 +10,6 @@ SOCKET WindowsNetworking::clientSockets[numberOfClients];
 bool WindowsNetworking::clientAccepted[numberOfClients];
 bool WindowsNetworking::clientRecieving[numberOfClients];
 int WindowsNetworking::currentMessagePosition[numberOfClients];
-bool WindowsNetworking::clientUserNotUpdated[numberOfClients];
 bool WindowsNetworking::isListening = false;
 bool WindowsNetworking::isBinded = false;
 bool WindowsNetworking::inChatroom = false;
@@ -97,37 +96,6 @@ DWORD WINAPI WindowsNetworking::DisconnectThread(LPVOID param)
 	return 0;
 }
 
-DWORD WINAPI WindowsNetworking::SendTextThread(LPVOID param)
-{
-	int socketPosition = (int)param;
-	SOCKET clientSocket = clientSockets[socketPosition];
-	int& currentPos = currentMessagePosition[socketPosition];
-	std::vector<Message>& messages = chatroom.GetMessages();
-	while (currentPos != chatroom.GetNumberOfMessages())
-	{
-		Message currentMessage = messages[currentPos];
-		std::string originalMessage = currentMessage.GetOriginalMessage();
-		BufferServerSendMessage BSSM(currentMessage.GetUserPosition(), originalMessage);
-		send(clientSocket, (char*)&BSSM, sizeof(BufferServerSendMessage), 0);
-		currentPos++;
-	}
-
-	return 0;
-}
-
-DWORD WINAPI WindowsNetworking::UpdateUserThread(LPVOID param)
-{
-	int socketPosition = (int)param;
-	User updatedUser = chatroom.GetUser(socketPosition);
-	BufferServerUpdateUser BSUU(updatedUser, socketPosition);
-	send(clientSockets[socketPosition], (char*)&BSUU, sizeof(BufferServerUpdateUser), 0);
-
-
-	return 0;
-}
-
-
-
 DWORD WINAPI WindowsNetworking::ReceiveSendMessageThread(LPVOID param)
 {
 	RecieveHolder* NCHPtr = (RecieveHolder*)param;
@@ -135,6 +103,15 @@ DWORD WINAPI WindowsNetworking::ReceiveSendMessageThread(LPVOID param)
 	BufferSendMessage BC = *(BufferSendMessage*)NCHPtr->buffer;
 	delete NCHPtr;
 	chatroom.AddMessage(socketPosition, BC.GetMessageObject());
+	for (int i = 0; i < numberOfClients; i++)
+	{
+		if (clientSockets[i] != 0 && clientAccepted[i])
+		{
+			BufferServerSendMessage BSSM(socketPosition, BC.GetMessageObject());
+			send(clientSockets[socketPosition], (char*)&BSSM, sizeof(BufferServerSendMessage), 0);
+		}
+	}
+
 	Error recievedMessageNotification(BC.GetMessageObject(), 3);
 	ErrorHandler::AddError(recievedMessageNotification);
 
@@ -190,7 +167,17 @@ DWORD WINAPI WindowsNetworking::ReceiveUserUpdateThread(LPVOID param)
 	User user = BC.GetUser();
 	user.SetId(std::to_string(socketPosition));
 	chatroom.UpdateUser(socketPosition, user);
-	clientUserNotUpdated[socketPosition] = true;
+	BufferServerUpdateUser BSUU(user, socketPosition);
+
+	for (int i = 0; i < numberOfClients; i++)
+	{
+		if (clientSockets[i] != 0 && clientAccepted[i])
+		{
+			send(clientSockets[i], (char*)&BSUU, sizeof(BufferServerUpdateUser), 0);
+		}
+	}
+
+	
 
 	return 0;
 }
@@ -436,38 +423,6 @@ void WindowsNetworking::Disconnect()
 {
 	CreateThread(nullptr, 0, DisconnectThread, nullptr, 0, nullptr);
 }
-
-
-void WindowsNetworking::UpdateTexts()
-{
-	if (isOnline())
-	{
-		for (int i = 0; i < numberOfClients; i++)
-		{
-			if (clientSockets[i] != 0 && clientAccepted[i] && currentMessagePosition[i] < chatroom.GetNumberOfMessages())
-			{
-				CreateThread(nullptr, 0, SendTextThread, (LPVOID)i, 0, nullptr);
-			}
-		}
-	}
-	
-}
-
-void WindowsNetworking::UpdateUsers()
-{
-	if(isOnline())
-	{
-		for (int i = 0; i < numberOfClients; i++)
-		{
-			if (clientSockets[i] != 0 && clientAccepted[i] && clientUserNotUpdated[i])
-			{
-				CreateThread(nullptr, 0, UpdateUserThread, (LPVOID)i, 0, nullptr);
-			}
-		}
-	}
-	
-}
-
 
 
 // Class Based

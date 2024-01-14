@@ -41,7 +41,7 @@ private:
 
 	// Receive
 	static DWORD WINAPI ReceiveSendMessageThread(LPVOID param);
-	static DWORD WINAPI ReceiveConnect(LPVOID param);
+	static DWORD WINAPI ReceiveConnectThread(LPVOID param);
 	static DWORD WINAPI ReceiveUserUpdateThread(LPVOID param);
 	static DWORD WINAPI ReceiveServerDisconnectThread(LPVOID param);
 

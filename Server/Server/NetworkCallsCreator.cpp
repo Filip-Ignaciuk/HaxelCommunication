@@ -74,24 +74,6 @@ void NetworkCallsCreator::Disconnect() const
 	delete networkCalls;
 }
 
-
-void NetworkCallsCreator::UpdateTexts()
-{
-	NetworkCalls* networkCalls = this->CreateNetworkCalls();
-	networkCalls->UpdateTexts();
-	delete networkCalls;
-}
-
-
-void NetworkCallsCreator::UpdateUsers()
-{
-	NetworkCalls* networkCalls = this->CreateNetworkCalls();
-	networkCalls->UpdateUsers();
-	delete networkCalls;
-}
-
-
-
 bool NetworkCallsCreator::GetListeningStatus() const
 {
 	NetworkCalls* networkCalls = this->CreateNetworkCalls();

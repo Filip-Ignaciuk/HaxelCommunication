@@ -9,12 +9,18 @@
 #include "Chatroom.hpp"
 #include "NetworkCalls.hpp"
 
-	struct RecieveHolder
-	{
-		// Allows us to hold the data as well as the socket position.
-		int socketPosition;
-		char* buffer = new char[maxBufferSize];
-	};
+struct RecieveHolder
+{
+	// Allows us to hold the data as well as the socket position.
+	int socketPosition;
+	char* buffer = new char[maxBufferSize];
+};
+
+struct PositionHolder
+{
+	int position1;
+	int position2;
+};
 
 // Implementation of NetworkCalls in windows.
 class WindowsNetworking : public NetworkCalls
@@ -28,7 +34,6 @@ private:
 	static bool clientAccepted[numberOfClients];
 	static bool clientRecieving[numberOfClients];
 	static int currentMessagePosition[numberOfClients];
-	static bool clientUserNotUpdated[numberOfClients];
 
 	static bool isListening;
 
@@ -46,9 +51,6 @@ private:
 	static DWORD WINAPI ListenThread(LPVOID param);
 	static DWORD WINAPI BindThread(LPVOID param);
 	static DWORD WINAPI DisconnectThread(LPVOID param);
-
-	static DWORD WINAPI SendTextThread(LPVOID param);
-	static DWORD WINAPI UpdateUserThread(LPVOID param);
 
 	// All possible receives
 	static DWORD WINAPI ReceiveSendMessageThread(LPVOID param);
@@ -75,11 +77,6 @@ public:
 	void OpenChatroom(std::string& _chatroomName, std::string& _chatroomPassword) override;
 	void CloseChatroom() override;
 	void Disconnect() override;
-	
-
-	// Main Procedures
-	void UpdateTexts() override;
-	void UpdateUsers() override;
 
 	// Class Based
 	bool GetListeningStatus() override;
