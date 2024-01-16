@@ -433,10 +433,15 @@ void MenuBar()
                     ImGui::EndMenu();
 
                 }
+                if (ImGui::MenuItem("Application"))
+                {
+
+                }
 
                 ImGui::EndMenu();
 
             }
+            
 
             if (ImGui::MenuItem("Credit"))
             {
