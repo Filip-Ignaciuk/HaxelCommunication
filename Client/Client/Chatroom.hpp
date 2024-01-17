@@ -34,6 +34,7 @@ public:
 	int GetNumberOfMessages() const;
 	bool HasPassword() const;
 	std::string GetPassword() const;
+	MessageBuilder& GetMessageBuilder();
 
 	// Other
 	void UpdateMessages();

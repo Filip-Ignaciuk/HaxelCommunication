@@ -53,4 +53,5 @@ public:
 	
 	Message* GetFinalMessage() const;
 	std::vector<int>& GetStyle();
+	void SetStyle(std::vector<int>& _style);
 };

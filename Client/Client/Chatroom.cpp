@@ -73,7 +73,7 @@ bool Chatroom::HasPassword() const { return m_hasPassword; }
 
 std::string Chatroom::GetPassword() const { return m_password; }
 
-
+MessageBuilder& Chatroom::GetMessageBuilder() { return messageBuilder; }
 
 void Chatroom::UpdateMessages()
 {
