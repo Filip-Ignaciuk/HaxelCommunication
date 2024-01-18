@@ -445,7 +445,7 @@ void MenuBar()
 
             if (ImGui::MenuItem("Credit"))
             {
-
+                ImGui::Text();
             }
 
             ImGui::EndMenu();
