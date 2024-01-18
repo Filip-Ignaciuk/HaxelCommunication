@@ -153,6 +153,11 @@ std::vector<int>& MessageBuilder::GetStyle()
 	return style;
 }
 
+void MessageBuilder::SetStyle(std::vector<int>& _style)
+{
+	style = _style;
+}
+
 
 
 

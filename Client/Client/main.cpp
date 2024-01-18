@@ -428,6 +428,7 @@ void MenuBar()
 
                     if(ImGui::Button("SaveChanges"))
                     {
+                        chatroom->GetMessageBuilder().SetStyle(style);
                         chatroom->UpdateMessages();
                     }
                     ImGui::EndMenu();
