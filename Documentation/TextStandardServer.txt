@@ -41,3 +41,4 @@ Declined Socket, maximum numbers of users reached.
 Enter Command
 Online
 Updated user: 
+Welcome to chatroom: 
