@@ -33,3 +33,4 @@ Failed to change language, language not supported.
 Failed to create EnGB text file.
 Failed to read a language File that doesn't exist, regenerating file.
 Failed to update user.
+Appearances
