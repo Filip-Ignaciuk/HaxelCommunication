@@ -34,3 +34,4 @@ Failed to create EnGB text file.
 Failed to read a language File that doesn't exist, regenerating file.
 Failed to update user.
 Appearances
+Type /h for help with commands
