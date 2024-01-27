@@ -35,3 +35,4 @@ Failed to read a language File that doesn't exist, regenerating file.
 Failed to update user.
 Appearances
 Type /h for help with commands
+/D - See your display name
