@@ -1,6 +1,6 @@
 The standard is roughly sorted by the most common actions.
 The standard allows for objects to be sent back and forth between a client and a server.
-Each class has a notion starting with Buffer, and then the person who is sending the object.
+Each class starts with the keyword Buffer, then the sender, and lastly the type of object.
 For example BufferConnect is a class reserved for the client to send an object to the server, and BufferServerConnect is the server's Response.
 
 0 - BufferNormal
