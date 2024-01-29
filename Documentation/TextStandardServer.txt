@@ -42,3 +42,4 @@ Enter Command
 Online
 Updated user: 
 Welcome to chatroom: 
+Updating Tables
