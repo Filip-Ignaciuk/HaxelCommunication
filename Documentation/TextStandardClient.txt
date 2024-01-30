@@ -36,3 +36,4 @@ Failed to update user.
 Appearances
 Type /h for help with commands
 /D - See your display name
+/I - See your ID
