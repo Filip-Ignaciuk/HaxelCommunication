@@ -40,4 +40,4 @@ Type /h for help with commands
 /C - See your colour
 /L - Leave the chatroom
 /J {ip} {port} {password} - Join chatroom
-/
+/N - See the name of the current chatroom
