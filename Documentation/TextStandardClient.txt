@@ -41,3 +41,4 @@ Type /h for help with commands
 /L - Leave the chatroom
 /J {ip} {port} {password} - Join chatroom
 /N - See the name of the current chatroom
+/I - See the ip of the current chatroom
