@@ -42,3 +42,4 @@ Type /h for help with commands
 /J {ip} {port} {password} - Join chatroom
 /N - See the name of the current chatroom
 /I - See the ip of the current chatroom
+/DN {id} - See display name of id
