@@ -43,3 +43,4 @@ Type /h for help with commands
 /N - See the name of the current chatroom
 /I - See the ip of the current chatroom
 /DN {id} - See display name of id
+/ID {displayName} - See id of display name
