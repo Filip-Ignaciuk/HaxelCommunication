@@ -44,3 +44,4 @@ Type /h for help with commands
 /I - See the ip of the current chatroom
 /DN {id} - See display name of id
 /ID {displayName} - See id of display name
+/TC {id} - See colour of id.
