@@ -43,3 +43,4 @@ Online
 Updated user: 
 Welcome to chatroom: 
 Updating Tables
+/help
