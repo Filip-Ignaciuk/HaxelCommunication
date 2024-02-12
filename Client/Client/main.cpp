@@ -108,9 +108,9 @@ void ErrorChecker()
                     ErrorHandler::DeleteError();
                     ImGui::CloseCurrentPopup();
                 }
-                
+                ImGui::EndPopup();
+
             }
-            ImGui::EndPopup();
         }
         else if (latestErrorLevel == 1)
         {
@@ -124,9 +124,9 @@ void ErrorChecker()
                     ErrorHandler::DeleteError();
                     ImGui::CloseCurrentPopup();
                 }
-                
+                ImGui::EndPopup();
             }
-            ImGui::EndPopup();
+            
         }
         else if (latestErrorLevel == 2)
         {
@@ -140,9 +140,9 @@ void ErrorChecker()
                     ErrorHandler::DeleteError();
                     ImGui::CloseCurrentPopup();
                 }
-                
+                ImGui::EndPopup();
+
             }
-            ImGui::EndPopup();
         }
 
 
@@ -704,9 +704,6 @@ int main(int, char**)
                 {
                     break;
                 }
-                // Gui Logic
-                ErrorChecker();
-
                 // Gui
                 MenuBar();
                 ImGui::Text("Chatroom info:");

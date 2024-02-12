@@ -49,6 +49,7 @@ int Message::GetUserPosition() const
 MessageBuilder::MessageBuilder()
 {
 	this->Reset();
+	this->m_Message = new Message("", 0);
 }
 
 MessageBuilder::~MessageBuilder()
