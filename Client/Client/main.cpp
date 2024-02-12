@@ -446,7 +446,7 @@ void MenuBar()
 
             if (ImGui::MenuItem("Credit"))
             {
-                ImGui::Text();
+                //ImGui::Text();
             }
 
             ImGui::EndMenu();
@@ -679,11 +679,14 @@ int main(int, char**)
                 }
                 ImGui::EndChild();
                 static char str0[128] = "";
-                ImGui::InputText("Message", str0, IM_ARRAYSIZE(str0));
-                if(ImGui::Button("Send"))
+                if(ImGui::InputText("Message", str0, IM_ARRAYSIZE(str0), ImGuiInputTextFlags_EnterReturnsTrue))
                 {
                     std::string text = str0;
                     networkCalls->SendText(text);
+                    for (int i = 0; i < 128; i++)
+                    {
+                        str0[i] = 0;
+                    }
                 }
             }
             
