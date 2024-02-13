@@ -108,7 +108,7 @@ DWORD WINAPI WindowsNetworking::ReceiveSendMessageThread(LPVOID param)
 		if (clientSockets[i] != 0 && clientAccepted[i])
 		{
 			BufferServerSendMessage BSSM(socketPosition, BC.GetMessageObject());
-			send(clientSockets[socketPosition], (char*)&BSSM, sizeof(BufferServerSendMessage), 0);
+			send(clientSockets[i], (char*)&BSSM, sizeof(BufferServerSendMessage), 0);
 		}
 	}
 
