@@ -152,9 +152,9 @@ DWORD WINAPI WindowsNetworking::ReceiveServerDisconnectThread(LPVOID param)
 DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 {
 	isReceiving = true;
-	char* buffer = new char[sizeof(BufferServerUpdateUser)];
+	char* buffer = new char[sizeof(maxBufferSize)];
 	// Use the largest possible class, so that we can accomidate everything.
-	int recievedBytes = recv(clientSocket, buffer, sizeof(BufferServerUpdateUser), 0);
+	int recievedBytes = recv(clientSocket, buffer, sizeof(maxBufferSize), 0);
 	BufferNormal BH = *(BufferNormal*)buffer;
 	
 	if (BH.GetType() == 2)
@@ -176,8 +176,8 @@ DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 	else if (BH.GetType() == 6)
 	{
 		// BufferServerDisconnect
-		delete[] buffer;
-		CreateThread(nullptr, 0, ReceiveUserUpdateThread, buffer, 0, nullptr);
+		//delete[] buffer;
+		//CreateThread(nullptr, 0, ReceiveUserUpdateThread, buffer, 0, nullptr);
 
 	}
 	else

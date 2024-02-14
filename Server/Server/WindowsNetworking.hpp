@@ -47,6 +47,8 @@ private:
 	static std::string currentIp;
 	static int currentPort;
 
+	static std::vector<RecieveHolder*> recievedBuffers;
+
 	static DWORD WINAPI AcceptThread(LPVOID param);
 	static DWORD WINAPI ListenThread(LPVOID param);
 	static DWORD WINAPI BindThread(LPVOID param);

@@ -19,6 +19,8 @@ std::wstring WindowsNetworking::currentWideIp = L"";
 std::string WindowsNetworking::currentIp = "";
 int WindowsNetworking::currentPort = 0;
 
+std::vector<RecieveHolder*> WindowsNetworking::recievedBuffers;
+
 DWORD WINAPI WindowsNetworking::AcceptThread(LPVOID param)
 {
 	SOCKET acceptedSocket = accept(serverSocket, NULL, NULL);
@@ -102,6 +104,12 @@ DWORD WINAPI WindowsNetworking::ReceiveSendMessageThread(LPVOID param)
 	int socketPosition = NCHPtr->socketPosition;
 	BufferSendMessage BC = *(BufferSendMessage*)NCHPtr->buffer;
 	delete NCHPtr;
+
+	RecieveHolder* RHPtr = new RecieveHolder();
+	BufferServerSendMessage* BSSM = new BufferServerSendMessage(socketPosition, BC.GetMessageObject());
+	RHPtr->socketPosition = socketPosition;
+	recievedBuffers.emplace_back(RHPtr);
+
 	chatroom.AddMessage(socketPosition, BC.GetMessageObject());
 	for (int i = 0; i < numberOfClients; i++)
 	{
@@ -132,10 +140,15 @@ DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 			chatroomName = chatroom.GetChatroomName(); 
 			BufferServerConnect BSC(true, chatroomName);
 			send(clientSockets[socketPosition], (char*)&BSC, sizeof(BufferServerConnect), 0);
-			clientRecieving[socketPosition] = false;
 			Error error("Accepted User, correct password.", 3);
 			ErrorHandler::AddError(error);
+			for (auto buffer : recievedBuffers)
+			{
+				send(clientSockets[socketPosition], (char*)buffer, sizeof(maxBufferSize), 0);
+			}
 			clientAccepted[socketPosition] = true;
+
+			
 			return 0;
 		}
 		BufferServerConnect BSC(false, chatroomName);
@@ -153,7 +166,10 @@ DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 	send(clientSockets[socketPosition], (char*)&BSC, sizeof(BufferServerConnect), 0);
 	Error error("Accepted User.", 3);
 	ErrorHandler::AddError(error);
-	clientRecieving[socketPosition] = false;
+	for (auto buffer : recievedBuffers)
+	{
+		send(clientSockets[socketPosition], (char*)buffer, sizeof(maxBufferSize), 0);
+	}
 	clientAccepted[socketPosition] = true;
 	return 0;
 }
@@ -164,10 +180,16 @@ DWORD WINAPI WindowsNetworking::ReceiveUserUpdateThread(LPVOID param)
 	int socketPosition = NCHPtr->socketPosition;
 	BufferUpdateUser BC = *(BufferUpdateUser*)NCHPtr->buffer;
 	delete NCHPtr;
+
 	User user = BC.GetUser();
 	user.SetId(std::to_string(socketPosition));
 	chatroom.UpdateUser(socketPosition, user);
 	BufferServerUpdateUser BSUU(user, socketPosition);
+
+	RecieveHolder* RHPtr = new RecieveHolder();
+	BufferServerUpdateUser* BSSM = new BufferServerUpdateUser(user, socketPosition);
+	RHPtr->socketPosition = socketPosition;
+	recievedBuffers.emplace_back(RHPtr);
 
 	for (int i = 0; i < numberOfClients; i++)
 	{
@@ -188,11 +210,16 @@ DWORD WINAPI WindowsNetworking::ReceiveDisconnect(LPVOID param)
 	int socketPosition = NCHPtr->socketPosition;
 	BufferDisconnect BC = *(BufferDisconnect*)NCHPtr->buffer;
 	delete NCHPtr;
-	
 	Error error("User: " + chatroom.GetUser(socketPosition).GetDisplayName() + ", disconnected", 3);
 	ErrorHandler::AddError(error);
-	User EmtpyUser;
-	chatroom.UpdateUser(socketPosition, EmtpyUser);
+	User EmptyUser;
+	chatroom.UpdateUser(socketPosition, EmptyUser);
+	// As this is a disconnect we can just add a update user buffer.
+	RecieveHolder* RHPtr = new RecieveHolder();
+	BufferServerUpdateUser* BSSM = new BufferServerUpdateUser(EmptyUser, socketPosition);
+	RHPtr->socketPosition = socketPosition;
+	recievedBuffers.emplace_back(RHPtr);
+
 	SOCKET& clientSocket = clientSockets[socketPosition];
 	clientAccepted[socketPosition] = false;
 	clientRecieving[socketPosition] = false;
@@ -212,9 +239,9 @@ DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 	SOCKET clientSocket = clientSockets[clientPosition];
 	bool& clientRecievingStatus = clientRecieving[clientPosition];
 	clientRecievingStatus = true;
-	char* buffer = new char[sizeof(BufferServerUpdateUser)];
+	char* buffer = new char[sizeof(maxBufferSize)];
 	// Use the largest possible class, so that we can accomidate everything.
-	int recievedBytes = recv(clientSocket, buffer, sizeof(BufferServerUpdateUser), 0);
+	int recievedBytes = recv(clientSocket, buffer, sizeof(maxBufferSize), 0);
 	BufferNormal* BH = (BufferNormal*)buffer;
 	RecieveHolder* RH = new RecieveHolder();
 	RH->buffer = buffer;

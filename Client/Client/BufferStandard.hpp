@@ -102,3 +102,7 @@ private:
 public:
 	BufferServerDisconnect();
 };
+
+
+// Max Size
+constexpr int maxBufferSize = sizeof(BufferServerUpdateUser);
