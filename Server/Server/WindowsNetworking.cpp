@@ -19,8 +19,6 @@ std::wstring WindowsNetworking::currentWideIp = L"";
 std::string WindowsNetworking::currentIp = "";
 int WindowsNetworking::currentPort = 0;
 
-std::vector<RecieveHolder*> WindowsNetworking::recievedBuffers;
-
 DWORD WINAPI WindowsNetworking::AcceptThread(LPVOID param)
 {
 	SOCKET acceptedSocket = accept(serverSocket, NULL, NULL);
@@ -105,12 +103,9 @@ DWORD WINAPI WindowsNetworking::ReceiveSendMessageThread(LPVOID param)
 	BufferSendMessage BC = *(BufferSendMessage*)NCHPtr->buffer;
 	delete NCHPtr;
 
-	RecieveHolder* RHPtr = new RecieveHolder();
-	BufferServerSendMessage* BSSM = new BufferServerSendMessage(socketPosition, BC.GetMessageObject());
-	RHPtr->socketPosition = socketPosition;
-	recievedBuffers.emplace_back(RHPtr);
+	std::string message = BC.GetMessageObject();
 
-	chatroom.AddMessage(socketPosition, BC.GetMessageObject());
+	chatroom.AddMessage(socketPosition, message);
 	for (int i = 0; i < numberOfClients; i++)
 	{
 		if (clientSockets[i] != 0 && clientAccepted[i])
@@ -137,21 +132,29 @@ DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 	{
 		if(BC.GetPassword() == chatroom.GetPassword())
 		{
-			chatroomName = chatroom.GetChatroomName(); 
-			BufferServerConnect BSC(true, chatroomName);
+			chatroomName = chatroom.GetChatroomName();
+			char chatroomNameArray[wordSize];
+			const int chatroomNameSize = chatroomName.size();
+			for (int i = 0; i < chatroomNameSize; i++)
+			{
+				chatroomNameArray[i] = chatroomName[i];
+			}
+			BufferServerConnect BSC(true, chatroomNameArray);
 			send(clientSockets[socketPosition], (char*)&BSC, sizeof(BufferServerConnect), 0);
 			Error error("Accepted User, correct password.", 3);
 			ErrorHandler::AddError(error);
-			for (auto buffer : recievedBuffers)
-			{
-				send(clientSockets[socketPosition], (char*)buffer, sizeof(maxBufferSize), 0);
-			}
+			//BufferServerChatroomUpdate* BSCUPtr = new BufferServerChatroomUpdate(chatroom.get);
+			
+
+			//send(clientSockets[socketPosition], (char*)buffer, sizeof(maxBufferSize), 0);
+
 			clientAccepted[socketPosition] = true;
 
 			
 			return 0;
 		}
-		BufferServerConnect BSC(false, chatroomName);
+		char array[1];
+		BufferServerConnect BSC(false, array);
 		send(clientSockets[socketPosition], (char*)&BSC, sizeof(BufferServerConnect), 0);
 		shutdown(clientSockets[socketPosition], 2);
 		clientSockets[socketPosition] = 0;
@@ -162,14 +165,20 @@ DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 
 	}
 	chatroomName = chatroom.GetChatroomName();
-	BufferServerConnect BSC(true, chatroomName);
+	char chatroomNameArray[wordSize];
+	const int chatroomNameSize = chatroomName.size();
+	for (int i = 0; i < chatroomNameSize; i++)
+	{
+		chatroomNameArray[i] = chatroomName[i];
+	}
+	BufferServerConnect BSC(true, chatroomNameArray);
 	send(clientSockets[socketPosition], (char*)&BSC, sizeof(BufferServerConnect), 0);
 	Error error("Accepted User.", 3);
 	ErrorHandler::AddError(error);
-	for (auto buffer : recievedBuffers)
-	{
-		send(clientSockets[socketPosition], (char*)buffer, sizeof(maxBufferSize), 0);
-	}
+
+	//send(clientSockets[socketPosition], (char*)buffer, sizeof(maxBufferSize), 0);
+
+
 	clientAccepted[socketPosition] = true;
 	return 0;
 }
@@ -182,14 +191,14 @@ DWORD WINAPI WindowsNetworking::ReceiveUserUpdateThread(LPVOID param)
 	delete NCHPtr;
 
 	User user = BC.GetUser();
-	user.SetId(std::to_string(socketPosition));
+	char id[idWordSize];
+	std::string stringId = std::to_string(socketPosition);
+	id[0] = stringId[0];
+	id[1] = stringId[1];
+	user.SetId(id);
+
 	chatroom.UpdateUser(socketPosition, user);
 	BufferServerUpdateUser BSUU(user, socketPosition);
-
-	RecieveHolder* RHPtr = new RecieveHolder();
-	BufferServerUpdateUser* BSSM = new BufferServerUpdateUser(user, socketPosition);
-	RHPtr->socketPosition = socketPosition;
-	recievedBuffers.emplace_back(RHPtr);
 
 	for (int i = 0; i < numberOfClients; i++)
 	{
@@ -210,15 +219,11 @@ DWORD WINAPI WindowsNetworking::ReceiveDisconnect(LPVOID param)
 	int socketPosition = NCHPtr->socketPosition;
 	BufferDisconnect BC = *(BufferDisconnect*)NCHPtr->buffer;
 	delete NCHPtr;
-	Error error("User: " + chatroom.GetUser(socketPosition).GetDisplayName() + ", disconnected", 3);
+	std::string displayName = chatroom.GetUser(socketPosition).GetDisplayName();
+	Error error("User: " + displayName + ", disconnected", 3);
 	ErrorHandler::AddError(error);
 	User EmptyUser;
 	chatroom.UpdateUser(socketPosition, EmptyUser);
-	// As this is a disconnect we can just add a update user buffer.
-	RecieveHolder* RHPtr = new RecieveHolder();
-	BufferServerUpdateUser* BSSM = new BufferServerUpdateUser(EmptyUser, socketPosition);
-	RHPtr->socketPosition = socketPosition;
-	recievedBuffers.emplace_back(RHPtr);
 
 	SOCKET& clientSocket = clientSockets[socketPosition];
 	clientAccepted[socketPosition] = false;
@@ -293,8 +298,8 @@ DWORD WINAPI WindowsNetworking::ReceiveVerifyThread(LPVOID param)
 		return 0;
 	}
 
-	std::string emptyString = "";
-	BufferServerConnect BSC(false, emptyString);
+	char emptyArray[1];
+	BufferServerConnect BSC(false, emptyArray);
 	send(clientSockets[socketPosition], (char*)&BSC, sizeof(BufferServerConnect), 0);
 	shutdown(clientSockets[socketPosition], 2);
 	clientSockets[socketPosition] = 0;
@@ -388,10 +393,15 @@ void WindowsNetworking::CloseSocket()
 	WSACleanup();
 }
 
-void WindowsNetworking::Bind(const std::string& _ip, int _port) 
+void WindowsNetworking::Bind(char* _ip, int _port)
 {
 	// Convert Ip to wide Ip
-	std::wstring wideIp = std::wstring(_ip.begin(), _ip.end());
+	std::string ip = "               ";
+	for (int i = 0; i < 15; i++)
+	{
+		ip[15] = _ip[i];
+	}
+	std::wstring wideIp = std::wstring(ip.begin(), ip.end());
 	currentWideIp = wideIp;
 	currentIp = _ip;
 	currentPort = _port;
@@ -423,16 +433,33 @@ Chatroom* WindowsNetworking::GetChatroom()
 	return &chatroom;
 }
 
-void WindowsNetworking::OpenChatroom(std::string& _chatroomName, std::string& _chatroomPassword)
+void WindowsNetworking::OpenChatroom(char* _chatroomName, char* _chatroomPassword)
 {
 	
 	inChatroom = true;
 	Chatroom emptyChatroom;
 	chatroom = emptyChatroom;
-	chatroom.UpdateName(_chatroomName);
-	if (!_chatroomPassword.empty())
+	// This is rubbish i know
+	std::string chatroomName;
+	for (int i = 0; i < wordSize; i++)
 	{
-		chatroom.AddPassword(_chatroomPassword);
+		char letter = _chatroomName[i];
+		std::string letterS = " ";
+		letterS[0] = letter;
+		chatroomName.append(letterS);
+	}
+	chatroom.UpdateName(chatroomName);
+	std::string chatroomPassword;
+	for (int i = 0; i < wordSize; i++)
+	{
+		char letter = _chatroomPassword[i];
+		std::string letterS = " ";
+		letterS[0] = letter;
+		chatroomPassword.append(letterS);
+	}
+	if (!chatroomPassword.empty())
+	{
+		chatroom.AddPassword(chatroomPassword);
 	}
 }
 

@@ -2,11 +2,11 @@
 
 void NetworkCalls::CreateSocket(){}
 void NetworkCalls::CloseSocket(){}
-void NetworkCalls::Connect(const std::string& _ip, const int _port, std::string& _password) {}
+void NetworkCalls::Connect(char* _ip, const int _port, char* _password) {}
 void NetworkCalls::Disconnect(){}
 
 
-void NetworkCalls::SendText(std::string _message) {}
+void NetworkCalls::SendText(char* _message) {}
 void NetworkCalls::UpdateUser(User& _user) {}
 void NetworkCalls::Receive() {}
 

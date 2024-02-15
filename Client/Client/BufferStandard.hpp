@@ -3,8 +3,8 @@
 
 // Application Headers
 #include "Chatroom.hpp"
+#include "Standard.hpp"
 
-constexpr int bufferSize = 200;
 
 /* The standard allows for objects to be sent back and forth between a client and a server.
  * Each class has a notion starting with Buffer, and then the person who is sending the object.
@@ -12,6 +12,10 @@ constexpr int bufferSize = 200;
  *
  *
  */
+
+
+
+
 
 class BufferNormal
 {
@@ -27,10 +31,10 @@ public:
 class BufferSendMessage : public BufferNormal
 {
 private:
-	std::string m_message;
+	char m_message[messageSize];
 public:
-	BufferSendMessage(std::string& _message);
-	std::string& GetMessageObject();
+	BufferSendMessage(char* _message);
+	char* GetMessageObject();
 };
 
 
@@ -38,31 +42,31 @@ class BufferServerSendMessage : public BufferNormal
 {
 private:
 	int m_position;
-	std::string m_message;
+	char m_message[messageSize];
 public:
-	BufferServerSendMessage(int _userPosition, std::string& _message);
-	std::string& GetMessageObject();
+	BufferServerSendMessage(int _userPosition, char* _message);
+	char* GetMessageObject();
 	int GetPositionObject();
 };
 
 class BufferConnect : public BufferNormal
 {
 private:
-	std::string m_password;
+	char m_password[wordSize];
 public:
-	BufferConnect(std::string& _password);
-	std::string GetPassword() const;
+	BufferConnect(char* _password);
+	char* GetPassword();
 };
 
 class BufferServerConnect : public BufferNormal
 {
 private:
 	int m_isAccepted; // 2 - Requires password, 1 - Accepted, 0 - Not accepted.
-	std::string m_name;
+	char m_name[wordSize];
 public:
-	BufferServerConnect(int _isAccepted, std::string& _chatroomName);
+	BufferServerConnect(int _isAccepted, char* _chatroomName);
 	int GetIsAccepted() const;
-	std::string& GetChatroomName();
+	char* GetChatroomName();
 };
 
 class BufferUpdateUser : public BufferNormal
@@ -73,7 +77,6 @@ public:
 	BufferUpdateUser(User& _user);
 	User& GetUser();
 };
-
 
 class BufferServerUpdateUser : public BufferNormal
 {
@@ -103,6 +106,14 @@ public:
 	BufferServerDisconnect();
 };
 
+class BufferServerChatroomUpdate : public  BufferNormal
+{
+private:
+	User m_users[32];
+public:
+	BufferServerChatroomUpdate(User _users);
+};
+
 
 // Max Size
-constexpr int maxBufferSize = sizeof(BufferServerUpdateUser);
+constexpr int maxBufferSize = sizeof(BufferServerChatroomUpdate);

@@ -210,6 +210,7 @@
     <ClInclude Include="Message.hpp" />
     <ClInclude Include="NerworkCallsCreator.hpp" />
     <ClInclude Include="NetworkCalls.hpp" />
+    <ClInclude Include="Standard.hpp" />
     <ClInclude Include="User.hpp" />
     <ClInclude Include="WindowsNetworkCallsCreator.hpp" />
     <ClInclude Include="WindowsNetworking.hpp" />

@@ -9,11 +9,11 @@ public:
 	virtual ~NetworkCallsCreator();
 	void CreateSocket() const;
 	void CloseSocket() const;
-	void Bind(const std::string& _ip, int _port) const;
+	void Bind(char* _ip, int _port);
 	void Listen();
 	void Receive();
 	Chatroom* GetChatroom();
-	void OpenChatroom(std::string& _chatroomName, std::string& _chatroomPassword);
+	void OpenChatroom(char* _chatroomName, char* _chatroomPassword);
 	void CloseChatroom();
 	void Disconnect() const;
 

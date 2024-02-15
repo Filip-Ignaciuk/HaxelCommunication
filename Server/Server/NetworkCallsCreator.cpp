@@ -21,7 +21,7 @@ void NetworkCallsCreator::CloseSocket() const
 	delete networkCalls;
 }
 
-void NetworkCallsCreator::Bind(const std::string& _ip, int _port) const
+void NetworkCallsCreator::Bind(char* _ip, int _port)
 {
 	NetworkCalls* networkCalls = this->CreateNetworkCalls();
 	networkCalls->Bind(_ip, _port);
@@ -52,7 +52,7 @@ Chatroom* NetworkCallsCreator::GetChatroom()
 	return  result;
 }
 
-void NetworkCallsCreator::OpenChatroom(std::string& _chatroomName, std::string& _chatroomPassword)
+void NetworkCallsCreator::OpenChatroom(char* _chatroomName, char* _chatroomPassword)
 {
 	NetworkCalls* networkCalls = this->CreateNetworkCalls();
 	networkCalls->OpenChatroom(_chatroomName, _chatroomPassword);

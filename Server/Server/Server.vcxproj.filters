@@ -170,6 +170,9 @@
     <ClInclude Include="Storage.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Standard.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

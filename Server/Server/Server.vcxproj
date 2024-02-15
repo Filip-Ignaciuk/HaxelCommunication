@@ -204,6 +204,7 @@
     <ClInclude Include="Message.hpp" />
     <ClInclude Include="NerworkCallsCreator.hpp" />
     <ClInclude Include="NetworkCalls.hpp" />
+    <ClInclude Include="Standard.hpp" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Storage.hpp" />
     <ClInclude Include="targetver.h" />

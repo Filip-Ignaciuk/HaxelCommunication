@@ -2,29 +2,25 @@
 #include <string>
 
 #include "imgui.h"
-
-
-struct IDGenerator
-{
-	static int GenerateID();
-};
+#include "Standard.hpp"
 
 class User
 {
 private:
-	std::string m_id;
-	std::string m_displayName;
+	char m_id[idWordSize];
+	char m_displayName[wordSize];
 	ImVec4 m_UserColour;
 
 public:
 	User();
-	User(const std::string& _displayName, const std::string& _id, ImVec4 _userColour);
+	User(char* _displayName, char* _id, ImVec4 _userColour);
 
-	void SetId(const std::string& _id);
-	std::string GetId() const;
+	void SetId(char* _id);
+	void SetDisplayName(char* _displayName);
 
-	std::string GetDisplayName() const;
-	void SetDisplayName(const std::string& _displayName);
+
+	char* GetId();
+	char* GetDisplayName();
 
 	ImVec4 GetUserColour() const;
 	void SetUserColour(ImVec4& _newUserColour);

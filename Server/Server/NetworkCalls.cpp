@@ -3,11 +3,11 @@
 
 void NetworkCalls::CreateSocket(){}
 void NetworkCalls::CloseSocket(){}
-void NetworkCalls::Bind(const std::string& _ip, int _port){}
+void NetworkCalls::Bind(char* _ip, int _port){}
 void NetworkCalls::Listen() {}
 void NetworkCalls::Receive() {}
 Chatroom* NetworkCalls::GetChatroom() { return nullptr; }
-void NetworkCalls::OpenChatroom(std::string& _chatroomName, std::string& _chatroomPassword){}
+void NetworkCalls::OpenChatroom(char* _chatroomName, char* _chatroomPassword){}
 void NetworkCalls::CloseChatroom(){}
 void NetworkCalls::Disconnect(){}
 

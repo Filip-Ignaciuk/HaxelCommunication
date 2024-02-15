@@ -217,7 +217,13 @@ bool CreateBind(std::string& _ip, std::string& _port)
     const bool isPortValid = PortChecker(_port);
     if(isIpValid && isPortValid)
     {
-        networkCalls->Bind(_ip, std::stoi(_port));
+        char ipArray[15];
+        for (int i = 0; i < 15; i++)
+        {
+            ipArray[i] = _ip[i];
+        }
+
+        networkCalls->Bind(ipArray, std::stoi(_port));
         return true;
     }
     else
@@ -621,8 +627,7 @@ int main(int, char**)
             	if(ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[37]))
                 {
                     std::string sChatroomName = chatroomName;
-                    std::string sChatroomPassword = chatroomPassword;
-                    networkCalls->OpenChatroom(sChatroomName, sChatroomPassword);
+                    networkCalls->OpenChatroom(chatroomName, chatroomPassword);
                     currentChatroomNameText = LanguageFileInitialiser::allTextsInApplication[36] + ": " + sChatroomName;
                     currentStatus = LanguageFileInitialiser::allTextsInApplication[34];
                     currentColour = green;
@@ -699,11 +704,11 @@ int main(int, char**)
                         if (!column)
                         {
                             
-                            ImGui::Text(user.GetDisplayName().c_str());
+                            ImGui::Text(user.GetDisplayName());
                             continue;
                         }
                         
-                        ImGui::Text(user.GetId().c_str());
+                        ImGui::Text(user.GetId());
                     }
                 }
                 

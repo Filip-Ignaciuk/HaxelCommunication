@@ -47,8 +47,6 @@ private:
 	static std::string currentIp;
 	static int currentPort;
 
-	static std::vector<RecieveHolder*> recievedBuffers;
-
 	static DWORD WINAPI AcceptThread(LPVOID param);
 	static DWORD WINAPI ListenThread(LPVOID param);
 	static DWORD WINAPI BindThread(LPVOID param);
@@ -72,11 +70,11 @@ public:
 	// Fundamental Procedures
 	void CreateSocket() override;
 	void CloseSocket() override;
-	void Bind(const std::string& _ip, int _port) override;
+	void Bind(char* _ip, int _port) override;
 	void Listen() override;
 	void Receive() override;
 	Chatroom* GetChatroom() override;
-	void OpenChatroom(std::string& _chatroomName, std::string& _chatroomPassword) override;
+	void OpenChatroom(char* _chatroomName, char* _chatroomPassword) override;
 	void CloseChatroom() override;
 	void Disconnect() override;
 

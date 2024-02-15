@@ -54,11 +54,11 @@ public:
 	// Fundamental Procedures
 	void CreateSocket() override;
 	void CloseSocket() override;
-	void Connect(const std::string& _ip, int _port, std::string& _password) override;
+	void Connect(char* _ip, int _port, char* _password) override;
 	void Disconnect() override;
 
 	// Main Procedures
-	void SendText(std::string _message) override;
+	void SendText(char* _message) override;
 	void UpdateUser(User& _user) override;
 	void Receive() override;
 

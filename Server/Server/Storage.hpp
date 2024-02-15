@@ -1,3 +1,4 @@
+#pragma once
 
 #include "Message.hpp"
 #include "Chatroom.hpp"

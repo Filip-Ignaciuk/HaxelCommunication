@@ -9,11 +9,11 @@ public:
 	virtual ~NetworkCallsCreator();
 	void CreateSocket() const;
 	void CloseSocket() const;
-	void Connect(const std::string& _ip, const int _port, std::string& _password);
+	void Connect(char* _ip, const int _port, char* _password);
 	void Disconnect() const;
 
 	// Main Procedures
-	void SendText(std::string _message) const;
+	void SendText(char* _message) const;
 	void UpdateUser(User& _user) const;
 	void Receive();
 
