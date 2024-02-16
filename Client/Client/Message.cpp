@@ -85,13 +85,13 @@ void MessageBuilder::AddDateShort()
 void MessageBuilder::AddId()
 {
 	// Lol
-	this->m_Message->AddToMessage(m_currentUser.GetId() + " ");
+	this->m_Message->AddToMessage((std::string)m_currentUser.GetId() + " ");
 
 }
 
 void MessageBuilder::AddDisplayName()
 {
-	this->m_Message->AddToMessage(m_currentUser.GetDisplayName() + " ");
+	this->m_Message->AddToMessage((std::string)m_currentUser.GetDisplayName() + " ");
 }
 
 void MessageBuilder::Reset()

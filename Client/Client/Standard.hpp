@@ -1,3 +1,5 @@
+#pragma once
+
 
 // Max message size
 const int messageSize = 2048;

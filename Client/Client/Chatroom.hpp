@@ -39,5 +39,6 @@ public:
 	// Other
 	void UpdateMessages();
 	void SetClientUser(User* _User);
+	void SetChatroomName(std::string& _chatroomName);
 
 };

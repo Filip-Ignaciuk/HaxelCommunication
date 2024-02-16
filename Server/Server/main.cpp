@@ -217,13 +217,8 @@ bool CreateBind(std::string& _ip, std::string& _port)
     const bool isPortValid = PortChecker(_port);
     if(isIpValid && isPortValid)
     {
-        char ipArray[15];
-        for (int i = 0; i < 15; i++)
-        {
-            ipArray[i] = _ip[i];
-        }
 
-        networkCalls->Bind(ipArray, std::stoi(_port));
+        networkCalls->Bind((char*)_ip.c_str(), std::stoi(_port));
         return true;
     }
     else

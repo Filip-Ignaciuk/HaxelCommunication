@@ -211,7 +211,7 @@ void JoinChatroom(std::string& _ip, std::string& _port, std::string& _password)
         networkCalls->Disconnect();
         networkCalls->CloseSocket();
         networkCalls->CreateSocket();
-        networkCalls->Connect(_ip, std::stoi(_port), _password);
+        networkCalls->Connect((char*)_ip.c_str(), std::stoi(_port), (char*)_password.c_str());
     }
     else
     {
@@ -600,9 +600,9 @@ int main(int, char**)
     networkCalls = creator->CreateNetworkCalls();
     networkCalls->CreateSocket();
     chatroom = &networkCalls->GetChatroom();
-    clientUser.SetId("77");
+    clientUser.SetId((char*)"77");
     clientUser.SetUserColour(white);
-    clientUser.SetDisplayName("Deguy");
+    clientUser.SetDisplayName((char*)"Deguy");
     chatroom->SetClientUser(&clientUser);
     networkCalls->UpdateUser(clientUser);
 
@@ -682,7 +682,7 @@ int main(int, char**)
                 if(ImGui::InputText("Message", str0, IM_ARRAYSIZE(str0), ImGuiInputTextFlags_EnterReturnsTrue))
                 {
                     std::string text = str0;
-                    networkCalls->SendText(text);
+                    networkCalls->SendText((char*)text.c_str());
                     for (int i = 0; i < 128; i++)
                     {
                         str0[i] = 0;
@@ -763,11 +763,11 @@ int main(int, char**)
                         ImGui::TableSetColumnIndex(column);
                         if (!column)
                         {
-                            ImGui::Text(user.GetDisplayName().c_str());
+                            ImGui::Text(user.GetDisplayName());
                             continue;
                         }
 
-                        ImGui::Text(user.GetId().c_str());
+                        ImGui::Text(user.GetId());
                     }
                 }
 
@@ -797,7 +797,7 @@ int main(int, char**)
                     ImGui::TextColored(red, "Not updated with chatroom.");
 
                 }
-                std::string userNameText = "User name: " + clientUser.GetDisplayName();
+                std::string userNameText = "User name: " + (std::string)clientUser.GetDisplayName();
                 ImGui::Text(userNameText.c_str());
                 static char userName[14] = "";
                 ImGui::InputText("Name", userName, IM_ARRAYSIZE(userName));
@@ -813,7 +813,7 @@ int main(int, char**)
                 {
                     std::string name = userName;
                     
-                    clientUser.SetDisplayName(name);
+                    clientUser.SetDisplayName((char*)name.c_str());
                     userColour.w = 1.0f;
                     clientUser.SetUserColour(userColour);
                     networkCalls->UpdateUser(clientUser);

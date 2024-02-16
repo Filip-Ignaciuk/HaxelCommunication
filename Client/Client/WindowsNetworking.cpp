@@ -37,7 +37,7 @@ DWORD WINAPI WindowsNetworking::ConnectThread(LPVOID param)
 	if (!connect(clientSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
 	{
 		// Successful
-		BufferConnect BC(password);
+		BufferConnect BC((char*)password.c_str());
 		send(clientSocket, (char*)&BC, sizeof(BufferConnect), 0);
 		isConnected = true;
 	}
@@ -74,7 +74,7 @@ DWORD WINAPI WindowsNetworking::SendTextThread(LPVOID param)
 	std::string message = *(std::string*)param;
 	char* buffer = (char*)param;
 	delete[] buffer;
-	BufferSendMessage BSM(message);
+	BufferSendMessage BSM((char*)message.c_str());
 	send(clientSocket, (char*)&BSM, sizeof(BufferSendMessage), 0);
 	// We don't add it to our chatroom as the message could potentially fail.
 	return 0;
@@ -97,8 +97,8 @@ DWORD WINAPI WindowsNetworking::ReceiveSendMessageThread(LPVOID param)
 	BufferServerSendMessage BSSM = *(BufferServerSendMessage*)param;
 	char* buffer = (char*)param;
 	delete[] buffer;
-
-	chatroom.AddMessage(BSSM.GetPositionObject(), BSSM.GetMessageObject());
+	std::string message = BSSM.GetMessageObject();
+	chatroom.AddMessage(BSSM.GetPositionObject(), message);
 	
 	return 0;
 }
@@ -111,7 +111,8 @@ DWORD WINAPI WindowsNetworking::ReceiveConnectThread(LPVOID param)
 
 	if(BSC.GetIsAccepted())
 	{
-		chatroom = BSC.GetChatroomName();
+		std::string chatroomName = BSC.GetChatroomName();
+		chatroom.SetChatroomName(chatroomName);
 		inChatroom = true;
 
 		// Send User Information
@@ -243,10 +244,11 @@ void WindowsNetworking::CloseSocket()
 
 }
 
-void WindowsNetworking::Connect(const std::string& _ip, int _port, std::string& _password) 
+void WindowsNetworking::Connect(char* _ip, int _port, char* _password)
 {
 	// Convert Ip to wide Ip
-	std::wstring wideIp = std::wstring(_ip.begin(), _ip.end());
+	std::string ip = _ip;
+	std::wstring wideIp = std::wstring(ip.begin(), ip.end());
 	ConnectHolder* CH = new ConnectHolder{ wideIp, _port, _password};
 	CreateThread(nullptr, 0, ConnectThread, CH, 0, nullptr);
 }
@@ -257,7 +259,7 @@ void WindowsNetworking::Disconnect()
 }
 
 
-void WindowsNetworking::SendText(std::string _message) 
+void WindowsNetworking::SendText(char* _message)
 {
 	std::string* message = new std::string(_message);
 	CreateThread(nullptr, 0, SendTextThread, message, 0, nullptr);

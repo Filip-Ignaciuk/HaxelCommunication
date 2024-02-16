@@ -93,3 +93,8 @@ void Chatroom::SetClientUser(User* _User)
 {
 	m_clientUser = _User;
 }
+
+void Chatroom::SetChatroomName(std::string& _chatroomName)
+{
+	m_name = _chatroomName;
+}

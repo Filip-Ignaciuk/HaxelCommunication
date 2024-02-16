@@ -101,11 +101,11 @@
     <ClCompile Include="NetworkCalls.cpp">
       <Filter>Source Files\Networking</Filter>
     </ClCompile>
-    <ClCompile Include="NetworkCallsCreator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Error.cpp">
       <Filter>Source Files\ErrorHandling</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkCallsCreator.cpp">
+      <Filter>Source Files\Networking</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -130,7 +130,10 @@ DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 	std::string chatroomName = "";
 	if(chatroom.HasPassword())
 	{
-		if(BC.GetPassword() == chatroom.GetPassword())
+		std::string userPassword = BC.GetPassword();
+		std::string chatroomPassword = chatroom.GetPassword();
+		bool test = userPassword == chatroomPassword;
+		if(test)
 		{
 			chatroomName = chatroom.GetChatroomName();
 			char chatroomNameArray[wordSize];
@@ -153,8 +156,8 @@ DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 			
 			return 0;
 		}
-		char array[1];
-		BufferServerConnect BSC(false, array);
+		std::string empty = "";
+		BufferServerConnect BSC(false, (char*)empty.c_str());
 		send(clientSockets[socketPosition], (char*)&BSC, sizeof(BufferServerConnect), 0);
 		shutdown(clientSockets[socketPosition], 2);
 		clientSockets[socketPosition] = 0;
@@ -396,11 +399,7 @@ void WindowsNetworking::CloseSocket()
 void WindowsNetworking::Bind(char* _ip, int _port)
 {
 	// Convert Ip to wide Ip
-	std::string ip = "               ";
-	for (int i = 0; i < 15; i++)
-	{
-		ip[15] = _ip[i];
-	}
+	std::string ip = _ip;
 	std::wstring wideIp = std::wstring(ip.begin(), ip.end());
 	currentWideIp = wideIp;
 	currentIp = _ip;
@@ -444,8 +443,7 @@ void WindowsNetworking::OpenChatroom(char* _chatroomName, char* _chatroomPasswor
 	for (int i = 0; i < wordSize; i++)
 	{
 		char letter = _chatroomName[i];
-		std::string letterS = " ";
-		letterS[0] = letter;
+		std::string letterS(1, letter);
 		chatroomName.append(letterS);
 	}
 	chatroom.UpdateName(chatroomName);
@@ -453,8 +451,7 @@ void WindowsNetworking::OpenChatroom(char* _chatroomName, char* _chatroomPasswor
 	for (int i = 0; i < wordSize; i++)
 	{
 		char letter = _chatroomPassword[i];
-		std::string letterS = " ";
-		letterS[0] = letter;
+		std::string letterS(1, letter);
 		chatroomPassword.append(letterS);
 	}
 	if (!chatroomPassword.empty())
