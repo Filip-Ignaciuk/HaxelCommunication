@@ -678,14 +678,13 @@ int main(int, char**)
                     
                 }
                 ImGui::EndChild();
-                static char str0[128] = "";
-                if(ImGui::InputText("Message", str0, IM_ARRAYSIZE(str0), ImGuiInputTextFlags_EnterReturnsTrue))
+                static char textInput[messageSize] = "";
+                if(ImGui::InputText("Message", textInput, IM_ARRAYSIZE(textInput), ImGuiInputTextFlags_EnterReturnsTrue))
                 {
-                    std::string text = str0;
-                    networkCalls->SendText((char*)text.c_str());
-                    for (int i = 0; i < 128; i++)
+                    networkCalls->SendText(textInput);
+                    for (int i = 0; i < messageSize; i++)
                     {
-                        str0[i] = 0;
+                        textInput[i] = 0;
                     }
                 }
             }

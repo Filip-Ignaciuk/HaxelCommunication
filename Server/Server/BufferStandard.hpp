@@ -106,14 +106,18 @@ public:
 	BufferServerDisconnect();
 };
 
+// Have to send these in groups of 4, to be within under the maxBufferSize
 class BufferServerChatroomUpdate : public  BufferNormal
 {
 private:
-	User m_users[32];
+	int m_position; // 0 - 0th place in the array, 1 - 8th place in the array etc.
+	User m_users[8];
 public:
-	BufferServerChatroomUpdate(User _users);
+	BufferServerChatroomUpdate(User* _users, int _position);
+	User& GetUser(int _position);
+	int GetPosition() const;
 };
 
 
 // Max Size
-constexpr int maxBufferSize = sizeof(BufferServerChatroomUpdate);
+constexpr int maxBufferSize = 2048;

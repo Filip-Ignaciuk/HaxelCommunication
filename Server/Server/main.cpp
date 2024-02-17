@@ -615,8 +615,8 @@ int main(int, char**)
                 ImGui::SeparatorText("Information");
             	ImGui::Text(currentIpText.c_str());
                 ImGui::Text(currentPortText.c_str());
-                static char chatroomName[30];
-                static char chatroomPassword[32];
+                static char chatroomName[wordSize];
+                static char chatroomPassword[wordSize];
                 ImGui::InputText(LanguageFileInitialiser::charAllTextsInApplication[36], chatroomName, IM_ARRAYSIZE(chatroomName));
                 ImGui::InputText("Password", chatroomPassword, IM_ARRAYSIZE(chatroomPassword));
             	if(ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[37]))

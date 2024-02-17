@@ -150,12 +150,38 @@ DWORD WINAPI WindowsNetworking::ReceiveServerDisconnectThread(LPVOID param)
 	return 0;
 }
 
+DWORD WINAPI WindowsNetworking::ReceiveServerChatroomUpdateThread(LPVOID param)
+{
+	BufferServerChatroomUpdate BSCU = *(BufferServerChatroomUpdate*)param;
+	char* buffer = (char*)param;
+	delete[] buffer;
+
+	int modifier = BSCU.GetPosition() * 8;
+	for (int i = 0; i < 8; i++)
+	{
+		User emptyUser;
+		if(BSCU.GetUser(i) == emptyUser)
+		{
+			
+		}
+		else
+		{
+			chatroom.UpdateUser(i + modifier, BSCU.GetUser(i));
+		}
+	}
+
+	return 0;
+
+}
+
+
 DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 {
 	isReceiving = true;
-	char* buffer = new char[sizeof(maxBufferSize)];
+	char* buffer = new char[maxBufferSize];
 	// Use the largest possible class, so that we can accomidate everything.
-	int recievedBytes = recv(clientSocket, buffer, sizeof(maxBufferSize), 0);
+	int recievedBytes = recv(clientSocket, buffer, maxBufferSize, 0);
+	isReceiving = false;
 	BufferNormal BH = *(BufferNormal*)buffer;
 	
 	if (BH.GetType() == 2)
@@ -165,7 +191,7 @@ DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 	}
 	else if (BH.GetType() == 4)
 	{
-		// BufferConnectServer
+		// BufferServerConnect
 		CreateThread(nullptr, 0, ReceiveConnectThread, buffer, 0, nullptr);
 	}
 	else if (BH.GetType() == 6)
@@ -174,18 +200,23 @@ DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 		CreateThread(nullptr, 0, ReceiveUserUpdateThread, buffer, 0, nullptr);
 
 	}
-	else if (BH.GetType() == 6)
+	else if (BH.GetType() == 8)
 	{
 		// BufferServerDisconnect
 		//delete[] buffer;
 		//CreateThread(nullptr, 0, ReceiveUserUpdateThread, buffer, 0, nullptr);
 
 	}
+	else if (BH.GetType() == 10)
+	{
+		// BufferServerChatroomUpdate
+		CreateThread(nullptr, 0, ReceiveServerChatroomUpdateThread, buffer, 0, nullptr);
+
+	}
 	else
 	{
 		delete[] buffer;
 	}
-	isReceiving = false;
 	return 0;
 }
 

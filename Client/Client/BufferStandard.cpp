@@ -19,22 +19,15 @@ int BufferNormal::GetType() const
 // BufferSendMessage
 BufferSendMessage::BufferSendMessage(char* _message) :BufferNormal(1)
 {
-	for (int i = 0; i < messageSize; i++)
-	{
-		// Should implement more efficent algorithm here.
-		m_message[i] = _message[i];
-	}
+	strcpy_s(m_message, _message);
 }
 char* BufferSendMessage::GetMessageObject() { return m_message; }
 
 // BufferServerSendMessage
 BufferServerSendMessage::BufferServerSendMessage(int _userPosition, char* _message) :BufferNormal(2), m_position(_userPosition)
 {
-	for (int i = 0; i < messageSize; i++)
-	{
-		// Should implement more efficent algorithm here.
-		m_message[i] = _message[i];
-	}
+	strcpy_s(m_message, _message);
+
 }
 char* BufferServerSendMessage::GetMessageObject() { return m_message; }
 int BufferServerSendMessage::GetPositionObject() { return m_position; }
@@ -42,20 +35,15 @@ int BufferServerSendMessage::GetPositionObject() { return m_position; }
 // BufferConnect
 BufferConnect::BufferConnect(char* _password) :BufferNormal(3)
 {
-	for (int i = 0; i < wordSize; i++)
-	{
-		m_password[i] = _password[i];
-	}
+	strcpy_s(m_password, _password);
+
 }
 char* BufferConnect::GetPassword() { return m_password; }
 
 // BufferServerConnect
 BufferServerConnect::BufferServerConnect(int _isAccepted, char* _chatroomName) :BufferNormal(4), m_isAccepted(_isAccepted)
 {
-	for (int i = 0; i < wordSize; i++)
-	{
-		m_name[i] = _chatroomName[i];
-	}
+	strcpy_s(m_name, _chatroomName);
 }
 int BufferServerConnect::GetIsAccepted() const { return m_isAccepted; }
 char* BufferServerConnect::GetChatroomName() { return m_name; }
@@ -74,3 +62,15 @@ BufferDisconnect::BufferDisconnect() : BufferNormal(7) {}
 
 // BufferServerDisconnect
 BufferServerDisconnect::BufferServerDisconnect() : BufferNormal(8) {}
+
+// BufferServerChatroomUpdate
+BufferServerChatroomUpdate::BufferServerChatroomUpdate(User* _users, int _position) : BufferNormal(10), m_position(_position)
+{
+	for (size_t i = 0; i < 8; i++)
+	{
+		m_users[i] = _users[i];
+	}
+}
+User& BufferServerChatroomUpdate::GetUser(int _position) { return m_users[_position]; }
+int BufferServerChatroomUpdate::GetPosition() const { return m_position; }
+
