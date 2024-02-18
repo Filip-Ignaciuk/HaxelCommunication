@@ -248,6 +248,7 @@ void PopupChecker()
             if (ImGui::Button(LanguageFileInitialiser::charAllTextsInApplication[22], ImVec2(120, 0)))
             {
                 closeChatroomPopup = false;
+                networkCalls->Disconnect();
                 networkCalls->CloseChatroom();
                 currentStatus = LanguageFileInitialiser::allTextsInApplication[34];
                 currentColour = yellow;
@@ -275,6 +276,7 @@ void PopupChecker()
                 closeSocketPopup = false;
                 if(networkCalls->GetChatroomStatus())
                 {
+                    networkCalls->Disconnect();
                     networkCalls->CloseChatroom();
                 }
                 networkCalls->CloseSocket();

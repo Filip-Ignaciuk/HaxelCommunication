@@ -9,7 +9,7 @@ SOCKET WindowsNetworking::serverSocket = INVALID_SOCKET;
 SOCKET WindowsNetworking::clientSockets[numberOfClients];
 bool WindowsNetworking::clientAccepted[numberOfClients];
 bool WindowsNetworking::clientRecieving[numberOfClients];
-int WindowsNetworking::currentMessagePosition[numberOfClients];
+bool WindowsNetworking::disconnectedFromAllClients = false;
 bool WindowsNetworking::isListening = false;
 bool WindowsNetworking::isBinded = false;
 bool WindowsNetworking::inChatroom = false;
@@ -93,6 +93,20 @@ DWORD WINAPI WindowsNetworking::BindThread(LPVOID param)
 DWORD WINAPI WindowsNetworking::DisconnectThread(LPVOID param)
 {
 	// Send disconnect message
+	for (int i = 0; i < numberOfClients; i++)
+	{
+		if(clientSockets[i] != 0)
+		{
+			BufferServerDisconnect BSD;
+			int bytesSent = send(clientSockets[i], (char*)&BSD, sizeof(BufferServerDisconnect), 0);
+			shutdown(clientSockets[i], 2);
+			closesocket(clientSockets[i]);
+			clientSockets[i] = INVALID_SOCKET;
+			clientAccepted[i] = false;
+			clientRecieving[i] = false;
+		}
+ 	}
+	disconnectedFromAllClients = true;
 	return 0;
 }
 
@@ -152,7 +166,7 @@ DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 			int deadUsers3 = 0;
 			int deadUsers4 = 0;
 
-			for (int i = 0; i < 32; i++)
+			for (int i = 0; i < numberOfClients; i++)
 			{
 				if(i < 8)
 				{
@@ -320,7 +334,6 @@ DWORD WINAPI WindowsNetworking::ReceiveDisconnect(LPVOID param)
 	SOCKET& clientSocket = clientSockets[socketPosition];
 	clientAccepted[socketPosition] = false;
 	clientRecieving[socketPosition] = false;
-	currentMessagePosition[socketPosition] = 0;
 	shutdown(clientSocket, 2);
 	closesocket(clientSocket);
 	clientSocket = 0;
@@ -454,7 +467,7 @@ void WindowsNetworking::CreateSocket()
 		const Error creatingSocketError(LanguageFileInitialiser::charAllTextsInApplication[26], 0);
 		ErrorHandler::AddError(creatingSocketError);
 	}
-
+	disconnectedFromAllClients = false;
 }
 
 void WindowsNetworking::CloseSocket() 
@@ -462,19 +475,16 @@ void WindowsNetworking::CloseSocket()
 	isBinded = false;
 	inChatroom = false;
 	isListening = false;
-	for (int i = 0; i < numberOfClients; i++)
+	if(!disconnectedFromAllClients)
 	{
-		if(clientSockets[i] != 0)
+		CreateThread(nullptr, 0, DisconnectThread, nullptr, 0, nullptr);
+		while(!disconnectedFromAllClients)
 		{
-			SOCKET& clientSocket = clientSockets[i];
-			shutdown(clientSocket, 2);
-			closesocket(clientSocket);
-			clientSocket = INVALID_SOCKET;
+			
 		}
-		clientAccepted[i] = false;
-		clientRecieving[i] = false;
-		
 	}
+	
+
 	shutdown(serverSocket, 2);
 	if(closesocket(serverSocket))
 	{
@@ -540,10 +550,10 @@ void WindowsNetworking::OpenChatroom(char* _chatroomName, char* _chatroomPasswor
 
 void WindowsNetworking::CloseChatroom()
 {
-	Disconnect();
 	Chatroom emptyChatroom;
 	chatroom = emptyChatroom;
 	inChatroom = false;
+
 }
 
 

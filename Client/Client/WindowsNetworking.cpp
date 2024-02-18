@@ -203,9 +203,8 @@ DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 	else if (BH.GetType() == 8)
 	{
 		// BufferServerDisconnect
-		//delete[] buffer;
-		//CreateThread(nullptr, 0, ReceiveUserUpdateThread, buffer, 0, nullptr);
-
+		CreateThread(nullptr, 0, ReceiveServerDisconnectThread, 0, 0, nullptr);
+		delete[] buffer;
 	}
 	else if (BH.GetType() == 10)
 	{

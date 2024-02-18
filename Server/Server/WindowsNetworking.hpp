@@ -33,7 +33,8 @@ private:
 	static SOCKET clientSockets[numberOfClients];
 	static bool clientAccepted[numberOfClients];
 	static bool clientRecieving[numberOfClients];
-	static int currentMessagePosition[numberOfClients];
+
+	static bool disconnectedFromAllClients;
 
 	static bool isListening;
 
