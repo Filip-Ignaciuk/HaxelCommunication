@@ -10,6 +10,7 @@ void Chatroom::AddMessage(int _userPosition, std::string& _message)
 {
 
 	messageBuilder.Reset();
+	messageBuilder.SetStyle(m_style);
 	messageBuilder.AddMessage(_userPosition, _message, GetUser(_userPosition));
 	//Change in accordance to the users settings
 	messageBuilder.BuildFromStyle();
@@ -73,13 +74,12 @@ bool Chatroom::HasPassword() const { return m_hasPassword; }
 
 std::string Chatroom::GetPassword() const { return m_password; }
 
-MessageBuilder& Chatroom::GetMessageBuilder() { return messageBuilder; }
-
 void Chatroom::UpdateMessages()
 {
 	for (Message& message : m_messages)
 	{
 		messageBuilder.Reset();
+		messageBuilder.SetStyle(m_style);
 		std::string originalMessage = message.GetOriginalMessage();
 		messageBuilder.AddMessage(message.GetUserPosition(), originalMessage, GetUser(message.GetUserPosition()));
 		//Change in accordance to the users settings
@@ -97,4 +97,9 @@ void Chatroom::SetClientUser(User* _User)
 void Chatroom::SetChatroomName(std::string& _chatroomName)
 {
 	m_name = _chatroomName;
+}
+
+void Chatroom::SetStyle(std::vector<int>& _style)
+{
+	m_style = _style;
 }

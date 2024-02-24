@@ -47,6 +47,10 @@ static void glfw_error_callback(int error, const char* description)
 NetworkCallsCreator* creator;
 NetworkCalls* networkCalls;
 
+bool receivingStatus;
+bool chatroomStatus;
+bool isConnected;
+
 
 // Error Data
 
@@ -63,6 +67,8 @@ static User clientUser;
 static inline Chatroom emptyChatroom;
 static inline Chatroom* chatroom;
 static inline MessageBuilder messageBuilder;
+
+static inline bool updateMessagesInChatroom;
 
 
 // We store all chatroom behaviour in the chatroom class, to organise and simplify our code.
@@ -293,7 +299,7 @@ void PopulateUsers()
 // Menu Bar
 
 std::string origialMessage = "It's Cold.";
-std::vector<int>& style = messageBuilder.GetStyle();
+std::vector<int> style;
 static bool wantsDisplayName;
 static bool wantsId;
 static bool wantsDateShort;
@@ -323,6 +329,7 @@ void MenuBar()
                     
                     Message exampleMessage(origialMessage, std::stoi(clientUser.GetId()));
                     messageBuilder.Reset();
+                    messageBuilder.SetStyle(style);
                     messageBuilder.AddMessage(exampleMessage.GetUserPosition(), origialMessage, clientUser);
                     messageBuilder.BuildFromStyle();
                     Message* finalMessage = messageBuilder.GetFinalMessage();
@@ -428,8 +435,16 @@ void MenuBar()
 
                     if(ImGui::Button("SaveChanges"))
                     {
-                        chatroom->GetMessageBuilder().SetStyle(style);
-                        chatroom->UpdateMessages();
+                        chatroom->SetStyle(style);
+                        if(chatroomStatus)
+                        {
+                            chatroom->UpdateMessages();
+                        }
+                        else
+                        {
+                            updateMessagesInChatroom = true;
+                        }
+                        
                     }
                     ImGui::EndMenu();
 
@@ -641,9 +656,9 @@ int main(int, char**)
 
         
         bool exit = true;
-        bool receivingStatus = networkCalls->GetReceivingStatus();
-        bool chatroomStatus = networkCalls->GetChatroomStatus();
-        bool isConnected = networkCalls->GetConnectedStatus();
+        receivingStatus = networkCalls->GetReceivingStatus();
+        chatroomStatus = networkCalls->GetChatroomStatus();
+        isConnected = networkCalls->GetConnectedStatus();
 
         // Receive data from chatroom
         networkCalls->Receive();
@@ -661,7 +676,11 @@ int main(int, char**)
         {
             ImGui::Begin("ChatRoom", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize );
             {
-                
+                if(updateMessagesInChatroom)
+                {
+                    chatroom->UpdateMessages();
+                    updateMessagesInChatroom = false;
+                }
 
                 // Gui
                 MenuBar();

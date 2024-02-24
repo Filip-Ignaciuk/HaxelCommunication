@@ -147,6 +147,8 @@ DWORD WINAPI WindowsNetworking::ReceiveServerDisconnectThread(LPVOID param)
 	isConnected = false;
 	isReceiving = false;
 	shutdown(clientSocket, 2);
+	Error serverDisconnectedError("The server you were connected to has disconnected.", 2);
+	ErrorHandler::AddError(serverDisconnectedError);
 	return 0;
 }
 
@@ -160,13 +162,10 @@ DWORD WINAPI WindowsNetworking::ReceiveServerChatroomUpdateThread(LPVOID param)
 	for (int i = 0; i < 8; i++)
 	{
 		User emptyUser;
-		if(BSCU.GetUser(i) == emptyUser)
-		{
-			
-		}
-		else
+		if(BSCU.GetUser(i) != emptyUser)
 		{
 			chatroom.UpdateUser(i + modifier, BSCU.GetUser(i));
+
 		}
 	}
 

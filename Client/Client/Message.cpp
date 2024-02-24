@@ -49,7 +49,6 @@ int Message::GetUserPosition() const
 MessageBuilder::MessageBuilder()
 {
 	this->Reset();
-	this->m_Message = new Message("", 0);
 }
 
 MessageBuilder::~MessageBuilder()
@@ -85,7 +84,12 @@ void MessageBuilder::AddDateShort()
 void MessageBuilder::AddId()
 {
 	// Lol
-	this->m_Message->AddToMessage((std::string)m_currentUser.GetId() + " ");
+	std::string id;
+	char* charid = m_currentUser.GetId();
+	id.push_back(charid[0]);
+	id.push_back(charid[1]);
+
+	this->m_Message->AddToMessage(id + " ");
 
 }
 
@@ -96,6 +100,9 @@ void MessageBuilder::AddDisplayName()
 
 void MessageBuilder::Reset()
 {
+	this->style = std::vector<int>();
+	User emptyUser;
+	this->m_currentUser = emptyUser;
 	this->m_Message = new Message("", 0);
 }
 

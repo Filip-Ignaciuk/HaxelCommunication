@@ -750,6 +750,8 @@ int main(int, char**)
     glfwTerminate();
 
     networkCalls->CloseChatroom();
+	networkCalls->Disconnect();
+    networkCalls->CloseSocket();
     delete networkCalls;
     delete creator;
 
