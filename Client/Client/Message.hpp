@@ -17,7 +17,7 @@ private:
 	int m_userPosition;
 public:
 	Message(const std::string& _message, int _userPosition);
-	void AddToMessage(const std::string& _message);
+	void AddToMessage(std::string& _message);
 	void ChangeOriginalMessage(const std::string& _message);
 	void ChangeUserPosition(int _userPosition);
 	void DeleteCompleteMessage();

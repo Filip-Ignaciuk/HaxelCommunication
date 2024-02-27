@@ -14,9 +14,15 @@ void Message::ChangeOriginalMessage(const std::string& _newOriginalMessage)
 	m_originalMessage = _newOriginalMessage;
 }
 
-void Message::AddToMessage(const std::string& _message)
+void Message::AddToMessage(std::string& _message)
 {
-	m_completeMessage = m_completeMessage + _message;
+
+	if (m_completeMessage.size() > 1 && m_completeMessage[m_completeMessage.size() - 2] == '\0')
+	{
+		std::string message = m_completeMessage;
+		//m_completeMessage[m_completeMessage.size() - 2] = 0;
+	}
+	this->m_completeMessage += _message;
 }
 
 
@@ -27,18 +33,18 @@ void Message::ChangeUserPosition(int _userPosition)
 
 void Message::DeleteCompleteMessage()
 {
-	m_completeMessage = "";
+	this->m_completeMessage = "";
 }
 
 
 std::string Message::GetOriginalMessage() const
 {
-	return m_originalMessage;
+	return this->m_originalMessage;
 }
 
 std::string Message::GetMessageComplete() const
 {
-	return m_completeMessage;
+	return this->m_completeMessage;
 }
 
 int Message::GetUserPosition() const
@@ -63,7 +69,8 @@ void MessageBuilder::AddTime()
 	std::time_t finalTime = std::chrono::system_clock::to_time_t(currentTime);
 	std::string stringTime = std::string(std::ctime(&finalTime));
 
-	this->m_Message->AddToMessage(stringTime + " ");
+	std::string final = stringTime + " ";
+	this->m_Message->AddToMessage(final);
 }
 
 void MessageBuilder::AddDateLong()
@@ -71,7 +78,8 @@ void MessageBuilder::AddDateLong()
 	std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
 	auto now_local = std::chrono::current_zone()->to_local(now);
 	std::chrono::weekday today{ floor<std::chrono::days>(now_local) };
-	this->m_Message->AddToMessage(weekdaysLong[today.c_encoding()] + " ");
+	std::string final = weekdaysLong[today.c_encoding()] + " ";
+	this->m_Message->AddToMessage(final);
 }
 
 void MessageBuilder::AddDateShort()
@@ -79,7 +87,8 @@ void MessageBuilder::AddDateShort()
 	std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
 	auto now_local = std::chrono::current_zone()->to_local(now);
 	std::chrono::weekday today{ floor<std::chrono::days>(now_local) };
-	this->m_Message->AddToMessage(weekdaysShort[today.c_encoding()] + " ");
+	std::string final = weekdaysShort[today.c_encoding()] + " ";
+	this->m_Message->AddToMessage(final);
 }
 void MessageBuilder::AddId()
 {
@@ -88,14 +97,15 @@ void MessageBuilder::AddId()
 	char* charid = m_currentUser.GetId();
 	id.push_back(charid[0]);
 	id.push_back(charid[1]);
-
-	this->m_Message->AddToMessage(id + " ");
+	std::string final = id + " ";
+	this->m_Message->AddToMessage(final);
 
 }
 
 void MessageBuilder::AddDisplayName()
 {
-	this->m_Message->AddToMessage((std::string)m_currentUser.GetDisplayName() + " ");
+	std::string final = (std::string)m_currentUser.GetDisplayName() + " ";
+	this->m_Message->AddToMessage(final);
 }
 
 void MessageBuilder::Reset()
@@ -152,7 +162,8 @@ void MessageBuilder::BuildFromStyle()
 
 Message* MessageBuilder::GetFinalMessage() const
 {
-	this->m_Message->AddToMessage(">> " + m_Message->GetOriginalMessage());
+	std::string final = ">> " + m_Message->GetOriginalMessage();
+	this->m_Message->AddToMessage(final);
 	return m_Message;
 }
 
