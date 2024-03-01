@@ -16,15 +16,15 @@ void Message::ChangeOriginalMessage(const std::string& _newOriginalMessage)
 
 void Message::AddToMessage(std::string& _message)
 {
-	std::string message = m_completeMessage;
 
-	//if (m_completeMessage.size() > 1 && m_completeMessage[m_completeMessage.size() - 2] == '\0')
-	//{
-	//	//m_completeMessage[m_completeMessage.size() - 2] = 0;
-	//}
-	message += _message;
+	if (m_completeMessage.size() > 1 && m_completeMessage[m_completeMessage.size() - 2] == '\0')
+	{
+		m_completeMessage.pop_back();
+		m_completeMessage.pop_back();
+		m_completeMessage.push_back(' ');
+	}
 
-	this->m_completeMessage = message;
+	this->m_completeMessage += _message;
 }
 
 
