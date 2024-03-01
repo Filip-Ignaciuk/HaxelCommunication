@@ -326,10 +326,14 @@ DWORD WINAPI WindowsNetworking::ReceiveDisconnect(LPVOID param)
 	BufferDisconnect BC = *(BufferDisconnect*)NCHPtr->buffer;
 	delete NCHPtr;
 	std::string displayName = chatroom.GetUser(socketPosition).GetDisplayName();
-	Error error("User: " + displayName + ", disconnected", 3);
+	std::string id = chatroom.GetUser(socketPosition).GetId();
+	Error error("User: " + displayName + ", ID: " + id + ", disconnected", 3);
 	ErrorHandler::AddError(error);
-	User EmptyUser;
-	chatroom.UpdateUser(socketPosition, EmptyUser);
+	
+	char empty[1] = "";
+	User emptyUser(empty, empty, ImVec4{ 0,0,0,0 });
+	chatroom.UpdateUser(socketPosition, emptyUser);
+
 
 	SOCKET& clientSocket = clientSockets[socketPosition];
 	clientAccepted[socketPosition] = false;

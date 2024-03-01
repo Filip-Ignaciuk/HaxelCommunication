@@ -16,7 +16,7 @@ void Message::ChangeOriginalMessage(const std::string& _newOriginalMessage)
 
 void Message::AddToMessage(std::string& _message)
 {
-
+	// Removes terminating null character so that strings can be appended to.
 	if (m_completeMessage.size() > 1 && m_completeMessage[m_completeMessage.size() - 2] == '\0')
 	{
 		m_completeMessage.pop_back();
