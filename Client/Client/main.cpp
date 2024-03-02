@@ -40,6 +40,19 @@ static void glfw_error_callback(int error, const char* description)
 
 #define IMGUI_ENABLE_FREETYPE
 
+// GUI Logic
+
+static bool wantsEditUser = false;
+static bool isUpdated = false;
+
+static ImVec4 white{ 1,1,1,1 };
+static ImVec4 red{ 1.0f, 0.0f, 0.0f ,1.0f };
+static ImVec4 yellow{ 1.0f, 1.0f, 0.0f , 1.0f };
+static ImVec4 green{ 0.0f, 1.0f, 0.0f, 1.0f };
+
+// Popups
+bool leaveChatroomPopup = false;
+
 // Client
 
 // Application
@@ -62,7 +75,7 @@ const char* latestErrorMessage = "";
 bool finishedError = true;
 
 // Chatroom Info
-static User clientUser;
+static User* clientUser = new User((char*)"Deguy", (char*)"77", white);
 
 static inline Chatroom emptyChatroom;
 static inline Chatroom* chatroom;
@@ -74,18 +87,7 @@ static inline bool updateMessagesInChatroom;
 // We store all chatroom behaviour in the chatroom class, to organise and simplify our code.
 
 
-// GUI Logic
 
-static bool wantsEditUser = false;
-static bool isUpdated = false;
-
-static ImVec4 white{ 1,1,1,1 };
-static ImVec4 red{ 1.0f, 0.0f, 0.0f ,1.0f };
-static ImVec4 yellow{ 1.0f, 1.0f, 0.0f , 1.0f };
-static ImVec4 green{ 0.0f, 1.0f, 0.0f, 1.0f };
-
-// Popups
-bool leaveChatroomPopup = false;
 
 
 // Error Logic
@@ -327,10 +329,10 @@ void MenuBar()
                 if (ImGui::BeginMenu("Message"))
                 {
                     
-                    Message exampleMessage(origialMessage, std::stoi(clientUser.GetId()));
+                    Message exampleMessage(origialMessage, std::stoi(clientUser->GetId()));
                     messageBuilder.Reset();
                     messageBuilder.SetStyle(style);
-                    messageBuilder.AddMessage(exampleMessage.GetUserPosition(), origialMessage, clientUser);
+                    messageBuilder.AddMessage(exampleMessage.GetUserPosition(), origialMessage, *clientUser);
                     messageBuilder.BuildFromStyle();
                     Message* finalMessage = messageBuilder.GetFinalMessage();
                     ImGui::Text(finalMessage->GetMessageComplete().c_str());
@@ -615,10 +617,9 @@ int main(int, char**)
     networkCalls = creator->CreateNetworkCalls();
     networkCalls->CreateSocket();
     chatroom = &networkCalls->GetChatroom();
-    clientUser.SetId((char*)"77");
-    clientUser.SetUserColour(white);
-    clientUser.SetDisplayName((char*)"Deguy");
-    chatroom->SetClientUser(&clientUser);
+
+    // All parts have the same client user pointer.
+    chatroom->SetClientUser(clientUser);
     networkCalls->UpdateUser(clientUser);
 
 
@@ -815,7 +816,7 @@ int main(int, char**)
                     ImGui::TextColored(red, "Not updated with chatroom.");
 
                 }
-                std::string userNameText = "User name: " + (std::string)clientUser.GetDisplayName();
+                std::string userNameText = "User name: " + (std::string)clientUser->GetDisplayName();
                 ImGui::Text(userNameText.c_str());
                 static char userName[14] = "";
                 ImGui::InputText("Name", userName, IM_ARRAYSIZE(userName));
@@ -831,11 +832,11 @@ int main(int, char**)
                 {
                     std::string name = userName;
                     
-                    clientUser.SetDisplayName((char*)name.c_str());
+                    clientUser->SetDisplayName((char*)name.c_str());
                     userColour.w = 1.0f;
-                    clientUser.SetUserColour(userColour);
+                    clientUser->SetUserColour(userColour);
                     networkCalls->UpdateUser(clientUser);
-                    chatroom->SetClientUser(&clientUser);
+                    chatroom->SetClientUser(clientUser);
 
                     
                 }

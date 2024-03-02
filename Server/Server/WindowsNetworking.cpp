@@ -296,6 +296,8 @@ DWORD WINAPI WindowsNetworking::ReceiveUserUpdateThread(LPVOID param)
 	BufferUpdateUser BC = *(BufferUpdateUser*)NCHPtr->buffer;
 	delete NCHPtr;
 
+
+	// Make sure client cant just override their id
 	User user = BC.GetUser();
 	char id[idWordSize];
 	std::string stringId = std::to_string(socketPosition);
@@ -346,6 +348,23 @@ DWORD WINAPI WindowsNetworking::ReceiveDisconnect(LPVOID param)
 	return 0;
 }
 
+DWORD WINAPI WindowsNetworking::ReceiveRequestIdThread(LPVOID param)
+{
+	RecieveHolder* NCHPtr = (RecieveHolder*)param;
+	int socketPosition = NCHPtr->socketPosition;
+	delete NCHPtr;
+
+	std::string stringId = std::to_string(socketPosition);
+	char id[2];
+	id[0] = stringId[0];
+	id[1] = stringId[1];
+	BufferServerRequestId BSRI(id);
+	send(clientSockets[socketPosition], (char*)&BSRI, sizeof(BufferServerRequestId), 0);
+
+
+	return 0;
+}
+
 
 DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 {
@@ -381,6 +400,12 @@ DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 	{
 		// BufferDisconnect
 		CreateThread(nullptr, 0, ReceiveDisconnect, RH, 0, nullptr);
+
+	}
+	else if (BH->GetType() == 11)
+	{
+		// BufferRequestId
+		CreateThread(nullptr, 0, ReceiveRequestIdThread, RH, 0, nullptr);
 
 	}
 	else

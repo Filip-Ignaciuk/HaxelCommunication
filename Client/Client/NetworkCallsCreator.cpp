@@ -38,7 +38,7 @@ void NetworkCallsCreator::SendText(char* _message) const
 	delete networkCalls;
 }
 
-void NetworkCallsCreator::UpdateUser(User& _user) const
+void NetworkCallsCreator::UpdateUser(User* _user) const
 {
 	NetworkCalls* networkCalls = this->CreateNetworkCalls();
 	networkCalls->UpdateUser(_user);

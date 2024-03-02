@@ -74,3 +74,12 @@ BufferServerChatroomUpdate::BufferServerChatroomUpdate(User* _users, int _positi
 User& BufferServerChatroomUpdate::GetUser(int _position) { return m_users[_position]; }
 int BufferServerChatroomUpdate::GetPosition() const { return m_position; }
 
+// BufferRequestId
+BufferRequestId::BufferRequestId() : BufferNormal(11) {}
+
+// BufferServerRequestId
+BufferServerRequestId::BufferServerRequestId(char* _id) : BufferNormal(12)
+{
+	strcpy_s(m_id, _id);
+}
+char* BufferServerRequestId::GetId() { return m_id; }

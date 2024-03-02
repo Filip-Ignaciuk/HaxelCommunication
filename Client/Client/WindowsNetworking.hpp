@@ -28,7 +28,7 @@ private:
 
 	static bool hasUpdatedUser;
 
-	static User currentUser;
+	static User* currentUser;
 
 	static Chatroom chatroom;
 
@@ -45,6 +45,7 @@ private:
 	static DWORD WINAPI ReceiveUserUpdateThread(LPVOID param);
 	static DWORD WINAPI ReceiveServerDisconnectThread(LPVOID param);
 	static DWORD WINAPI ReceiveServerChatroomUpdateThread(LPVOID param);
+	static DWORD WINAPI ReceiveServerRequestIdThread(LPVOID param);
 
 
 	static DWORD WINAPI ReceiveThread(LPVOID param);
@@ -61,7 +62,7 @@ public:
 
 	// Main Procedures
 	void SendText(char* _message) override;
-	void UpdateUser(User& _user) override;
+	void UpdateUser(User* _user) override;
 	void Receive() override;
 
 	// Class Based

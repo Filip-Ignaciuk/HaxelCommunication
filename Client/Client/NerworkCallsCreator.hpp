@@ -14,7 +14,7 @@ public:
 
 	// Main Procedures
 	void SendText(char* _message) const;
-	void UpdateUser(User& _user) const;
+	void UpdateUser(User* _user) const;
 	void Receive();
 
 	bool GetReceivingStatus();

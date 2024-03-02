@@ -3,6 +3,9 @@
 #include "BufferStandard.hpp"
 #include "Error.hpp"
 #include "ErrorHandler.hpp"
+#include <chrono>
+#include <thread>
+
 #include <WS2tcpip.h>
 
 SOCKET WindowsNetworking::clientSocket = INVALID_SOCKET;
@@ -10,7 +13,7 @@ bool WindowsNetworking::isReceiving = false;
 bool WindowsNetworking::isConnected = false;
 bool WindowsNetworking::inChatroom = false;
 bool WindowsNetworking::hasUpdatedUser = false;
-User WindowsNetworking::currentUser;
+User* WindowsNetworking::currentUser;
 Chatroom WindowsNetworking::chatroom;
 
 
@@ -58,6 +61,8 @@ DWORD WINAPI WindowsNetworking::DisconnectThread(LPVOID param)
 	// Send disconnect message
 	if(inChatroom && isConnected)
 	{
+		currentUser->SetId((char*)"77");
+
 		BufferDisconnect BD;
 		send(clientSocket, (char*)&BD, sizeof(BufferDisconnect), 0);
 	}
@@ -84,7 +89,7 @@ DWORD WINAPI WindowsNetworking::UpdateUserThread(LPVOID param)
 {
 	if(inChatroom && isConnected)
 	{
-		BufferUpdateUser BUUPtr(currentUser);
+		BufferUpdateUser BUUPtr(*currentUser);
 		send(clientSocket, (char*)&BUUPtr, sizeof(BufferUpdateUser), 0);
 		
 	}
@@ -114,9 +119,15 @@ DWORD WINAPI WindowsNetworking::ReceiveConnectThread(LPVOID param)
 		std::string chatroomName = BSC.GetChatroomName();
 		chatroom.SetChatroomName(chatroomName);
 		inChatroom = true;
+		BufferRequestId BRI;
+		send(clientSocket, (char*)&BRI, sizeof(BufferRequestId), 0);
+
+		// Victim of our own success, computers as so fast it sends the request too fast.
+		std::this_thread::sleep_for(std::chrono::milliseconds(120));
 
 		// Send User Information
-		BufferUpdateUser BUUPtr(currentUser);
+		User user = *currentUser;
+		BufferUpdateUser BUUPtr(user);
 		send(clientSocket, (char*)&BUUPtr, sizeof(BufferUpdateUser), 0);
 	}
 	else
@@ -132,7 +143,7 @@ DWORD WINAPI WindowsNetworking::ReceiveUserUpdateThread(LPVOID param)
 	BufferServerUpdateUser BSUU = *(BufferServerUpdateUser*)param;
 	char* buffer = (char*)param;
 	delete[] buffer;
-	if (BSUU.GetUser() == currentUser)
+	if (BSUU.GetUser().GetId()[0] == currentUser->GetId()[0] && BSUU.GetUser().GetId()[1] == currentUser->GetId()[1])
 	{
 		hasUpdatedUser = true;
 	}
@@ -146,6 +157,7 @@ DWORD WINAPI WindowsNetworking::ReceiveServerDisconnectThread(LPVOID param)
 	inChatroom = false;
 	isConnected = false;
 	isReceiving = false;
+	currentUser->SetId((char*)"77");
 	shutdown(clientSocket, 2);
 	Error serverDisconnectedError("The server you were connected to has disconnected.", 2);
 	ErrorHandler::AddError(serverDisconnectedError);
@@ -169,6 +181,18 @@ DWORD WINAPI WindowsNetworking::ReceiveServerChatroomUpdateThread(LPVOID param)
 		}
 	}
 
+	return 0;
+
+}
+
+DWORD WINAPI WindowsNetworking::ReceiveServerRequestIdThread(LPVOID param)
+{
+	BufferServerRequestId BSRI = *(BufferServerRequestId*)param;
+	char* buffer = (char*)param;
+	delete[] buffer;
+
+	currentUser->SetId(BSRI.GetId());
+	chatroom.SetClientUser(currentUser);
 	return 0;
 
 }
@@ -209,6 +233,12 @@ DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 	{
 		// BufferServerChatroomUpdate
 		CreateThread(nullptr, 0, ReceiveServerChatroomUpdateThread, buffer, 0, nullptr);
+
+	}
+	else if (BH.GetType() == 12)
+	{
+		// BufferServerRequestId
+		CreateThread(nullptr, 0, ReceiveServerRequestIdThread, buffer, 0, nullptr);
 
 	}
 	else
@@ -294,8 +324,9 @@ void WindowsNetworking::SendText(char* _message)
 	CreateThread(nullptr, 0, SendTextThread, message, 0, nullptr);
 }
 
-void WindowsNetworking::UpdateUser(User& _user) 
+void WindowsNetworking::UpdateUser(User* _user) 
 {
+	hasUpdatedUser = false;
 	currentUser = _user;
 	CreateThread(nullptr, 0, UpdateUserThread, nullptr, 0, nullptr);
 }

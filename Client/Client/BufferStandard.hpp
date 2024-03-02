@@ -131,6 +131,21 @@ public:
 	int GetPosition() const;
 };
 
+class BufferRequestId : public BufferNormal
+{
+public:
+	BufferRequestId();
+};
+
+class BufferServerRequestId : public BufferNormal
+{
+private:
+	char m_id[idWordSize];
+public:
+	BufferServerRequestId(char* _id);
+	char* GetId();
+
+};
 
 // Max Size
 constexpr int maxBufferSize = 2048;

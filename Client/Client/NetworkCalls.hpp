@@ -13,7 +13,7 @@ public:
 	virtual void Disconnect();
 
 	virtual void SendText(char* _message);
-	virtual void UpdateUser(User& _user);
+	virtual void UpdateUser(User* _user);
 	virtual void Receive();
 
 	virtual bool GetReceivingStatus();

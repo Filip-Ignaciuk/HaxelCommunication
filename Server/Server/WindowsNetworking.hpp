@@ -58,6 +58,8 @@ private:
 	static DWORD WINAPI ReceiveConnect(LPVOID param);
 	static DWORD WINAPI ReceiveUserUpdateThread(LPVOID param);
 	static DWORD WINAPI ReceiveDisconnect(LPVOID param);
+	static DWORD WINAPI ReceiveRequestIdThread(LPVOID param);
+
 
 	static DWORD WINAPI ReceiveThread(LPVOID param);
 	static DWORD WINAPI ReceiveVerifyThread(LPVOID param);

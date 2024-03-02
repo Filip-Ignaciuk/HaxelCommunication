@@ -7,7 +7,7 @@ void NetworkCalls::Disconnect(){}
 
 
 void NetworkCalls::SendText(char* _message) {}
-void NetworkCalls::UpdateUser(User& _user) {}
+void NetworkCalls::UpdateUser(User* _user) {}
 void NetworkCalls::Receive() {}
 
 bool NetworkCalls::GetReceivingStatus() { return false; }

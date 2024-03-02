@@ -14,3 +14,5 @@ For example BufferConnect is a class reserved for the client to send an object t
 8 - BufferServerDisconnect
 9 - N/A
 10 - BufferServerChatroomUpdate
+11 - BufferRequestId
+12 - BufferServerRequestId
