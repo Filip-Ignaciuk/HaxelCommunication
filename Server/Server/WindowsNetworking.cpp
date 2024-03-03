@@ -252,8 +252,6 @@ DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 
 			
 
-			// Now Send Messages
-
 			BufferServerConnect BSC(true, (char*)chatroomName.c_str());
 			send(clientSockets[socketPosition], (char*)&BSC, sizeof(BufferServerConnect), 0);
 			clientAccepted[socketPosition] = true;
