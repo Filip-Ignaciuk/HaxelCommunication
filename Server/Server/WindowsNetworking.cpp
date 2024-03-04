@@ -259,8 +259,7 @@ DWORD WINAPI WindowsNetworking::ReceiveConnect(LPVOID param)
 			
 			return 0;
 		}
-		std::string empty = "";
-		BufferServerConnect BSC(false, (char*)empty.c_str());
+		BufferServerConnect BSC(false, (char*)"");
 		send(clientSockets[socketPosition], (char*)&BSC, sizeof(BufferServerConnect), 0);
 		shutdown(clientSockets[socketPosition], 2);
 		clientSockets[socketPosition] = 0;
@@ -329,9 +328,8 @@ DWORD WINAPI WindowsNetworking::ReceiveDisconnect(LPVOID param)
 	std::string id = chatroom.GetUser(socketPosition).GetId();
 	Error error("User: " + displayName + ", ID: " + id + ", disconnected", 3);
 	ErrorHandler::AddError(error);
-	
-	char empty[1] = "";
-	User emptyUser(empty, empty, ImVec4{ 0,0,0,0 });
+
+	User emptyUser((char*)"", (char*)"", ImVec4{ 0,0,0,0 });
 	chatroom.UpdateUser(socketPosition, emptyUser);
 
 
@@ -405,6 +403,26 @@ DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 		// BufferRequestId
 		CreateThread(nullptr, 0, ReceiveRequestIdThread, RH, 0, nullptr);
 
+	}
+	else if(recievedBytes == SOCKET_ERROR)
+	{
+		std::string displayName = chatroom.GetUser(clientPosition).GetDisplayName();
+		std::string id = chatroom.GetUser(clientPosition).GetId();
+		Error error("User: " + displayName + ", ID: " + id + ", disconnected", 3);
+		ErrorHandler::AddError(error);
+
+		User emptyUser((char*)"", (char*)"", ImVec4{ 0,0,0,0 });
+		chatroom.UpdateUser(clientPosition, emptyUser);
+
+
+		SOCKET& clientSocket = clientSockets[clientPosition];
+		clientAccepted[clientPosition] = false;
+		clientRecieving[clientPosition] = false;
+		shutdown(clientSocket, 2);
+		closesocket(clientSocket);
+		clientSocket = 0;
+		disconnectedFromAllClients = true;
+		delete RH;
 	}
 	else
 	{
