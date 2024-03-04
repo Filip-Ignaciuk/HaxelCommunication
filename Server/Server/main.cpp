@@ -505,6 +505,8 @@ int main(int, char**)
 
     // Our state
     bool exit = true;
+    bool resetFocus = false;
+
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     // Setup Networking
@@ -649,9 +651,15 @@ int main(int, char**)
                 }
                 ImGui::EndChild();
                 static char command[128] = "";
-                if(ImGui::InputText(LanguageFileInitialiser::charAllTextsInApplication[41], command, IM_ARRAYSIZE(command)))
+                if (resetFocus)
                 {
-	                
+                    ImGui::SetKeyboardFocusHere(1);
+                    resetFocus = false;
+                }
+                if(ImGui::InputText(LanguageFileInitialiser::charAllTextsInApplication[41], command, IM_ARRAYSIZE(command), ImGuiInputTextFlags_CallbackAlways))
+                {
+                    resetFocus = true;
+
                 }
             }
             

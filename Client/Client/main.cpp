@@ -608,8 +608,11 @@ int main(int, char**)
     ImFont* font = io.Fonts->AddFontFromFileTTF("d:\\Fonts\\arialuni.ttf", 18.0f);
     IM_ASSERT(font != nullptr);
 
+    
+
 
     // Our state
+    bool exit = true;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     // Setup Networking
@@ -622,6 +625,7 @@ int main(int, char**)
     chatroom->SetClientUser(clientUser);
     networkCalls->UpdateUser(clientUser);
 
+    bool resetFocus = false;
 
     // Loading Configs
     config::StartConfigs();
@@ -656,7 +660,7 @@ int main(int, char**)
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
 
         
-        bool exit = true;
+        
         receivingStatus = networkCalls->GetReceivingStatus();
         chatroomStatus = networkCalls->GetChatroomStatus();
         isConnected = networkCalls->GetConnectedStatus();
@@ -699,13 +703,23 @@ int main(int, char**)
                 }
                 ImGui::EndChild();
                 static char textInput[messageSize] = "";
+                if(resetFocus)
+                {
+                    ImGui::SetKeyboardFocusHere(1);
+                    resetFocus = false;
+                }
                 if(ImGui::InputText("Message", textInput, IM_ARRAYSIZE(textInput), ImGuiInputTextFlags_EnterReturnsTrue))
                 {
-                    networkCalls->SendText(textInput);
-                    for (int i = 0; i < messageSize; i++)
+                	resetFocus = true;
+                    if(textInput != "")
                     {
-                        textInput[i] = 0;
+                        networkCalls->SendText(textInput);
+                        for (int i = 0; i < messageSize; i++)
+                        {
+                            textInput[i] = 0;
+                        }
                     }
+                    
                 }
             }
             
