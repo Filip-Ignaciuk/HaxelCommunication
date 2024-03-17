@@ -9,8 +9,11 @@
 #include <glfw3.h> // Will drag system OpenGL headers
 
 // Application Headers
+#include <thread>
+
 #include "Chatroom.hpp"
 #include "config.hpp"
+#include "DataManager.hpp"
 #include "User.hpp"
 #include "ErrorHandler.hpp"
 #include "GuiLanguage.hpp"
@@ -495,12 +498,18 @@ void MenuBar()
 
         if (ImGui::BeginMenu("User"))
         {
+            if (ImGui::MenuItem("Save User"))
+            {
+                DataManager::SaveUser(*clientUser, style);
+            }
+            if (ImGui::MenuItem("Load User"))
+            {
+
+            }
+
             if(wantsEditUser)
             {
-                if (ImGui::MenuItem("Save Changes"))
-                {
-                    wantsEditUser = true;
-                }
+                
                 if(ImGui::MenuItem("Close Edit User Panel"))
                 {
                     wantsEditUser = false;

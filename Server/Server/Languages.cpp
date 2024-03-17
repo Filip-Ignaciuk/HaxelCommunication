@@ -2,27 +2,30 @@
 #include <filesystem>
 
 #include "Languages.hpp"
-#include "config.hpp"
+
+#include "Config.hpp"
 #include "Error.hpp"
 #include "ErrorHandler.hpp"
 
 
 void LanguageFileInitialiser::GenerateLanguageFile(const int _language)
 {
-	CheckInstalledLanguages();
+	
 	// No need for else as we already checked for maximums and minimums.
+	// Returns the result if it has successfully initialised.
 	if (!_language && !initialisedLanguages[_language]) { initialisedLanguages[_language] = GenerateEnGb(); }
 	else if (_language == 1 && !initialisedLanguages[_language]) { initialisedLanguages[_language] = GeneratePl(); }
 }
 
 void LanguageFileInitialiser::ChangeLanguage(const int _language)
 {
-	if(_language < 0 || _language > numberOfLanguages  )
+	if(_language < 0 || numberOfLanguages < _language  )
 	{
+		// number is outside range
 		Error invalidLanguage(charAllTextsInApplication[30], 1);
 		ErrorHandler::AddError(invalidLanguage);
 	}
-	config::UpdateLanguage(_language);
+
 	if(initialisedLanguages[_language] == false)
 	{
 		GenerateLanguageFile(_language);
@@ -99,15 +102,18 @@ bool LanguageFileInitialiser::GeneratePl()
 	return true;
 }
 
-void LanguageFileInitialiser::CheckInstalledLanguages()
+void LanguageFileInitialiser::UpdateInstalledLanguages()
 {
 	const std::string languagePath = config::currentDirNormalised + "/Languages";
 	for (const auto& entry : std::filesystem::directory_iterator(languagePath))
 	{
+		// Reversing the directory so that we can get the name of the document.
+		// Bad code need to redo.
 		std::string entryReversedNormalised = entry.path().string();
 		entryReversedNormalised = config::NormaliseDir(entryReversedNormalised);
 		std::reverse(entryReversedNormalised.begin(), entryReversedNormalised.end());
 		std::string fileName;
+
 		int i = 0;
 		while(entryReversedNormalised[i] != '/')
 		{

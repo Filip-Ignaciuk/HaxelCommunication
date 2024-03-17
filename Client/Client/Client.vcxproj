@@ -167,6 +167,7 @@
     <ClCompile Include="BufferStandard.cpp" />
     <ClCompile Include="Chatroom.cpp" />
     <ClCompile Include="Config.cpp" />
+    <ClCompile Include="DataManager.cpp" />
     <ClCompile Include="Error.cpp" />
     <ClCompile Include="ErrorHandler.cpp" />
     <ClCompile Include="GuiLanguage.hpp" />
@@ -191,6 +192,7 @@
     <ClInclude Include="BufferStandard.hpp" />
     <ClInclude Include="Chatroom.hpp" />
     <ClInclude Include="config.hpp" />
+    <ClInclude Include="DataManager.hpp" />
     <ClInclude Include="Error.hpp" />
     <ClInclude Include="ErrorHandler.hpp" />
     <ClInclude Include="imconfig.h" />

@@ -1,6 +1,5 @@
 #pragma once
-// Application Headers
-#include "config.hpp"
+
 
 class LanguageFileInitialiser
 {
@@ -15,6 +14,10 @@ private:
 	static bool GenerateEnGb();
 	static bool GeneratePl();
 
+	static void GenerateLanguageFile(const int _language);
+	static void PopulateAllTextsInApplication();
+
+
 public:
 	// Currently generated languages
 	static bool initialisedLanguages[numberOfLanguages];
@@ -22,12 +25,10 @@ public:
 	static char* charAllTextsInApplication[numberOfSentences];
 	static std::string allTextsInApplication[numberOfSentences];
 
-	static void GenerateLanguageFile(const int _language);
 	static void ChangeLanguage(int _language);
 
-	static void CheckInstalledLanguages();
+	static void UpdateInstalledLanguages();
 
-	static void PopulateAllTextsInApplication();
 
 };
 

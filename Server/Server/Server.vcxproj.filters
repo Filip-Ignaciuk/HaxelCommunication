@@ -31,6 +31,9 @@
     <Filter Include="Source Files\Networking">
       <UniqueIdentifier>{54079dd3-bd53-4cbb-b1b2-a08c8ea950ed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Extra">
+      <UniqueIdentifier>{f5faa21b-9240-4d2c-b4ae-f3ef2b432af9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Chatroom.cpp">
@@ -93,21 +96,18 @@
     <ClCompile Include="BufferStandard.cpp">
       <Filter>Source Files\Networking</Filter>
     </ClCompile>
+    <ClCompile Include="DataManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Chatroom.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="config.hpp">
+    <ClInclude Include="Config.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GuiLanguage.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="User.hpp">
@@ -172,6 +172,12 @@
     </ClInclude>
     <ClInclude Include="Standard.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DataManager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="json.hpp">
+      <Filter>Header Files\Extra</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

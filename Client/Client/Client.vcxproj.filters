@@ -107,6 +107,9 @@
     <ClCompile Include="NetworkCallsCreator.cpp">
       <Filter>Source Files\Networking</Filter>
     </ClCompile>
+    <ClCompile Include="DataManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="User.hpp">
@@ -185,6 +188,9 @@
       <Filter>Header Files\ErrorHandling</Filter>
     </ClInclude>
     <ClInclude Include="Standard.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DataManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

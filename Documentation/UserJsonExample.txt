@@ -1,0 +1,10 @@
+This is how an example user json file would look like.
+
+{
+	"name" : "Cold"
+	"colourx" : 1.0
+	"coloury" : 1.0
+	"colourz" : 1.0
+	"numofstyle" : 3
+	"style" : [2,1,3]
+}

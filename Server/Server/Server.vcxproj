@@ -93,14 +93,14 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;</AdditionalIncludeDirectories>
-      <AdditionalUsingDirectories>$(SolutionDir)Client\</AdditionalUsingDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Dependencies\GLFW\include;</AdditionalIncludeDirectories>
+      <AdditionalUsingDirectories>$(SolutionDir)..Dependencies\JSON;$(SolutionDir)Client\</AdditionalUsingDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>ws2_32.lib;opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\GLFW\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\Dependencies\GLFW\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -112,8 +112,8 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;</AdditionalIncludeDirectories>
-      <AdditionalUsingDirectories>$(SolutionDir)Client\</AdditionalUsingDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Dependencies\GLFW\include;</AdditionalIncludeDirectories>
+      <AdditionalUsingDirectories>$(SolutionDir)..Dependencies\JSON;$(SolutionDir)Client\</AdditionalUsingDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -121,7 +121,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>ws2_32.lib;opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\GLFW\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\Dependencies\GLFW\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -131,14 +131,14 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;</AdditionalIncludeDirectories>
-      <AdditionalUsingDirectories>$(SolutionDir)Client\</AdditionalUsingDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Dependencies\GLFW\include;</AdditionalIncludeDirectories>
+      <AdditionalUsingDirectories>$(SolutionDir)..Dependencies\JSON;$(SolutionDir)Client\</AdditionalUsingDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>ws2_32.lib;opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\GLFW\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\Dependencies\GLFW\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -150,8 +150,8 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;</AdditionalIncludeDirectories>
-      <AdditionalUsingDirectories>$(SolutionDir)Client\</AdditionalUsingDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Dependencies\GLFW\include;</AdditionalIncludeDirectories>
+      <AdditionalUsingDirectories>$(SolutionDir)..Dependencies\JSON;$(SolutionDir)Client\</AdditionalUsingDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -159,13 +159,14 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>ws2_32.lib;opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\GLFW\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\Dependencies\GLFW\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BufferStandard.cpp" />
     <ClCompile Include="Chatroom.cpp" />
     <ClCompile Include="Config.cpp" />
+    <ClCompile Include="DataManager.cpp" />
     <ClCompile Include="Error.cpp" />
     <ClCompile Include="ErrorHandler.cpp" />
     <ClCompile Include="imgui.cpp" />
@@ -187,7 +188,8 @@
   <ItemGroup>
     <ClInclude Include="BufferStandard.hpp" />
     <ClInclude Include="Chatroom.hpp" />
-    <ClInclude Include="config.hpp" />
+    <ClInclude Include="Config.hpp" />
+    <ClInclude Include="DataManager.hpp" />
     <ClInclude Include="Error.hpp" />
     <ClInclude Include="ErrorHandler.hpp" />
     <ClInclude Include="GuiLanguage.hpp" />
@@ -200,14 +202,13 @@
     <ClInclude Include="imstb_rectpack.h" />
     <ClInclude Include="imstb_textedit.h" />
     <ClInclude Include="imstb_truetype.h" />
+    <ClInclude Include="json.hpp" />
     <ClInclude Include="Languages.hpp" />
     <ClInclude Include="Message.hpp" />
     <ClInclude Include="NerworkCallsCreator.hpp" />
     <ClInclude Include="NetworkCalls.hpp" />
     <ClInclude Include="Standard.hpp" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="Storage.hpp" />
-    <ClInclude Include="targetver.h" />
     <ClInclude Include="User.hpp" />
     <ClInclude Include="WindowsNetworkCallsCreator.hpp" />
     <ClInclude Include="WindowsNetworking.hpp" />

@@ -10,7 +10,7 @@
 
 // Application Headers
 #include "Chatroom.hpp"
-#include "config.hpp"
+#include "Config.hpp"
 #include "User.hpp"
 #include "ErrorHandler.hpp"
 #include "GuiLanguage.hpp"
