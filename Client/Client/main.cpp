@@ -347,7 +347,7 @@ void MenuBar()
                         else
                         {
                             
-	                        for (int i = 0; i < style.size(); i++)
+	                        for (size_t i = 0, size = style.size(); i < size; i++)
 	                        {
                                 if (style[i] == 1)
                                 {
@@ -367,7 +367,7 @@ void MenuBar()
                         }
                         else
                         {
-                            for (int i = 0; i < style.size(); i++)
+                            for (size_t i = 0, size = style.size(); i < size; i++)
                             {
                                 if (style[i] == 2)
                                 {
@@ -386,7 +386,7 @@ void MenuBar()
                         }
                         else
                         {
-                            for (int i = 0; i < style.size(); i++)
+                            for (size_t i = 0, size = style.size(); i < size; i++)
                             {
                                 if (style[i] == 3)
                                 {
@@ -405,7 +405,7 @@ void MenuBar()
                         }
                         else
                         {
-                            for (int i = 0; i < style.size(); i++)
+                            for (size_t i = 0, size = style.size(); i < size; i++)
                             {
                                 if (style[i] == 4)
                                 {
@@ -424,7 +424,7 @@ void MenuBar()
                         }
                         else
                         {
-                            for (int i = 0; i < style.size(); i++)
+                            for (size_t i = 0, size = style.size(); i < size; i++)
                             {
                                 if (style[i] == 5)
                                 {
