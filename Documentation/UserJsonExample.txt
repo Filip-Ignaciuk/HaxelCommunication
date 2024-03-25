@@ -1,5 +1,5 @@
 This is how an example user json file would look like.
-
+Based on data manager.
 {
 	"name" : "Cold"
 	"colourx" : 1.0
