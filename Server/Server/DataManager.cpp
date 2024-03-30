@@ -37,6 +37,8 @@ void DataManager::SaveUser(User& _user)
 	if(!userFile.is_open())
 	{
 		userFile.close();
+		std::ofstream userFile(config::currentDirNormalised + "/Users/" + _user.GetDisplayName() + ".json");
+
 
 	}
 	else
