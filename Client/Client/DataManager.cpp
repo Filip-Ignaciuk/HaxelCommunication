@@ -17,6 +17,7 @@ bool DataManager::LoadUser(std::string& _name, User* _user, std::vector<int>& _s
 	float userColourY = 0.0f;
 	float userColourZ = 0.0f;
 	int numOfStyle;
+	std::vector<int> style;
 	if (userFile.is_open())
 	{
 		nlohmann::json jsonData = nlohmann::json::parse(userFile);
@@ -70,9 +71,11 @@ bool DataManager::LoadUser(std::string& _name, User* _user, std::vector<int>& _s
 		{
 			if (rawStyleData.value().is_array())
 			{
-				auto style = rawStyleData.value();
+				style = rawStyleData.value().get<std::vector<int>>();
 			}
 		}
+
+		
 
 		ImVec4 userColour(userColourX, userColourY, userColourZ, 1.0f);
 		User* user = new User((char*)userName.c_str(), (char*)"77", userColour);
@@ -103,11 +106,29 @@ void DataManager::SaveUser(User& _user, std::vector<int>& _style)
 		jsonData["colourx"] = _user.GetUserColour().x;
 		jsonData["coloury"] = _user.GetUserColour().y;
 		jsonData["colourz"] = _user.GetUserColour().z;
-		jsonData["numofstyle"] = _style.size();
+		jsonData["Style"] = _style;
+
+		userFile.close();
+		std::ofstream outUserFile(config::currentDirNormalised + "/Users/" + _user.GetDisplayName() + ".json");
+		outUserFile << jsonData;
+		outUserFile.close();
+	}
+	else
+	{
+		// TODO: Implement are you sure to override feature;
+
+
+		nlohmann::json jsonData;
+		jsonData["name"] = _user.GetDisplayName();
+		jsonData["colourx"] = _user.GetUserColour().x;
+		jsonData["coloury"] = _user.GetUserColour().y;
+		jsonData["colourz"] = _user.GetUserColour().z;
+		jsonData["Style"] = _style;
+
+		userFile.close();
 
 		std::ofstream outUserFile(config::currentDirNormalised + "/Users/" + _user.GetDisplayName() + ".json");
 		outUserFile << jsonData;
 		outUserFile.close();
 	}
-	userFile.close();
 }
