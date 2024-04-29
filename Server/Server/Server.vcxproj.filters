@@ -16,9 +16,6 @@
     <Filter Include="Header Files\ErrorHandling">
       <UniqueIdentifier>{356943cd-eee9-4c85-ac3b-32e61206be5b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\ImGui">
-      <UniqueIdentifier>{975ddc87-d5ba-45db-b2cf-c798b9a31b76}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Networking">
       <UniqueIdentifier>{22c4c545-95e2-4488-a63b-bef142c6d81a}</UniqueIdentifier>
     </Filter>
@@ -125,40 +122,10 @@
     <ClInclude Include="ErrorHandler.hpp">
       <Filter>Header Files\ErrorHandling</Filter>
     </ClInclude>
-    <ClInclude Include="imgui.h">
-      <Filter>Header Files\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui_impl_glfw.h">
-      <Filter>Header Files\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui_impl_opengl3.h">
-      <Filter>Header Files\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui_impl_opengl3_loader.h">
-      <Filter>Header Files\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui_internal.h">
-      <Filter>Header Files\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imstb_rectpack.h">
-      <Filter>Header Files\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imstb_textedit.h">
-      <Filter>Header Files\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imstb_truetype.h">
-      <Filter>Header Files\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imconfig.h">
-      <Filter>Header Files\ImGui</Filter>
-    </ClInclude>
     <ClInclude Include="NerworkCallsCreator.hpp">
       <Filter>Header Files\Networking</Filter>
     </ClInclude>
     <ClInclude Include="NetworkCalls.hpp">
-      <Filter>Header Files\Networking</Filter>
-    </ClInclude>
-    <ClInclude Include="BufferStandard.hpp">
       <Filter>Header Files\Networking</Filter>
     </ClInclude>
     <ClInclude Include="WindowsNetworkCallsCreator.hpp">

@@ -93,7 +93,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\Dependencies\GLFW\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Dependencies\GLFW\include;$(SolutionDir)..\Dependencies\BufferStandard\include;$(SolutionDir)..\Dependencies\ImGui\include</AdditionalIncludeDirectories>
       <AdditionalUsingDirectories>$(SolutionDir)..Dependencies\JSON;$(SolutionDir)Client\</AdditionalUsingDirectories>
     </ClCompile>
     <Link>
@@ -112,7 +112,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\Dependencies\GLFW\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Dependencies\GLFW\include;$(SolutionDir)..\Dependencies\BufferStandard\include;$(SolutionDir)..\Dependencies\ImGui\include</AdditionalIncludeDirectories>
       <AdditionalUsingDirectories>$(SolutionDir)..Dependencies\JSON;$(SolutionDir)Client\</AdditionalUsingDirectories>
     </ClCompile>
     <Link>
@@ -131,7 +131,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\Dependencies\GLFW\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Dependencies\GLFW\include;$(SolutionDir)..\Dependencies\BufferStandard\include;$(SolutionDir)..\Dependencies\ImGui\include</AdditionalIncludeDirectories>
       <AdditionalUsingDirectories>$(SolutionDir)..Dependencies\JSON;$(SolutionDir)Client\</AdditionalUsingDirectories>
     </ClCompile>
     <Link>
@@ -150,7 +150,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\Dependencies\GLFW\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Dependencies\GLFW\include;$(SolutionDir)..\Dependencies\BufferStandard\include;$(SolutionDir)..\Dependencies\ImGui\include</AdditionalIncludeDirectories>
       <AdditionalUsingDirectories>$(SolutionDir)..Dependencies\JSON;$(SolutionDir)Client\</AdditionalUsingDirectories>
     </ClCompile>
     <Link>
@@ -186,22 +186,12 @@
     <ClCompile Include="WindowsNetworking.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BufferStandard.hpp" />
     <ClInclude Include="Chatroom.hpp" />
     <ClInclude Include="Config.hpp" />
     <ClInclude Include="DataManager.hpp" />
     <ClInclude Include="Error.hpp" />
     <ClInclude Include="ErrorHandler.hpp" />
     <ClInclude Include="GuiLanguage.hpp" />
-    <ClInclude Include="imconfig.h" />
-    <ClInclude Include="imgui.h" />
-    <ClInclude Include="imgui_impl_glfw.h" />
-    <ClInclude Include="imgui_impl_opengl3.h" />
-    <ClInclude Include="imgui_impl_opengl3_loader.h" />
-    <ClInclude Include="imgui_internal.h" />
-    <ClInclude Include="imstb_rectpack.h" />
-    <ClInclude Include="imstb_textedit.h" />
-    <ClInclude Include="imstb_truetype.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="Languages.hpp" />
     <ClInclude Include="Message.hpp" />

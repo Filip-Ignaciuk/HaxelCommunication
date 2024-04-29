@@ -8,6 +8,7 @@
 
 User DataManager::LoadUser(std::string& _name)
 {
+	User user;
 	// We're checking if this file exists
 	std::ifstream userFile(config::currentDirNormalised + "/Users/" + _name + ".json");
 	if (userFile.is_open())
@@ -17,7 +18,7 @@ User DataManager::LoadUser(std::string& _name)
 		float userColourX = jsonData["colourx"].get<float>();
 		float userColourY = jsonData["coloury"].get<float>();
 		float userColourZ = jsonData["colourz"].get<float>();
-		int numOfStyle = 
+		//int numOfStyle = 
 
 	}
 	else
@@ -26,6 +27,7 @@ User DataManager::LoadUser(std::string& _name)
 		Error userNonExistant("User doesnt exist", 1);
 		ErrorHandler::AddError(userNonExistant);
 	}
+	return user;
 }
 
 
