@@ -1,0 +1,256 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Projects\\HaxelCommunication\\Client\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|D:\\Projects\\HaxelCommunication\\Client\\Client\\ErrorHandler.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|solutionrelative:Client\\ErrorHandler.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|D:\\Projects\\HaxelCommunication\\Client\\Client\\BufferStandard.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|solutionrelative:Client\\BufferStandard.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|D:\\Projects\\HaxelCommunication\\Client\\Client\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|solutionrelative:Client\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|D:\\Projects\\HaxelCommunication\\Client\\Client\\WindowsNetworkCallsCreator.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|solutionrelative:Client\\WindowsNetworkCallsCreator.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|D:\\Projects\\HaxelCommunication\\Client\\Client\\DataManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|solutionrelative:Client\\DataManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|D:\\Projects\\HaxelCommunication\\Client\\Client\\User.hpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|solutionrelative:Client\\User.hpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|D:\\Projects\\HaxelCommunication\\Client\\Client\\DataManager.hpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|solutionrelative:Client\\DataManager.hpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|D:\\Projects\\HaxelCommunication\\Client\\Client\\Message.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|solutionrelative:Client\\Message.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|D:\\Projects\\HaxelCommunication\\Client\\Client\\Languages.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|solutionrelative:Client\\Languages.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|D:\\Projects\\HaxelCommunication\\Client\\Client\\User.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|solutionrelative:Client\\User.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|D:\\Projects\\HaxelCommunication\\Client\\Client\\Chatroom.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|solutionrelative:Client\\Chatroom.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|D:\\Projects\\HaxelCommunication\\Client\\Client\\Config.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|solutionrelative:Client\\Config.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|D:\\Projects\\HaxelCommunication\\Client\\Client\\config.hpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|solutionrelative:Client\\config.hpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|D:\\Projects\\HaxelCommunication\\Client\\Client\\Languages.hpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|solutionrelative:Client\\Languages.hpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 218,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "BufferStandard.cpp",
+              "DocumentMoniker": "D:\\Projects\\HaxelCommunication\\Client\\Client\\BufferStandard.cpp",
+              "RelativeDocumentMoniker": "Client\\BufferStandard.cpp",
+              "ToolTip": "D:\\Projects\\HaxelCommunication\\Client\\Client\\BufferStandard.cpp",
+              "RelativeToolTip": "Client\\BufferStandard.cpp",
+              "ViewState": "AQIAACYAAAAAAAAAAAAAAEYAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-05-06T19:41:18.325Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "WindowsNetworkCallsCreator.cpp",
+              "DocumentMoniker": "D:\\Projects\\HaxelCommunication\\Client\\Client\\WindowsNetworkCallsCreator.cpp",
+              "RelativeDocumentMoniker": "Client\\WindowsNetworkCallsCreator.cpp",
+              "ToolTip": "D:\\Projects\\HaxelCommunication\\Client\\Client\\WindowsNetworkCallsCreator.cpp",
+              "RelativeToolTip": "Client\\WindowsNetworkCallsCreator.cpp",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-05-06T19:40:26.961Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ErrorHandler.cpp",
+              "DocumentMoniker": "D:\\Projects\\HaxelCommunication\\Client\\Client\\ErrorHandler.cpp",
+              "RelativeDocumentMoniker": "Client\\ErrorHandler.cpp",
+              "ToolTip": "D:\\Projects\\HaxelCommunication\\Client\\Client\\ErrorHandler.cpp",
+              "RelativeToolTip": "Client\\ErrorHandler.cpp",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAZAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-05-06T19:40:23.555Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Config.cpp",
+              "DocumentMoniker": "D:\\Projects\\HaxelCommunication\\Client\\Client\\Config.cpp",
+              "RelativeDocumentMoniker": "Client\\Config.cpp",
+              "ToolTip": "D:\\Projects\\HaxelCommunication\\Client\\Client\\Config.cpp",
+              "RelativeToolTip": "Client\\Config.cpp",
+              "ViewState": "AQIAAAkAAAAAAAAAAAAAAE8AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-03-30T22:01:41.369Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "main.cpp",
+              "DocumentMoniker": "D:\\Projects\\HaxelCommunication\\Client\\Client\\main.cpp",
+              "RelativeDocumentMoniker": "Client\\main.cpp",
+              "ToolTip": "D:\\Projects\\HaxelCommunication\\Client\\Client\\main.cpp",
+              "RelativeToolTip": "Client\\main.cpp",
+              "ViewState": "AQIAAG8DAAAAAAAAAAAAANICAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-03-30T22:01:41.458Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Languages.cpp",
+              "DocumentMoniker": "D:\\Projects\\HaxelCommunication\\Client\\Client\\Languages.cpp",
+              "RelativeDocumentMoniker": "Client\\Languages.cpp",
+              "ToolTip": "D:\\Projects\\HaxelCommunication\\Client\\Client\\Languages.cpp",
+              "RelativeToolTip": "Client\\Languages.cpp",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAACcAAAAYAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-03-30T22:01:41.367Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "DataManager.cpp",
+              "DocumentMoniker": "D:\\Projects\\HaxelCommunication\\Client\\Client\\DataManager.cpp",
+              "RelativeDocumentMoniker": "Client\\DataManager.cpp",
+              "ToolTip": "D:\\Projects\\HaxelCommunication\\Client\\Client\\DataManager.cpp",
+              "RelativeToolTip": "Client\\DataManager.cpp",
+              "ViewState": "AQIAAGMAAAAAAAAAAAD4v2YAAAACAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-03-30T22:01:41.334Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Message.cpp",
+              "DocumentMoniker": "D:\\Projects\\HaxelCommunication\\Client\\Client\\Message.cpp",
+              "RelativeDocumentMoniker": "Client\\Message.cpp",
+              "ToolTip": "D:\\Projects\\HaxelCommunication\\Client\\Client\\Message.cpp",
+              "RelativeToolTip": "Client\\Message.cpp",
+              "ViewState": "AQIAACEAAAAAAAAAAAAAALAAAAAVAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-03-30T22:01:41.596Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Chatroom.cpp",
+              "DocumentMoniker": "D:\\Projects\\HaxelCommunication\\Client\\Client\\Chatroom.cpp",
+              "RelativeDocumentMoniker": "Client\\Chatroom.cpp",
+              "ToolTip": "D:\\Projects\\HaxelCommunication\\Client\\Client\\Chatroom.cpp",
+              "RelativeToolTip": "Client\\Chatroom.cpp",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAKAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-03-30T22:01:41.597Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "User.cpp",
+              "DocumentMoniker": "D:\\Projects\\HaxelCommunication\\Client\\Client\\User.cpp",
+              "RelativeDocumentMoniker": "Client\\User.cpp",
+              "ToolTip": "D:\\Projects\\HaxelCommunication\\Client\\Client\\User.cpp",
+              "RelativeToolTip": "Client\\User.cpp",
+              "ViewState": "AQIAAA4AAAAAAAAAAAAuwCYAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-03-30T22:01:41.598Z"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 305,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "DataManager.hpp",
+              "DocumentMoniker": "D:\\Projects\\HaxelCommunication\\Client\\Client\\DataManager.hpp",
+              "RelativeDocumentMoniker": "Client\\DataManager.hpp",
+              "ToolTip": "D:\\Projects\\HaxelCommunication\\Client\\Client\\DataManager.hpp",
+              "RelativeToolTip": "Client\\DataManager.hpp",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAABPAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-03-30T22:01:41.601Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Languages.hpp",
+              "DocumentMoniker": "D:\\Projects\\HaxelCommunication\\Client\\Client\\Languages.hpp",
+              "RelativeDocumentMoniker": "Client\\Languages.hpp",
+              "ToolTip": "D:\\Projects\\HaxelCommunication\\Client\\Client\\Languages.hpp",
+              "RelativeToolTip": "Client\\Languages.hpp",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABsAAAArAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-03-30T22:01:41.605Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "config.hpp",
+              "DocumentMoniker": "D:\\Projects\\HaxelCommunication\\Client\\Client\\config.hpp",
+              "RelativeDocumentMoniker": "Client\\config.hpp",
+              "ToolTip": "D:\\Projects\\HaxelCommunication\\Client\\Client\\config.hpp",
+              "RelativeToolTip": "Client\\config.hpp",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAuwBkAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-03-30T22:01:41.607Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "User.hpp",
+              "DocumentMoniker": "D:\\Projects\\HaxelCommunication\\Client\\Client\\user.hpp",
+              "RelativeDocumentMoniker": "Client\\user.hpp",
+              "ToolTip": "D:\\Projects\\HaxelCommunication\\Client\\Client\\user.hpp",
+              "RelativeToolTip": "Client\\user.hpp",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAMAAAAJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-03-30T22:01:41.609Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
