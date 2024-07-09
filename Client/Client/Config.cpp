@@ -62,6 +62,9 @@ void config::Initialise(const std::string& _txt)
 	file.close();
 	LanguageFileInitialiser::ChangeLanguage(0);
 	m_isInitialised = 1;
+
+
+
 }
 
 void config::UpdateLanguage(const int _language)

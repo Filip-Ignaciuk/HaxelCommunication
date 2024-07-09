@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "D:\\Projects\\HaxelCommunication\\Server\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{63CC153C-C652-410A-A788-0EB97385217E}|Server\\Server.vcxproj|D:\\Projects\\HaxelCommunication\\Server\\Server\\BufferStandard.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{63CC153C-C652-410A-A788-0EB97385217E}|Server\\Server.vcxproj|solutionrelative:Server\\BufferStandard.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{63CC153C-C652-410A-A788-0EB97385217E}|Server\\Server.vcxproj|D:\\Projects\\HaxelCommunication\\Server\\Server\\DataManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{63CC153C-C652-410A-A788-0EB97385217E}|Server\\Server.vcxproj|solutionrelative:Server\\DataManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{63CC153C-C652-410A-A788-0EB97385217E}|Server\\Server.vcxproj|D:\\Projects\\HaxelCommunication\\Server\\Server\\BufferStandard.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{63CC153C-C652-410A-A788-0EB97385217E}|Server\\Server.vcxproj|solutionrelative:Server\\BufferStandard.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{63CC153C-C652-410A-A788-0EB97385217E}|Server\\Server.vcxproj|D:\\Projects\\HaxelCommunication\\Server\\Server\\Message.hpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -50,7 +50,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 443,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -70,13 +70,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "BufferStandard.cpp",
               "DocumentMoniker": "D:\\Projects\\HaxelCommunication\\Server\\Server\\BufferStandard.cpp",
               "RelativeDocumentMoniker": "Server\\BufferStandard.cpp",
               "ToolTip": "D:\\Projects\\HaxelCommunication\\Server\\Server\\BufferStandard.cpp",
               "RelativeToolTip": "Server\\BufferStandard.cpp",
-              "ViewState": "AQIAAAMAAAAAAAAAAAD4vxgAAAAAAAAA",
+              "ViewState": "AQIAAAMAAAAAAAAAAAD4vwsAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-04-29T19:52:43.74Z",
               "EditorCaption": ""
@@ -95,13 +95,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "DataManager.cpp",
               "DocumentMoniker": "D:\\Projects\\HaxelCommunication\\Server\\Server\\DataManager.cpp",
               "RelativeDocumentMoniker": "Server\\DataManager.cpp",
               "ToolTip": "D:\\Projects\\HaxelCommunication\\Server\\Server\\DataManager.cpp",
               "RelativeToolTip": "Server\\DataManager.cpp",
-              "ViewState": "AQIAAAwAAAAAAAAAAAAAAB0AAAANAAAA",
+              "ViewState": "AQIAABkAAAAAAAAAAAAAAC8AAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-04-29T19:52:29.49Z",
               "EditorCaption": ""

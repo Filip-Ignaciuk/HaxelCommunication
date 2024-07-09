@@ -18,7 +18,6 @@ User DataManager::LoadUser(std::string& _name)
 		float userColourX = jsonData["colourx"].get<float>();
 		float userColourY = jsonData["coloury"].get<float>();
 		float userColourZ = jsonData["colourz"].get<float>();
-		//int numOfStyle = 
 
 	}
 	else
@@ -40,7 +39,15 @@ void DataManager::SaveUser(User& _user)
 	{
 		userFile.close();
 		std::ofstream userFile(config::currentDirNormalised + "/Users/" + _user.GetDisplayName() + ".json");
+		ImVec4 userColour = _user.GetUserColour();
+		nlohmann::json userJson = {
+			{"name", _user.GetDisplayName()},
+			{"colourx", userColour.x},
+			{"coloury", userColour.y},
+			{"colourz", userColour.z},
 
+		};
+		userFile << userJson << std::endl;
 
 	}
 	else
