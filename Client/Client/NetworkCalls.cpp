@@ -10,10 +10,10 @@ void NetworkCalls::SendText(char* _message) {}
 void NetworkCalls::UpdateUser(User* _user) {}
 void NetworkCalls::Receive() {}
 
-bool NetworkCalls::GetReceivingStatus() { return false; }
-bool NetworkCalls::GetChatroomStatus() { return false; }
-bool NetworkCalls::GetConnectedStatus() { return false; }
-bool NetworkCalls::GetUpdatedUserStatus() { return false; }
+bool* NetworkCalls::GetReceivingStatus() { return nullptr; }
+bool* NetworkCalls::GetChatroomStatus() { return nullptr; }
+bool* NetworkCalls::GetConnectedStatus() { return nullptr; }
+bool* NetworkCalls::GetUpdatedUserStatus() { return nullptr; }
 
 Chatroom& NetworkCalls::GetChatroom() { return *new Chatroom(); }
 

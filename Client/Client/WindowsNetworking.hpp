@@ -20,13 +20,13 @@ class WindowsNetworking : public NetworkCalls
 private:
 	static SOCKET clientSocket;
 
-	static bool isReceiving;
+	static bool* isReceiving;
 
-	static bool isConnected;
+	static bool* isConnected;
 
-	static bool inChatroom;
+	static bool* inChatroom;
 
-	static bool hasUpdatedUser;
+	static bool* hasUpdatedUser;
 
 	static User* currentUser;
 
@@ -66,10 +66,10 @@ public:
 	void Receive() override;
 
 	// Class Based
-	bool GetReceivingStatus() override;
-	bool GetChatroomStatus() override;
-	bool GetConnectedStatus() override;
-	bool GetUpdatedUserStatus() override;
+	bool* GetReceivingStatus() override;
+	bool* GetChatroomStatus() override;
+	bool* GetConnectedStatus() override;
+	bool* GetUpdatedUserStatus() override;
 	Chatroom& GetChatroom() override;
 
 };

@@ -46,7 +46,7 @@ static void glfw_error_callback(int error, const char* description)
 // GUI Logic
 
 static bool wantsEditUser = false;
-static bool isUpdated = false;
+static bool* userUpdatedStatus = false;
 
 static ImVec4 white{ 1,1,1,1 };
 static ImVec4 red{ 1.0f, 0.0f, 0.0f ,1.0f };
@@ -63,9 +63,9 @@ bool leaveChatroomPopup = false;
 NetworkCallsCreator* creator;
 NetworkCalls* networkCalls;
 
-bool receivingStatus;
-bool chatroomStatus;
-bool isConnected;
+bool* receivingStatus;
+bool* chatroomStatus;
+bool* connectedStatus;
 
 
 // Error Data
@@ -84,7 +84,6 @@ static inline Chatroom emptyChatroom;
 static inline Chatroom* chatroom;
 static inline MessageBuilder messageBuilder;
 
-static inline bool updateMessagesInChatroom;
 
 
 // We store all chatroom behaviour in the chatroom class, to organise and simplify our code.
@@ -441,14 +440,8 @@ void MenuBar()
                     if(ImGui::Button("SaveChanges"))
                     {
                         chatroom->SetStyle(style);
-                        if(chatroomStatus)
-                        {
-                            chatroom->UpdateMessages();
-                        }
-                        else
-                        {
-                            updateMessagesInChatroom = true;
-                        }
+                        chatroom->UpdateMessages();
+
                         
                     }
                     ImGui::EndMenu();
@@ -630,7 +623,14 @@ int main(int, char**)
     networkCalls->CreateSocket();
     chatroom = &networkCalls->GetChatroom();
 
-    // All parts have the same client user pointer.
+    // Indication of current processes
+    receivingStatus = networkCalls->GetReceivingStatus();
+    chatroomStatus = networkCalls->GetChatroomStatus();
+    connectedStatus = networkCalls->GetConnectedStatus();
+    userUpdatedStatus = networkCalls->GetUpdatedUserStatus();
+
+
+    // All scripts point to the same client user. Which is declared here
     chatroom->SetClientUser(clientUser);
     networkCalls->UpdateUser(clientUser);
 
@@ -670,9 +670,7 @@ int main(int, char**)
 
         
         
-        receivingStatus = networkCalls->GetReceivingStatus();
-        chatroomStatus = networkCalls->GetChatroomStatus();
-        isConnected = networkCalls->GetConnectedStatus();
+        
 
         // Receive data from chatroom
         networkCalls->Receive();
@@ -825,12 +823,11 @@ int main(int, char**)
             {
                 std::string currentUserName;
                 ImGui::SeparatorText("User Information");
-                isUpdated = networkCalls->GetUpdatedUserStatus();
-                if(isUpdated)
+                if(userUpdatedStatus)
                 {
                     ImGui::TextColored(green, "Updated with chatroom.");
                 }
-                else if(!chatroomStatus && !isConnected)
+                else if(!chatroomStatus && !connectedStatus)
                 {
                     ImGui::TextColored(white, "Currently not in chatroom.");
                 }

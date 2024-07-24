@@ -118,7 +118,7 @@
     <ClInclude Include="Languages.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="config.hpp">
+    <ClInclude Include="Config.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NerworkCallsCreator.hpp">

@@ -9,10 +9,10 @@
 #include <WS2tcpip.h>
 
 SOCKET WindowsNetworking::clientSocket = INVALID_SOCKET;
-bool WindowsNetworking::isReceiving = false;
-bool WindowsNetworking::isConnected = false;
-bool WindowsNetworking::inChatroom = false;
-bool WindowsNetworking::hasUpdatedUser = false;
+bool* WindowsNetworking::isReceiving = false;
+bool* WindowsNetworking::isConnected = false;
+bool* WindowsNetworking::inChatroom = false;
+bool* WindowsNetworking::hasUpdatedUser = false;
 User* WindowsNetworking::currentUser;
 Chatroom WindowsNetworking::chatroom;
 
@@ -42,7 +42,7 @@ DWORD WINAPI WindowsNetworking::ConnectThread(LPVOID param)
 		// Successful
 		BufferConnect BC((char*)password.c_str());
 		send(clientSocket, (char*)&BC, sizeof(BufferConnect), 0);
-		isConnected = true;
+		*isConnected = true;
 	}
 	else
 	{
@@ -118,7 +118,7 @@ DWORD WINAPI WindowsNetworking::ReceiveConnectThread(LPVOID param)
 	{
 		std::string chatroomName = BSC.GetChatroomName();
 		chatroom.SetChatroomName(chatroomName);
-		inChatroom = true;
+		*inChatroom = true;
 		BufferRequestId BRI;
 		send(clientSocket, (char*)&BRI, sizeof(BufferRequestId), 0);
 
@@ -145,7 +145,7 @@ DWORD WINAPI WindowsNetworking::ReceiveUserUpdateThread(LPVOID param)
 	delete[] buffer;
 	if (BSUU.GetUser().GetId()[0] == currentUser->GetId()[0] && BSUU.GetUser().GetId()[1] == currentUser->GetId()[1])
 	{
-		hasUpdatedUser = true;
+		*hasUpdatedUser = true;
 	}
 	chatroom.UpdateUser(BSUU.GetPosition(), BSUU.GetUser());
 
@@ -200,7 +200,7 @@ DWORD WINAPI WindowsNetworking::ReceiveServerRequestIdThread(LPVOID param)
 
 DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 {
-	isReceiving = true;
+	*isReceiving = true;
 	char* buffer = new char[maxBufferSize];
 	// Use the largest possible class, so that we can accomidate everything.
 	int recievedBytes = recv(clientSocket, buffer, maxBufferSize, 0);
@@ -326,7 +326,7 @@ void WindowsNetworking::SendText(char* _message)
 
 void WindowsNetworking::UpdateUser(User* _user) 
 {
-	hasUpdatedUser = false;
+	*hasUpdatedUser = false;
 	currentUser = _user;
 	CreateThread(nullptr, 0, UpdateUserThread, nullptr, 0, nullptr);
 }
@@ -335,16 +335,16 @@ void WindowsNetworking::Receive()
 {
 	if (!isReceiving && isConnected)
 	{
-		isReceiving = true;
+		*isReceiving = true;
 		CreateThread(nullptr, 0, ReceiveThread, nullptr, 0, nullptr);
 	}
 	
 }
 
-bool WindowsNetworking::GetReceivingStatus() { return isReceiving; }
-bool WindowsNetworking::GetChatroomStatus() { return inChatroom; }
-bool WindowsNetworking::GetConnectedStatus() { return isConnected; }
-bool WindowsNetworking::GetUpdatedUserStatus() { return hasUpdatedUser; }
+bool* WindowsNetworking::GetReceivingStatus() { return isReceiving; }
+bool* WindowsNetworking::GetChatroomStatus() { return inChatroom; }
+bool* WindowsNetworking::GetConnectedStatus() { return isConnected; }
+bool* WindowsNetworking::GetUpdatedUserStatus() { return hasUpdatedUser; }
 
 Chatroom& WindowsNetworking::GetChatroom() { return chatroom; }
 

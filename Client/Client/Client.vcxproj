@@ -190,7 +190,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Chatroom.hpp" />
-    <ClInclude Include="config.hpp" />
+    <ClInclude Include="Config.hpp" />
     <ClInclude Include="DataManager.hpp" />
     <ClInclude Include="Error.hpp" />
     <ClInclude Include="ErrorHandler.hpp" />

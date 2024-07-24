@@ -16,10 +16,10 @@ public:
 	virtual void UpdateUser(User* _user);
 	virtual void Receive();
 
-	virtual bool GetReceivingStatus();
-	virtual bool GetChatroomStatus();
-	virtual bool GetConnectedStatus();
-	virtual bool GetUpdatedUserStatus();
+	virtual bool* GetReceivingStatus();
+	virtual bool* GetChatroomStatus();
+	virtual bool* GetConnectedStatus();
+	virtual bool* GetUpdatedUserStatus();
 
 	virtual Chatroom& GetChatroom();
 
