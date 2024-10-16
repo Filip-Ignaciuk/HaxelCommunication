@@ -1,0 +1,2 @@
+D:\Projects\HaxelCommunication\HaxelCommunication\Server\Bin\Win32\Debug\Server.exe.lastcodeanalysissucceeded
+D:\Projects\HaxelCommunication\HaxelCommunication\Server\Bin\intermediates\Win32\Debug\NativeCodeAnalysis.read.1.tlog

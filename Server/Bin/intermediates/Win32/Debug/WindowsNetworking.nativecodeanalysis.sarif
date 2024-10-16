@@ -1,0 +1,180 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "results": [
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "Variable 'RecieveHolder::socketPosition' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/WindowsNetworking.hpp"
+                },
+                "region": {
+                  "startLine": 17,
+                  "startColumn": 1
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "RecieveHolder::{ctor}",
+                  "decoratedName": "??0RecieveHolder@@QAE@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "RecieveHolder::socketPosition"
+          }
+        }
+      ],
+      "tool": {
+        "driver": {
+          "name": "PREfast",
+          "fullName": "PREfast Code Analysis",
+          "version": "14.40.33811.0",
+          "informationUri": "https://aka.ms/cpp/ca"
+        }
+      },
+      "invocations": [
+        {
+          "executionSuccessful": true
+        }
+      ],
+      "artifacts": [
+        {
+          "location": {
+            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/WindowsNetworking.hpp"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "sha-256": "d0ac9fe012434db279ad4c3b11fe2b13103d29b6afed1c17d1f7df0cfea8a2ff"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/server/server/windowsnetworking.cpp"
+          },
+          "roles": [
+            "analysisTarget"
+          ],
+          "hashes": {
+            "sha-256": "f4f03d3e307b4ec34998dee498e706d111fd8275a7a209305883e585c9b09e06"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/server/server/stdafx.h"
+          },
+          "hashes": {
+            "sha-256": "20962340e9a7035a51a0a7ec062c03b07fa51180227056aa940dec7187d6e893"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/server/server/targetver.h"
+          },
+          "hashes": {
+            "sha-256": "7c2d3a16d5d5ee35ea4b68ea0653ad714e5cf9d7156f94afa49d18ae6b3d82ee"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/dependencies/bufferstandard/include/bufferstandard.hpp"
+          },
+          "hashes": {
+            "sha-256": "1974070785e1d98cb230ae9a88ea77481fe2430462cefdc30e6594e67cb75e12"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/server/server/chatroom.hpp"
+          },
+          "hashes": {
+            "sha-256": "24fccb0ef1a529c235b32e73559af71bcfa1f3b860bc7f4b287f22aec9421699"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/server/server/message.hpp"
+          },
+          "hashes": {
+            "sha-256": "02fba69337bab85653a956ecf928842c2c94e56ad268bcdb36d316946cd80ca3"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/server/server/user.hpp"
+          },
+          "hashes": {
+            "sha-256": "567bd944a6e56b396709594164c3b2d65baffb4d2bf54d1c7619725563756732"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/dependencies/imgui/include/imgui.h"
+          },
+          "hashes": {
+            "sha-256": "c0764c652cf0cf36c6c076c1c7fe54101ba5a8f011cbc689dd2fbfe19b450543"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/dependencies/imgui/include/imconfig.h"
+          },
+          "hashes": {
+            "sha-256": "260dace38975aa8acc2d16fb60aa1c1f785046f2a4fe06c4ef35ef8ee65c9c8a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/server/server/standard.hpp"
+          },
+          "hashes": {
+            "sha-256": "17e73ec774483044385efd8bfc2f52e82892acb9e30e7d5c4dbd7d29b9402fd0"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/server/server/networkcalls.hpp"
+          },
+          "hashes": {
+            "sha-256": "bea2b4f19ca2135baf93215b09468747cb092d7695a7eb75e51087dfc84be330"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/server/server/languages.hpp"
+          },
+          "hashes": {
+            "sha-256": "fa4cdd2bd303c62c947892da19d1f78bc05a0d444659386343217a7fa2a96363"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/server/server/error.hpp"
+          },
+          "hashes": {
+            "sha-256": "4a110b2054e70acdd173af78dc4f82026a33b6cc050c406a51f782061c63318c"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/server/server/errorhandler.hpp"
+          },
+          "hashes": {
+            "sha-256": "c37a1307f697539b6b4ac100416eede14bd44ec87076fd82e8eda0efcc8a6281"
+          }
+        }
+      ]
+    }
+  ]
+}

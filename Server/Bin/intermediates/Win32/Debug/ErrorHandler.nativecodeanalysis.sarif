@@ -1,0 +1,51 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "results": [],
+      "tool": {
+        "driver": {
+          "name": "PREfast",
+          "fullName": "PREfast Code Analysis",
+          "version": "14.40.33811.0",
+          "informationUri": "https://aka.ms/cpp/ca"
+        }
+      },
+      "invocations": [
+        {
+          "executionSuccessful": true
+        }
+      ],
+      "artifacts": [
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/server/server/errorhandler.cpp"
+          },
+          "roles": [
+            "analysisTarget"
+          ],
+          "hashes": {
+            "sha-256": "b7ead11f77695101772b1a52389abb33fc2223232f3a83ebed3c276f83da5e8b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/server/server/errorhandler.hpp"
+          },
+          "hashes": {
+            "sha-256": "c37a1307f697539b6b4ac100416eede14bd44ec87076fd82e8eda0efcc8a6281"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/server/server/error.hpp"
+          },
+          "hashes": {
+            "sha-256": "4a110b2054e70acdd173af78dc4f82026a33b6cc050c406a51f782061c63318c"
+          }
+        }
+      ]
+    }
+  ]
+}

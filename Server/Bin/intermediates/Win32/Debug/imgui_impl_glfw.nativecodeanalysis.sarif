@@ -1,0 +1,75 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "results": [],
+      "tool": {
+        "driver": {
+          "name": "PREfast",
+          "fullName": "PREfast Code Analysis",
+          "version": "14.40.33811.0",
+          "informationUri": "https://aka.ms/cpp/ca"
+        }
+      },
+      "invocations": [
+        {
+          "executionSuccessful": true
+        }
+      ],
+      "artifacts": [
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/server/server/imgui_impl_glfw.cpp"
+          },
+          "roles": [
+            "analysisTarget"
+          ],
+          "hashes": {
+            "sha-256": "1f20f03e69cc4234f700ea776c102c82853046b014742c1e606fc232d1e13029"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/dependencies/imgui/include/imgui.h"
+          },
+          "hashes": {
+            "sha-256": "c0764c652cf0cf36c6c076c1c7fe54101ba5a8f011cbc689dd2fbfe19b450543"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/dependencies/imgui/include/imconfig.h"
+          },
+          "hashes": {
+            "sha-256": "260dace38975aa8acc2d16fb60aa1c1f785046f2a4fe06c4ef35ef8ee65c9c8a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/dependencies/imgui/include/imgui_impl_glfw.h"
+          },
+          "hashes": {
+            "sha-256": "3d7444c6f8148821695b6351788b8c5401ba1391552b048601c048342f1cf6c8"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/dependencies/glfw/include/glfw3.h"
+          },
+          "hashes": {
+            "sha-256": "40d11b091d54aa86b5070e102af39e6292e9ad6eba23d4527d2b134b61c08248"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/dependencies/glfw/include/glfw3native.h"
+          },
+          "hashes": {
+            "sha-256": "31b0171edf8b055c8995957e8b27c67b6d45c480be7bae92be4ba2391b5ddc90"
+          }
+        }
+      ]
+    }
+  ]
+}

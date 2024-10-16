@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>D:\Projects\HaxelCommunication\HaxelCommunication\Server\Server\</FILEPATH>
+      <FILENAME>json.hpp</FILENAME>
+      <LINE>18931</LINE>
+      <COLUMN>27</COLUMN>
+    </SFA>
+    <DEFECTCODE>28020</DEFECTCODE>
+    <DESCRIPTION>The expression '0&lt;=_Param_(1)&amp;&amp;_Param_(1)&lt;=400-1' is not true at this call.</DESCRIPTION>
+    <FUNCTION>nlohmann::json_abi_v3_11_3::detail::serializer&lt;nlohmann::json_abi_v3_11_3::basic_json&lt;std::map,std::vector,std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt;,bool,__int64,unsigned __int64,double,std::allocator,nlohmann::json_abi_v3_11_3::adl_serializer,std::vector&lt;unsigned char,std::allocator&lt;unsigned char&gt; &gt;,void&gt; &gt;::decode</FUNCTION>
+    <DECORATED>?decode@?$serializer@V?$basic_json@Vmap@std@@Vvector@2@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@2@_N_J_KNVallocator@2@Uadl_serializer@json_abi_v3_11_3@nlohmann@@V?$vector@EV?$allocator@E@std@@@2@X@json_abi_v3_11_3@nlohmann@@@detail@json_abi_v3_11_3@nlohmann@@CAEAAEAAIE@Z</DECORATED>
+    <FUNCLINE>18908</FUNCLINE>
+    <PATH>
+      <SFA>
+        <FILEPATH>d:\projects\haxelcommunication\haxelcommunication\server\server\</FILEPATH>
+        <FILENAME>json.hpp</FILENAME>
+        <LINE>18910</LINE>
+        <COLUMN>51</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\projects\haxelcommunication\haxelcommunication\server\server\</FILEPATH>
+        <FILENAME>json.hpp</FILENAME>
+        <LINE>18930</LINE>
+        <COLUMN>8</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\projects\haxelcommunication\haxelcommunication\server\server\</FILEPATH>
+        <FILENAME>json.hpp</FILENAME>
+        <LINE>18931</LINE>
+        <COLUMN>27</COLUMN>
+      </SFA>
+    </PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>D:\Projects\HaxelCommunication\HaxelCommunication\Server\Server\</FILEPATH>
+      <FILENAME>json.hpp</FILENAME>
+      <LINE>8240</LINE>
+      <COLUMN>17</COLUMN>
+    </SFA>
+    <DEFECTCODE>26819</DEFECTCODE>
+    <DESCRIPTION>Unannotated fallthrough between switch labels (es.78).</DESCRIPTION>
+    <FUNCTION>nlohmann::json_abi_v3_11_3::detail::lexer&lt;nlohmann::json_abi_v3_11_3::basic_json&lt;std::map,std::vector,std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt;,bool,__int64,unsigned __int64,double,std::allocator,nlohmann::json_abi_v3_11_3::adl_serializer,std::vector&lt;unsigned char,std::allocator&lt;unsigned char&gt; &gt;,void&gt;,nlohmann::json_abi_v3_11_3::detail::input_stream_adapter&gt;::scan_comment</FUNCTION>
+    <DECORATED>?scan_comment@?$lexer@V?$basic_json@Vmap@std@@Vvector@2@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@2@_N_J_KNVallocator@2@Uadl_serializer@json_abi_v3_11_3@nlohmann@@V?$vector@EV?$allocator@E@std@@@2@X@json_abi_v3_11_3@nlohmann@@Vinput_stream_adapter@detail@23@@detail@json_abi_v3_11_3@nlohmann@@AAE_NXZ</DECORATED>
+    <FUNCLINE>8216</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>D:\Projects\HaxelCommunication\HaxelCommunication\Server\Server\</FILEPATH>
+      <FILENAME>json.hpp</FILENAME>
+      <LINE>8277</LINE>
+      <COLUMN>30</COLUMN>
+    </SFA>
+    <DEFECTCODE>26819</DEFECTCODE>
+    <DESCRIPTION>Unannotated fallthrough between switch labels (es.78).</DESCRIPTION>
+    <FUNCTION>nlohmann::json_abi_v3_11_3::detail::lexer&lt;nlohmann::json_abi_v3_11_3::basic_json&lt;std::map,std::vector,std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt;,bool,__int64,unsigned __int64,double,std::allocator,nlohmann::json_abi_v3_11_3::adl_serializer,std::vector&lt;unsigned char,std::allocator&lt;unsigned char&gt; &gt;,void&gt;,nlohmann::json_abi_v3_11_3::detail::input_stream_adapter&gt;::scan_comment</FUNCTION>
+    <DECORATED>?scan_comment@?$lexer@V?$basic_json@Vmap@std@@Vvector@2@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@2@_N_J_KNVallocator@2@Uadl_serializer@json_abi_v3_11_3@nlohmann@@V?$vector@EV?$allocator@E@std@@@2@X@json_abi_v3_11_3@nlohmann@@Vinput_stream_adapter@detail@23@@detail@json_abi_v3_11_3@nlohmann@@AAE_NXZ</DECORATED>
+    <FUNCLINE>8216</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>D:\Projects\HaxelCommunication\HaxelCommunication\Server\Server\</FILEPATH>
+      <FILENAME>json.hpp</FILENAME>
+      <LINE>8240</LINE>
+      <COLUMN>17</COLUMN>
+    </SFA>
+    <DEFECTCODE>26819</DEFECTCODE>
+    <DESCRIPTION>Unannotated fallthrough between switch labels (es.78).</DESCRIPTION>
+    <FUNCTION>nlohmann::json_abi_v3_11_3::detail::lexer&lt;nlohmann::json_abi_v3_11_3::basic_json&lt;std::map,std::vector,std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt;,bool,__int64,unsigned __int64,double,std::allocator,nlohmann::json_abi_v3_11_3::adl_serializer,std::vector&lt;unsigned char,std::allocator&lt;unsigned char&gt; &gt;,void&gt;,nlohmann::json_abi_v3_11_3::detail::iterator_input_adapter&lt;char const *&gt; &gt;::scan_comment</FUNCTION>
+    <DECORATED>?scan_comment@?$lexer@V?$basic_json@Vmap@std@@Vvector@2@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@2@_N_J_KNVallocator@2@Uadl_serializer@json_abi_v3_11_3@nlohmann@@V?$vector@EV?$allocator@E@std@@@2@X@json_abi_v3_11_3@nlohmann@@V?$iterator_input_adapter@PBD@detail@23@@detail@json_abi_v3_11_3@nlohmann@@AAE_NXZ</DECORATED>
+    <FUNCLINE>8216</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>D:\Projects\HaxelCommunication\HaxelCommunication\Server\Server\</FILEPATH>
+      <FILENAME>json.hpp</FILENAME>
+      <LINE>8277</LINE>
+      <COLUMN>30</COLUMN>
+    </SFA>
+    <DEFECTCODE>26819</DEFECTCODE>
+    <DESCRIPTION>Unannotated fallthrough between switch labels (es.78).</DESCRIPTION>
+    <FUNCTION>nlohmann::json_abi_v3_11_3::detail::lexer&lt;nlohmann::json_abi_v3_11_3::basic_json&lt;std::map,std::vector,std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt;,bool,__int64,unsigned __int64,double,std::allocator,nlohmann::json_abi_v3_11_3::adl_serializer,std::vector&lt;unsigned char,std::allocator&lt;unsigned char&gt; &gt;,void&gt;,nlohmann::json_abi_v3_11_3::detail::iterator_input_adapter&lt;char const *&gt; &gt;::scan_comment</FUNCTION>
+    <DECORATED>?scan_comment@?$lexer@V?$basic_json@Vmap@std@@Vvector@2@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@2@_N_J_KNVallocator@2@Uadl_serializer@json_abi_v3_11_3@nlohmann@@V?$vector@EV?$allocator@E@std@@@2@X@json_abi_v3_11_3@nlohmann@@V?$iterator_input_adapter@PBD@detail@23@@detail@json_abi_v3_11_3@nlohmann@@AAE_NXZ</DECORATED>
+    <FUNCLINE>8216</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>D:\Projects\HaxelCommunication\HaxelCommunication\Server\Server\</FILEPATH>
+      <FILENAME>json.hpp</FILENAME>
+      <LINE>20443</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'nlohmann::json_abi_v3_11_3::basic_json&lt;std::map,std::vector,std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt;,bool,__int64,unsigned __int64,double,std::allocator,nlohmann::json_abi_v3_11_3::adl_serializer,std::vector&lt;unsigned char,std::allocator&lt;unsigned char&gt; &gt;,void&gt;::m_data' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>nlohmann::json_abi_v3_11_3::basic_json&lt;std::map,std::vector,std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt;,bool,__int64,unsigned __int64,double,std::allocator,nlohmann::json_abi_v3_11_3::adl_serializer,std::vector&lt;unsigned char,std::allocator&lt;unsigned char&gt; &gt;,void&gt;::{ctor}</FUNCTION>
+    <DECORATED>??$?0V?$json_ref@V?$basic_json@Vmap@std@@Vvector@2@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@2@_N_J_KNVallocator@2@Uadl_serializer@json_abi_v3_11_3@nlohmann@@V?$vector@EV?$allocator@E@std@@@2@X@json_abi_v3_11_3@nlohmann@@@detail@json_abi_v3_11_3@nlohmann@@$0A@@?$basic_json@Vmap@std@@Vvector@2@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@2@_N_J_KNVallocator@2@Uadl_serializer@json_abi_v3_11_3@nlohmann@@V?$vector@EV?$allocator@E@std@@@2@X@json_abi_v3_11_3@nlohmann@@QAE@ABV?$json_ref@V?$basic_json@Vmap@std@@Vvector@2@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@2@_N_J_KNVallocator@2@Uadl_serializer@json_abi_v3_11_3@nlohmann@@V?$vector@EV?$allocator@E@std@@@2@X@json_abi_v3_11_3@nlohmann@@@detail@12@@Z</DECORATED>
+    <FUNCLINE>20443</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>nlohmann::json_abi_v3_11_3::basic_json&lt;std::map,std::vector,std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt;,bool,__int64,unsigned __int64,double,std::allocator,nlohmann::json_abi_v3_11_3::adl_serializer,std::vector&lt;unsigned char,std::allocator&lt;unsigned char&gt; &gt;,void&gt;::m_data</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+</DEFECTS>

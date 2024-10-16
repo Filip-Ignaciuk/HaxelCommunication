@@ -1,0 +1,3830 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "results": [
+        {
+          "ruleId": "C33011",
+          "message": {
+            "text": "Unchecked upper bound for enum key used as index.."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                },
+                "region": {
+                  "startLine": 8555,
+                  "startColumn": 29,
+                  "endLine": 8555,
+                  "endColumn": 50
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "ImGui::GetKeyData",
+                  "decoratedName": "?GetKeyData@ImGui@@YAPAUImGuiKeyData@@PAUImGuiContext@@W4ImGuiKey@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 8545,
+                            "startColumn": 22
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 8547,
+                            "startColumn": 19
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 8547,
+                            "startColumn": 24
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 8550,
+                            "startColumn": 13
+                          }
+                        },
+                        "message": {
+                          "text": "Branching based on condition 'key & 63488'. 'false' branch is taken"
+                        }
+                      },
+                      "kinds": [
+                        "Branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 8554,
+                            "startColumn": 5
+                          }
+                        },
+                        "message": {
+                          "text": "Branching based on condition '0 <= key'. 'true' branch is taken\nEnum value 'key' is checked for lower bound."
+                        }
+                      },
+                      "kinds": [
+                        "Combination"
+                      ],
+                      "importance": "essential"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 8554,
+                            "startColumn": 5
+                          }
+                        },
+                        "message": {
+                          "text": "Branching based on condition 'key < 666'. 'false' branch is taken\nEnum value 'key' is checked for lower bound."
+                        }
+                      },
+                      "kinds": [
+                        "Combination"
+                      ],
+                      "importance": "essential"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 8554,
+                            "startColumn": 5
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 8554,
+                            "startColumn": 5
+                          }
+                        },
+                        "message": {
+                          "text": "Branching based on condition '0'. 'false' branch is taken"
+                        }
+                      },
+                      "kinds": [
+                        "Branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 8554,
+                            "startColumn": 5
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 8554,
+                            "startColumn": 5
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 8555,
+                            "startColumn": 20
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 8555,
+                            "startColumn": 20
+                          }
+                        },
+                        "message": {
+                          "text": "Branching based on condition 'result.IsLegacyKey'. 'true' branch is taken"
+                        }
+                      },
+                      "kinds": [
+                        "Branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 8555,
+                            "startColumn": 46
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C33010",
+          "message": {
+            "text": "Unchecked lower bound for enum source used as index.."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                },
+                "region": {
+                  "startLine": 9501,
+                  "startColumn": 5,
+                  "endLine": 9501,
+                  "endColumn": 37
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "GetInputSourceName",
+                  "decoratedName": "?GetInputSourceName@@YAPBDW4ImGuiInputSource@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 9497,
+                            "startColumn": 20
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 9499,
+                            "startColumn": 17
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 9499,
+                            "startColumn": 40
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 9500,
+                            "startColumn": 5
+                          }
+                        },
+                        "message": {
+                          "text": "Branching based on condition '1'. 'true' branch is taken"
+                        }
+                      },
+                      "kinds": [
+                        "Branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 9500,
+                            "startColumn": 5
+                          }
+                        },
+                        "message": {
+                          "text": "Branching based on condition '0 <= source'. 'false' branch is taken\nEnum value 'source' is checked for upper bound."
+                        }
+                      },
+                      "kinds": [
+                        "Combination"
+                      ],
+                      "importance": "essential"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 9500,
+                            "startColumn": 5
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 9500,
+                            "startColumn": 5
+                          }
+                        },
+                        "message": {
+                          "text": "Branching based on condition '0'. 'false' branch is taken"
+                        }
+                      },
+                      "kinds": [
+                        "Branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 9500,
+                            "startColumn": 5
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 9500,
+                            "startColumn": 5
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 9501,
+                            "startColumn": 5
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C33010",
+          "message": {
+            "text": "Unchecked lower bound for enum source used as index.."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                },
+                "region": {
+                  "startLine": 9507,
+                  "startColumn": 5,
+                  "endLine": 9507,
+                  "endColumn": 37
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "GetMouseSourceName",
+                  "decoratedName": "?GetMouseSourceName@@YAPBDW4ImGuiMouseSource@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 9503,
+                            "startColumn": 20
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 9505,
+                            "startColumn": 17
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 9505,
+                            "startColumn": 40
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 9506,
+                            "startColumn": 5
+                          }
+                        },
+                        "message": {
+                          "text": "Branching based on condition '1'. 'true' branch is taken"
+                        }
+                      },
+                      "kinds": [
+                        "Branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 9506,
+                            "startColumn": 5
+                          }
+                        },
+                        "message": {
+                          "text": "Branching based on condition '0 <= source'. 'false' branch is taken\nEnum value 'source' is checked for upper bound."
+                        }
+                      },
+                      "kinds": [
+                        "Combination"
+                      ],
+                      "importance": "essential"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 9506,
+                            "startColumn": 5
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 9506,
+                            "startColumn": 5
+                          }
+                        },
+                        "message": {
+                          "text": "Branching based on condition '0'. 'false' branch is taken"
+                        }
+                      },
+                      "kinds": [
+                        "Branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 9506,
+                            "startColumn": 5
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 9506,
+                            "startColumn": 5
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 9507,
+                            "startColumn": 5
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6011",
+          "message": {
+            "text": "Dereferencing NULL pointer 'window->Viewport'. "
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                },
+                "region": {
+                  "startLine": 14698,
+                  "startColumn": 13,
+                  "endLine": 14698,
+                  "endColumn": 74
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "ImGui::WindowSelectViewport",
+                  "decoratedName": "?WindowSelectViewport@ImGui@@YAXPAUImGuiWindow@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14573,
+                            "startColumn": 19
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14574,
+                            "startColumn": 22
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14575,
+                            "startColumn": 48
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14578,
+                            "startColumn": 21
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14579,
+                            "startColumn": 9
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14584,
+                            "startColumn": 27
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14587,
+                            "startColumn": 71
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14593,
+                            "startColumn": 73
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14608,
+                            "startColumn": 10
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14609,
+                            "startColumn": 32
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14621,
+                            "startColumn": 53
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14628,
+                            "startColumn": 31
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14633,
+                            "startColumn": 20
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14637,
+                            "startColumn": 44
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14641,
+                            "startColumn": 77
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14651,
+                            "startColumn": 14
+                          }
+                        },
+                        "message": {
+                          "text": "'window->Viewport' may be NULL"
+                        }
+                      },
+                      "kinds": [
+                        "declaration"
+                      ],
+                      "importance": "essential"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14652,
+                            "startColumn": 13
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume '<branch condition>' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14657,
+                            "startColumn": 26
+                          }
+                        },
+                        "message": {
+                          "text": "Enter this branch, (assume 'window->Viewport==0')"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14658,
+                            "startColumn": 13
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume '<branch condition>' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14662,
+                            "startColumn": 9
+                          }
+                        },
+                        "message": {
+                          "text": "Enter this branch, (assume '!lock_viewport')"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14664,
+                            "startColumn": 19
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume 'flags' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14676,
+                            "startColumn": 144
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume '<branch condition>' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14694,
+                            "startColumn": 65
+                          }
+                        },
+                        "message": {
+                          "text": "Enter this branch, (assume '<branch condition>')"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14698,
+                            "startColumn": 56
+                          }
+                        },
+                        "message": {
+                          "text": "'window->Viewport' is dereferenced, but may still be NULL"
+                        }
+                      },
+                      "kinds": [
+                        "usage"
+                      ],
+                      "importance": "essential"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6011",
+          "message": {
+            "text": "Dereferencing NULL pointer 'window'. See line 14574 for an earlier location where this can occur"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                },
+                "region": {
+                  "startLine": 14703,
+                  "startColumn": 5,
+                  "endLine": 14703,
+                  "endColumn": 56
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "ImGui::WindowSelectViewport",
+                  "decoratedName": "?WindowSelectViewport@ImGui@@YAXPAUImGuiWindow@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14573,
+                            "startColumn": 19
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14574,
+                            "startColumn": 22
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14575,
+                            "startColumn": 48
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14578,
+                            "startColumn": 21
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14579,
+                            "startColumn": 9
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume '<branch condition>' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14584,
+                            "startColumn": 27
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14587,
+                            "startColumn": 71
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume '<branch condition>' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14593,
+                            "startColumn": 73
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume '<branch condition>' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14608,
+                            "startColumn": 10
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14609,
+                            "startColumn": 32
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume '<branch condition>' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14621,
+                            "startColumn": 53
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume '<branch condition>' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14628,
+                            "startColumn": 31
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume '<branch condition>' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14633,
+                            "startColumn": 20
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume 'flags' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14637,
+                            "startColumn": 44
+                          }
+                        },
+                        "message": {
+                          "text": "'window' is an In/Out argument to 'ImGui::GetWindowAlwaysWantOwnViewport' (declared on line 1129)"
+                        }
+                      },
+                      "kinds": [
+                        "declaration"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14637,
+                            "startColumn": 44
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume '<branch condition>' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14641,
+                            "startColumn": 77
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume '<branch condition>' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14651,
+                            "startColumn": 14
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14652,
+                            "startColumn": 13
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume '<branch condition>' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14657,
+                            "startColumn": 26
+                          }
+                        },
+                        "message": {
+                          "text": "Enter this branch, (assume 'window->Viewport==0')"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14658,
+                            "startColumn": 13
+                          }
+                        },
+                        "message": {
+                          "text": "'window' is an In/Out argument to 'ImGui::UpdateTryMergeWindowIntoHostViewport' (declared on line 1127)"
+                        }
+                      },
+                      "kinds": [
+                        "declaration"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14658,
+                            "startColumn": 13
+                          }
+                        },
+                        "message": {
+                          "text": "Enter this branch, (assume '<branch condition>')"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14659,
+                            "startColumn": 30
+                          }
+                        },
+                        "message": {
+                          "text": "'window' is an In/Out argument to 'ImGui::AddUpdateViewport' (declared on line 1121)"
+                        }
+                      },
+                      "kinds": [
+                        "declaration"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14662,
+                            "startColumn": 9
+                          }
+                        },
+                        "message": {
+                          "text": "Enter this branch, (assume '!lock_viewport')"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14664,
+                            "startColumn": 19
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume 'flags' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14676,
+                            "startColumn": 144
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume '<branch condition>' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14694,
+                            "startColumn": 65
+                          }
+                        },
+                        "message": {
+                          "text": "Enter this branch, (assume '<branch condition>')"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14698,
+                            "startColumn": 56
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 14703,
+                            "startColumn": 27
+                          }
+                        },
+                        "message": {
+                          "text": "'window' is dereferenced, but may still be NULL"
+                        }
+                      },
+                      "kinds": [
+                        "usage"
+                      ],
+                      "importance": "essential"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6011",
+          "message": {
+            "text": "Dereferencing NULL pointer 'node'. See line 15683 for an earlier location where this can occur"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                },
+                "region": {
+                  "startLine": 15772,
+                  "startColumn": 9,
+                  "endLine": 15772,
+                  "endColumn": 40
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "ImGui::DockContextProcessDock",
+                  "decoratedName": "?DockContextProcessDock@ImGui@@YAXPAUImGuiContext@@PAUImGuiDockRequest@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15645,
+                            "startColumn": 5
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15646,
+                            "startColumn": 5
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15648,
+                            "startColumn": 19
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15649,
+                            "startColumn": 5
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15651,
+                            "startColumn": 18
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15652,
+                            "startColumn": 18
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15653,
+                            "startColumn": 20
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15654,
+                            "startColumn": 9
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15657,
+                            "startColumn": 9
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15660,
+                            "startColumn": 13
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15661,
+                            "startColumn": 20
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15662,
+                            "startColumn": 9
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15674,
+                            "startColumn": 9
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15676,
+                            "startColumn": 31
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15680,
+                            "startColumn": 14
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15682,
+                            "startColumn": 14
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15683,
+                            "startColumn": 19
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15684,
+                            "startColumn": 20
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15685,
+                            "startColumn": 43
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15693,
+                            "startColumn": 14
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15694,
+                            "startColumn": 19
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15705,
+                            "startColumn": 24
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15707,
+                            "startColumn": 14
+                          }
+                        },
+                        "message": {
+                          "text": "'node' may be NULL (Skip this branch)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15772,
+                            "startColumn": 38
+                          }
+                        },
+                        "message": {
+                          "text": "'node' is dereferenced, but may still be NULL"
+                        }
+                      },
+                      "kinds": [
+                        "usage"
+                      ],
+                      "importance": "essential"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6011",
+          "message": {
+            "text": "Dereferencing NULL pointer 'node->TabBar'. "
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                },
+                "region": {
+                  "startLine": 16003,
+                  "startColumn": 13,
+                  "endLine": 16003,
+                  "endColumn": 81
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "ImGui::DockNodeAddWindow",
+                  "decoratedName": "?DockNodeAddWindow@ImGui@@YAXPAUImGuiDockNode@@PAUImGuiWindow@@_N@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15962,
+                            "startColumn": 19
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15962,
+                            "startColumn": 38
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15963,
+                            "startColumn": 15
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15969,
+                            "startColumn": 5
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15970,
+                            "startColumn": 5
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15975,
+                            "startColumn": 61
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15978,
+                            "startColumn": 28
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15979,
+                            "startColumn": 34
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15980,
+                            "startColumn": 22
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15981,
+                            "startColumn": 20
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15982,
+                            "startColumn": 26
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15983,
+                            "startColumn": 30
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15987,
+                            "startColumn": 34
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 15998,
+                            "startColumn": 9
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 16000,
+                            "startColumn": 26
+                          }
+                        },
+                        "message": {
+                          "text": "'node->TabBar' may be NULL (Enter this branch)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 16002,
+                            "startColumn": 30
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 16003,
+                            "startColumn": 41
+                          }
+                        },
+                        "message": {
+                          "text": "'node->TabBar' is dereferenced, but may still be NULL"
+                        }
+                      },
+                      "kinds": [
+                        "usage"
+                      ],
+                      "importance": "essential"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C28182",
+          "message": {
+            "text": "Dereferencing NULL pointer. 'node' contains the same NULL value as 'info->CentralNode' did. See line 16176 for an earlier location where this can occur"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                },
+                "region": {
+                  "startLine": 16190,
+                  "startColumn": 9,
+                  "endLine": 16190,
+                  "endColumn": 27
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "DockNodeFindInfo",
+                  "decoratedName": "?DockNodeFindInfo@@YAXPAUImGuiDockNode@@PAUImGuiDockNodeTreeInfo@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 16176,
+                            "startColumn": 28
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 16182,
+                            "startColumn": 28
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 16184,
+                            "startColumn": 9
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 16185,
+                            "startColumn": 9
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 16186,
+                            "startColumn": 27
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 16188,
+                            "startColumn": 41
+                          }
+                        },
+                        "message": {
+                          "text": "'node' may be NULL (Skip this branch)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 16190,
+                            "startColumn": 27
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume 'node->ChildNodes[0]' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 16190,
+                            "startColumn": 27
+                          }
+                        },
+                        "message": {
+                          "text": "'node' is dereferenced, but may still be NULL"
+                        }
+                      },
+                      "kinds": [
+                        "usage"
+                      ],
+                      "importance": "essential"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6011",
+          "message": {
+            "text": "Dereferencing NULL pointer 'merge_lead_child'. "
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                },
+                "region": {
+                  "startLine": 17535,
+                  "startColumn": 5,
+                  "endLine": 17535,
+                  "endColumn": 50
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "ImGui::DockNodeTreeMerge",
+                  "decoratedName": "?DockNodeTreeMerge@ImGui@@YAXPAUImGuiContext@@PAUImGuiDockNode@@1@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 17509,
+                            "startColumn": 19
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 17510,
+                            "startColumn": 20
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 17511,
+                            "startColumn": 20
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 17512,
+                            "startColumn": 5
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 17513,
+                            "startColumn": 5
+                          }
+                        },
+                        "message": {
+                          "text": "'merge_lead_child' may be NULL (Enter this loop)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 17514,
+                            "startColumn": 48
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume '<branch condition>' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 17519,
+                            "startColumn": 5
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume '<branch condition>' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 17521,
+                            "startColumn": 12
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 17522,
+                            "startColumn": 27
+                          }
+                        },
+                        "message": {
+                          "text": "'merge_lead_child' is an In/Out argument to 'ImGui::DockNodeMoveChildNodes' (declared on line 15188)"
+                        }
+                      },
+                      "kinds": [
+                        "declaration"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 17523,
+                            "startColumn": 9
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume 'child_0' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 17528,
+                            "startColumn": 9
+                          }
+                        },
+                        "message": {
+                          "text": "Enter this branch, (assume 'child_1')"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 17530,
+                            "startColumn": 28
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 17531,
+                            "startColumn": 41
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 17533,
+                            "startColumn": 34
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 17534,
+                            "startColumn": 34
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 17535,
+                            "startColumn": 32
+                          }
+                        },
+                        "message": {
+                          "text": "'merge_lead_child' is dereferenced, but may still be NULL"
+                        }
+                      },
+                      "kinds": [
+                        "usage"
+                      ],
+                      "importance": "essential"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6011",
+          "message": {
+            "text": "Dereferencing NULL pointer 'node'. "
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                },
+                "region": {
+                  "startLine": 18561,
+                  "startColumn": 9,
+                  "endLine": 18561,
+                  "endColumn": 33
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "ImGui::BeginDocked",
+                  "decoratedName": "?BeginDocked@ImGui@@YAXPAUImGuiWindow@@PA_N@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18511,
+                            "startColumn": 19
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18512,
+                            "startColumn": 19
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18515,
+                            "startColumn": 26
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18517,
+                            "startColumn": 16
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18518,
+                            "startColumn": 9
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18529,
+                            "startColumn": 14
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18530,
+                            "startColumn": 21
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18531,
+                            "startColumn": 21
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18532,
+                            "startColumn": 13
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18540,
+                            "startColumn": 20
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18541,
+                            "startColumn": 14
+                          }
+                        },
+                        "message": {
+                          "text": "'node' may be NULL (Skip this branch)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18543,
+                            "startColumn": 29
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume 'window->DockId!=0&&node==0' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18561,
+                            "startColumn": 30
+                          }
+                        },
+                        "message": {
+                          "text": "'node' is dereferenced, but may still be NULL"
+                        }
+                      },
+                      "kinds": [
+                        "usage"
+                      ],
+                      "importance": "essential"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C28182",
+          "message": {
+            "text": "Dereferencing NULL pointer. 'window->DockNode' contains the same NULL value as 'node' did. See line 18561 for an earlier location where this can occur"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                },
+                "region": {
+                  "startLine": 18632,
+                  "startColumn": 18,
+                  "endLine": 18632,
+                  "endColumn": 50
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "ImGui::BeginDocked",
+                  "decoratedName": "?BeginDocked@ImGui@@YAXPAUImGuiWindow@@PA_N@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18511,
+                            "startColumn": 19
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18512,
+                            "startColumn": 19
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18515,
+                            "startColumn": 26
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18517,
+                            "startColumn": 16
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18518,
+                            "startColumn": 9
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18529,
+                            "startColumn": 14
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18530,
+                            "startColumn": 21
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18531,
+                            "startColumn": 21
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18532,
+                            "startColumn": 13
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18540,
+                            "startColumn": 20
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18541,
+                            "startColumn": 14
+                          }
+                        },
+                        "message": {
+                          "text": "'node' may be NULL (Skip this branch)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18543,
+                            "startColumn": 29
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume 'window->DockId!=0&&node==0' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18561,
+                            "startColumn": 30
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume '<branch condition>' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18573,
+                            "startColumn": 14
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18573,
+                            "startColumn": 35
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18574,
+                            "startColumn": 43
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18573,
+                            "startColumn": 75
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18573,
+                            "startColumn": 35
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18574,
+                            "startColumn": 43
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18573,
+                            "startColumn": 75
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18573,
+                            "startColumn": 35
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18579,
+                            "startColumn": 26
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume 'node->HostWindow==0' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18589,
+                            "startColumn": 5
+                          }
+                        },
+                        "message": {
+                          "text": "Enter this loop, (assume '!!((node->HostWindow))')"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18590,
+                            "startColumn": 5
+                          }
+                        },
+                        "message": {
+                          "text": "Enter this loop, (assume '!!((node->IsLeafNode()))')"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18591,
+                            "startColumn": 5
+                          }
+                        },
+                        "message": {
+                          "text": "Enter this loop, (assume '<branch condition>')"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18592,
+                            "startColumn": 17
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18595,
+                            "startColumn": 65
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume '<branch condition>' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18602,
+                            "startColumn": 21
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18603,
+                            "startColumn": 22
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18604,
+                            "startColumn": 32
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18605,
+                            "startColumn": 26
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18606,
+                            "startColumn": 31
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18607,
+                            "startColumn": 30
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18608,
+                            "startColumn": 27
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume 'node->MergedFlags' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18612,
+                            "startColumn": 29
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume 'node->VisibleWindow==window' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18616,
+                            "startColumn": 5
+                          }
+                        },
+                        "message": {
+                          "text": "Enter this loop, (assume '<branch condition>')"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18617,
+                            "startColumn": 19
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18618,
+                            "startColumn": 32
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume '<branch condition>' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18621,
+                            "startColumn": 23
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18625,
+                            "startColumn": 22
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume '<branch condition>' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18628,
+                            "startColumn": 71
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume '<branch condition>' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 18632,
+                            "startColumn": 18
+                          }
+                        },
+                        "message": {
+                          "text": "'node' is dereferenced, but may still be NULL"
+                        }
+                      },
+                      "kinds": [
+                        "usage"
+                      ],
+                      "importance": "essential"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C33010",
+          "message": {
+            "text": "Unchecked lower bound for enum key used as index.."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                },
+                "region": {
+                  "startLine": 19782,
+                  "startColumn": 95,
+                  "endLine": 19782,
+                  "endColumn": 119
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "ImGui::ShowMetricsWindow::funcs::IsLegacyNativeDupe",
+                  "decoratedName": "?IsLegacyNativeDupe@funcs@?MD@??ShowMetricsWindow@ImGui@@YAXPA_N@Z@SA_NW4ImGuiKey@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 19782,
+                            "startColumn": 40
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 19782,
+                            "startColumn": 86
+                          }
+                        },
+                        "message": {
+                          "text": "Branching based on condition 'key < 512'. 'true' branch is taken\nEnum value 'key' is checked for upper bound."
+                        }
+                      },
+                      "kinds": [
+                        "Combination"
+                      ],
+                      "importance": "essential"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 19782,
+                            "startColumn": 95
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 19782,
+                            "startColumn": 115
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "tool": {
+        "driver": {
+          "name": "PREfast",
+          "fullName": "PREfast Code Analysis",
+          "version": "14.40.33811.0",
+          "informationUri": "https://aka.ms/cpp/ca"
+        }
+      },
+      "invocations": [
+        {
+          "executionSuccessful": true
+        }
+      ],
+      "artifacts": [
+        {
+          "location": {
+            "uri": "file:///D:/Projects/HaxelCommunication/HaxelCommunication/Server/Server/imgui.cpp"
+          },
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ],
+          "hashes": {
+            "sha-256": "1c807215fcd0ea12d3b1591cbc65af9e16e2a156081450778a657ea09fe33094"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/dependencies/imgui/include/imgui.h"
+          },
+          "hashes": {
+            "sha-256": "c0764c652cf0cf36c6c076c1c7fe54101ba5a8f011cbc689dd2fbfe19b450543"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/dependencies/imgui/include/imconfig.h"
+          },
+          "hashes": {
+            "sha-256": "260dace38975aa8acc2d16fb60aa1c1f785046f2a4fe06c4ef35ef8ee65c9c8a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/dependencies/imgui/include/imgui_internal.h"
+          },
+          "hashes": {
+            "sha-256": "a3305aaf093df0d56af1c9df7b63a0428a7885aff3b9036e261cf42c863d98c3"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/dependencies/imgui/include/imstb_textedit.h"
+          },
+          "hashes": {
+            "sha-256": "f1f89d896d4921d6193a0def9b9445732483d116ee103b273816657246d0e2aa"
+          }
+        }
+      ]
+    }
+  ]
+}

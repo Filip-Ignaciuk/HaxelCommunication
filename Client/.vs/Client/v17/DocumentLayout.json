@@ -3,16 +3,16 @@
   "WorkspaceRootPath": "D:\\Projects\\HaxelCommunication\\HaxelCommunication\\Client\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|D:\\Projects\\HaxelCommunication\\HaxelCommunication\\Client\\Client\\WindowsNetworking.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|solutionrelative:Client\\WindowsNetworking.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|D:\\Projects\\HaxelCommunication\\HaxelCommunication\\Client\\Client\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|solutionrelative:Client\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|D:\\Projects\\HaxelCommunication\\HaxelCommunication\\Client\\Client\\Chatroom.hpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|solutionrelative:Client\\Chatroom.hpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|D:\\Projects\\HaxelCommunication\\HaxelCommunication\\Client\\Client\\WindowsNetworking.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|solutionrelative:Client\\WindowsNetworking.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D9C3B362-4213-482F-BF3F-5CECF6AEE079}|Client\\Client.vcxproj|D:\\Projects\\HaxelCommunication\\HaxelCommunication\\Client\\Client\\NetworkCalls.hpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -42,7 +42,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 285,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -50,7 +50,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Chatroom.hpp",
               "DocumentMoniker": "D:\\Projects\\HaxelCommunication\\HaxelCommunication\\Client\\Client\\Chatroom.hpp",
               "RelativeDocumentMoniker": "Client\\Chatroom.hpp",
@@ -98,15 +98,16 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "WindowsNetworking.cpp",
               "DocumentMoniker": "D:\\Projects\\HaxelCommunication\\HaxelCommunication\\Client\\Client\\WindowsNetworking.cpp",
               "RelativeDocumentMoniker": "Client\\WindowsNetworking.cpp",
               "ToolTip": "D:\\Projects\\HaxelCommunication\\HaxelCommunication\\Client\\Client\\WindowsNetworking.cpp",
               "RelativeToolTip": "Client\\WindowsNetworking.cpp",
-              "ViewState": "AQIAAJAAAAAAAAAAAAAAANkAAAAvAAAA",
+              "ViewState": "AQIAAAsAAAAAAAAAAAAAAFkAAAAUAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-07-24T14:34:49.278Z"
+              "WhenOpened": "2024-07-24T14:34:49.278Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -122,13 +123,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "main.cpp",
               "DocumentMoniker": "D:\\Projects\\HaxelCommunication\\HaxelCommunication\\Client\\Client\\main.cpp",
               "RelativeDocumentMoniker": "Client\\main.cpp",
               "ToolTip": "D:\\Projects\\HaxelCommunication\\HaxelCommunication\\Client\\Client\\main.cpp",
               "RelativeToolTip": "Client\\main.cpp",
-              "ViewState": "AQIAACsAAAAAAAAAAAAUwFYAAAAAAAAA",
+              "ViewState": "AQIAAJ8CAAAAAAAAAAAEwLYCAAARAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-07-24T14:27:40.472Z",
               "EditorCaption": ""
@@ -147,7 +148,7 @@
               "RelativeDocumentMoniker": "Client\\WindowsNetworking.hpp",
               "ToolTip": "D:\\Projects\\HaxelCommunication\\HaxelCommunication\\Client\\Client\\WindowsNetworking.hpp",
               "RelativeToolTip": "Client\\WindowsNetworking.hpp",
-              "ViewState": "AQIAACEAAAAAAAAAAAAAAB0AAAAAAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAB0AAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2024-07-24T14:35:59.763Z",
               "EditorCaption": ""

@@ -46,7 +46,7 @@ static void glfw_error_callback(int error, const char* description)
 // GUI Logic
 
 static bool wantsEditUser = false;
-static bool* userUpdatedStatus = false;
+static bool* userUpdatedStatus = nullptr;
 
 static ImVec4 white{ 1,1,1,1 };
 static ImVec4 red{ 1.0f, 0.0f, 0.0f ,1.0f };

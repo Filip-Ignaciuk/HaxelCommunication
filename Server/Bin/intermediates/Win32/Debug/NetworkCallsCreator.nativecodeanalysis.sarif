@@ -1,0 +1,99 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "results": [],
+      "tool": {
+        "driver": {
+          "name": "PREfast",
+          "fullName": "PREfast Code Analysis",
+          "version": "14.40.33811.0",
+          "informationUri": "https://aka.ms/cpp/ca"
+        }
+      },
+      "invocations": [
+        {
+          "executionSuccessful": true
+        }
+      ],
+      "artifacts": [
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/server/server/networkcallscreator.cpp"
+          },
+          "roles": [
+            "analysisTarget"
+          ],
+          "hashes": {
+            "sha-256": "4f5e047b2714cf193eed0144e3d5831fd22f6476fe3d8c2929bf09ea6300c022"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/server/server/chatroom.hpp"
+          },
+          "hashes": {
+            "sha-256": "24fccb0ef1a529c235b32e73559af71bcfa1f3b860bc7f4b287f22aec9421699"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/server/server/message.hpp"
+          },
+          "hashes": {
+            "sha-256": "02fba69337bab85653a956ecf928842c2c94e56ad268bcdb36d316946cd80ca3"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/server/server/user.hpp"
+          },
+          "hashes": {
+            "sha-256": "567bd944a6e56b396709594164c3b2d65baffb4d2bf54d1c7619725563756732"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/dependencies/imgui/include/imgui.h"
+          },
+          "hashes": {
+            "sha-256": "c0764c652cf0cf36c6c076c1c7fe54101ba5a8f011cbc689dd2fbfe19b450543"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/dependencies/imgui/include/imconfig.h"
+          },
+          "hashes": {
+            "sha-256": "260dace38975aa8acc2d16fb60aa1c1f785046f2a4fe06c4ef35ef8ee65c9c8a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/server/server/standard.hpp"
+          },
+          "hashes": {
+            "sha-256": "17e73ec774483044385efd8bfc2f52e82892acb9e30e7d5c4dbd7d29b9402fd0"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/server/server/nerworkcallscreator.hpp"
+          },
+          "hashes": {
+            "sha-256": "12dd0f57ec66049f45cfff0f82f997e13ffd41bbfa39aba00980b3f11156b315"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/projects/haxelcommunication/haxelcommunication/server/server/networkcalls.hpp"
+          },
+          "hashes": {
+            "sha-256": "bea2b4f19ca2135baf93215b09468747cb092d7695a7eb75e51087dfc84be330"
+          }
+        }
+      ]
+    }
+  ]
+}

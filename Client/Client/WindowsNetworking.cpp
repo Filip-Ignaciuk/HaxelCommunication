@@ -9,10 +9,10 @@
 #include <WS2tcpip.h>
 
 SOCKET WindowsNetworking::clientSocket = INVALID_SOCKET;
-bool* WindowsNetworking::isReceiving = false;
-bool* WindowsNetworking::isConnected = false;
-bool* WindowsNetworking::inChatroom = false;
-bool* WindowsNetworking::hasUpdatedUser = false;
+bool* WindowsNetworking::isReceiving = new bool(false);
+bool* WindowsNetworking::isConnected = new bool(false);
+bool* WindowsNetworking::inChatroom = new bool(false);
+bool* WindowsNetworking::hasUpdatedUser = new bool(false);
 User* WindowsNetworking::currentUser;
 Chatroom WindowsNetworking::chatroom;
 
@@ -32,9 +32,9 @@ DWORD WINAPI WindowsNetworking::ConnectThread(LPVOID param)
 	InetPtonW(AF_INET, ip.c_str(), &service.sin_addr.S_un.S_addr);
 	Chatroom emptyChatroom;
 	chatroom = emptyChatroom;
-	isReceiving = false;
-	inChatroom = false;
-	isConnected = false;
+	*isReceiving = false;
+	*inChatroom = false;
+	*isConnected = false;
 	
 
 	if (!connect(clientSocket, reinterpret_cast<SOCKADDR*>(&service), sizeof(service)))
@@ -59,7 +59,7 @@ DWORD WINAPI WindowsNetworking::ConnectThread(LPVOID param)
 DWORD WINAPI WindowsNetworking::DisconnectThread(LPVOID param)
 {
 	// Send disconnect message
-	if(inChatroom && isConnected)
+	if(*inChatroom && *isConnected)
 	{
 		currentUser->SetId((char*)"77");
 
@@ -67,9 +67,9 @@ DWORD WINAPI WindowsNetworking::DisconnectThread(LPVOID param)
 		send(clientSocket, (char*)&BD, sizeof(BufferDisconnect), 0);
 	}
 	shutdown(clientSocket, 2);
-	isConnected = false;
-	isReceiving = false;
-	inChatroom = false;
+	*isConnected = false;
+	*isReceiving = false;
+	*inChatroom = false;
 
 	return 0;
 }
@@ -87,7 +87,7 @@ DWORD WINAPI WindowsNetworking::SendTextThread(LPVOID param)
 
 DWORD WINAPI WindowsNetworking::UpdateUserThread(LPVOID param)
 {
-	if(inChatroom && isConnected)
+	if(*inChatroom && *isConnected)
 	{
 		BufferUpdateUser BUUPtr(*currentUser);
 		send(clientSocket, (char*)&BUUPtr, sizeof(BufferUpdateUser), 0);
@@ -154,9 +154,9 @@ DWORD WINAPI WindowsNetworking::ReceiveUserUpdateThread(LPVOID param)
 
 DWORD WINAPI WindowsNetworking::ReceiveServerDisconnectThread(LPVOID param)
 {
-	inChatroom = false;
-	isConnected = false;
-	isReceiving = false;
+	*inChatroom = false;
+	*isConnected = false;
+	*isReceiving = false;
 	currentUser->SetId((char*)"77");
 	shutdown(clientSocket, 2);
 	Error serverDisconnectedError("The server you were connected to has disconnected.", 2);
@@ -204,7 +204,7 @@ DWORD WINAPI WindowsNetworking::ReceiveThread(LPVOID param)
 	char* buffer = new char[maxBufferSize];
 	// Use the largest possible class, so that we can accomidate everything.
 	int recievedBytes = recv(clientSocket, buffer, maxBufferSize, 0);
-	isReceiving = false;
+	*isReceiving = false;
 	BufferNormal BH = *(BufferNormal*)buffer;
 	
 	if (BH.GetType() == 2)
@@ -258,7 +258,7 @@ WindowsNetworking::WindowsNetworking()
 
 void WindowsNetworking::CreateSocket()
 {
-	while (isConnected || inChatroom || isReceiving || clientSocket != INVALID_SOCKET)
+	while (*isConnected || *inChatroom || *isReceiving || clientSocket != INVALID_SOCKET)
 	{
 
 	}
@@ -284,7 +284,7 @@ void WindowsNetworking::CreateSocket()
 
 void WindowsNetworking::CloseSocket()
 {
-	while (isConnected || inChatroom || isReceiving)
+	while (*isConnected || *inChatroom || *isReceiving)
 	{
 		
 	}
@@ -333,7 +333,7 @@ void WindowsNetworking::UpdateUser(User* _user)
 
 void WindowsNetworking::Receive()  
 {
-	if (!isReceiving && isConnected)
+	if (!*isReceiving && *isConnected)
 	{
 		*isReceiving = true;
 		CreateThread(nullptr, 0, ReceiveThread, nullptr, 0, nullptr);
