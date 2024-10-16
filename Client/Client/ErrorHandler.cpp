@@ -29,3 +29,46 @@ bool ErrorHandler::HasError()
 	return hasErrors;
 }
 
+bool ErrorHandler::GetHasResponded()
+{
+	return hasResponded;
+}
+
+bool ErrorHandler::SetHasResponded(bool _hasResponded)
+{
+	hasResponded = _hasResponded;
+}
+
+Error& ErrorHandler::GetCurrentResponseError()
+{
+	return responseError;
+}
+
+Error& ErrorHandler::SetCurrentResponseError(Error& _currentResponseError)
+{
+	responseError = _currentResponseError;
+}
+
+bool ErrorHandler::GetResponseBool()
+{
+	return responseBool;
+}
+
+bool ErrorHandler::SetResponseBool(bool _responseBool)
+{
+	responseBool = _responseBool;
+}
+
+std::string& ErrorHandler::GetResponseString()
+{
+	return responseString;
+}
+
+
+std::string& ErrorHandler::SetResponseString(std::string& _responseString)
+{
+	responseString = _responseString;
+
+
+
+

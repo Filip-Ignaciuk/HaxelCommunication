@@ -113,9 +113,9 @@ void ErrorChecker()
                 ImGui::Text(latestError.GetMessageString().c_str());
                 if (ImGui::Button("Cancel", ImVec2(120, 0)))
                 {
-                    finishedError = true;
                     criticalError = true;
                     ErrorHandler::DeleteError();
+                    finishedError = true;
                     ImGui::CloseCurrentPopup();
                 }
                 ImGui::EndPopup();
@@ -130,8 +130,8 @@ void ErrorChecker()
                 ImGui::Text(latestError.GetMessageString().c_str());
                 if (ImGui::Button("Cancel", ImVec2(120, 0)))
                 {
-                    finishedError = true;
                     ErrorHandler::DeleteError();
+                    finishedError = true;
                     ImGui::CloseCurrentPopup();
                 }
                 ImGui::EndPopup();
@@ -146,8 +146,34 @@ void ErrorChecker()
                 ImGui::Text(latestError.GetMessageString().c_str());
                 if (ImGui::Button("Cancel", ImVec2(120, 0)))
                 {
-                    finishedError = true;
                     ErrorHandler::DeleteError();
+                    finishedError = true;
+                    ImGui::CloseCurrentPopup();
+                }
+                ImGui::EndPopup();
+
+            }
+        }
+        else if (latestErrorLevel == 3)
+        {
+            ImGui::OpenPopup("Response Required");
+            ErrorHandler::SetCurrentResponseError(latestError);
+            if (ImGui::BeginPopupModal("Response Required", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+                ImGui::Text(latestError.GetMessageString().c_str());
+                if (ImGui::Button("Yes", ImVec2(120, 0)))
+                {
+                    ErrorHandler::SetResponseBool(true);
+                    ErrorHandler::SetHasResponded(true);
+                    ErrorHandler::DeleteError();
+
+
+                    finishedError = true;
+                    ImGui::CloseCurrentPopup();
+                }
+                if (ImGui::Button("No", ImVec2(120, 0)))
+                {
+                    ErrorHandler::DeleteError();
+                    finishedError = true;
                     ImGui::CloseCurrentPopup();
                 }
                 ImGui::EndPopup();
@@ -302,7 +328,7 @@ void PopulateUsers()
 
 // Menu Bar
 
-std::string origialMessage = "It's Cold.";
+std::string origialMessage = "Hello!";
 std::vector<int> style;
 static bool wantsDisplayName;
 static bool wantsId;
