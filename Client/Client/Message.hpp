@@ -34,7 +34,7 @@ class MessageBuilder
 {
 private:
 	const inline static std::string weekdaysShort[7] = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
-	const inline static std::string weekdaysLong[7] = { "Monday", "Tuesday", "Wed", "Thu", "Fri", "Sat", "Sun" };
+	const inline static std::string weekdaysLong[7] = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
 	std::vector<int> style;
 	void AddTime();
 	void AddDateLong();
