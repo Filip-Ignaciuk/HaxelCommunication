@@ -48,6 +48,7 @@ static void glfw_error_callback(int error, const char* description)
 static bool wantsEditUser = false;
 static bool* userUpdatedStatus = nullptr;
 
+
 static ImVec4 white{ 1,1,1,1 };
 static ImVec4 red{ 1.0f, 0.0f, 0.0f ,1.0f };
 static ImVec4 yellow{ 1.0f, 1.0f, 0.0f , 1.0f };
@@ -87,7 +88,7 @@ static inline MessageBuilder messageBuilder;
 
 
 // We store all chatroom behaviour in the chatroom class, to organise and simplify our code.
-
+static bool updateMessagesInChatroom;
 
 
 
@@ -467,7 +468,7 @@ void MenuBar()
                     {
                         chatroom->SetStyle(style);
                         chatroom->UpdateMessages();
-
+                        updateMessagesInChatroom = true;
                         
                     }
                     ImGui::EndMenu();
@@ -710,7 +711,7 @@ int main(int, char**)
         ErrorChecker();
         PopupChecker();
 
-        if(chatroomStatus)
+        if(*chatroomStatus)
         {
             ImGui::Begin("ChatRoom", &exit, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize );
             {

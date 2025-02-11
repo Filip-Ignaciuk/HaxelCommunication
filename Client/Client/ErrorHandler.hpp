@@ -24,16 +24,16 @@ public:
 
 	// For Questions
 	static bool GetHasResponded();
-	static bool SetHasResponded(bool _hasResponded);
+	static void SetHasResponded(bool _hasResponded);
 
 	static Error& GetCurrentResponseError();
-	static Error& SetCurrentResponseError(Error& _currentResponseError);
+	static void SetCurrentResponseError(Error& _currentResponseError);
 
 	static bool GetResponseBool();
-	static bool SetResponseBool(bool _responseBool);
+	static void SetResponseBool(bool _responseBool);
 	
 	static std::string& GetResponseString();
-	static std::string& SetResponseString(std::string& _responseString);
+	static void SetResponseString(std::string& _responseString);
 
 	static void ClearCurrentResponse();
 };

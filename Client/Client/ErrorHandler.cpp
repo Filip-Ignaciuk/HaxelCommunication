@@ -3,6 +3,12 @@
 bool ErrorHandler::hasErrors = false;
 std::queue<Error> ErrorHandler::m_errors;
 
+bool ErrorHandler::hasResponded = false;
+Error ErrorHandler::responseError;
+
+bool ErrorHandler::responseBool = false;
+std::string ErrorHandler::responseString;
+
 void ErrorHandler::AddError(const Error& _error)
 {
 	hasErrors = true;
@@ -34,7 +40,7 @@ bool ErrorHandler::GetHasResponded()
 	return hasResponded;
 }
 
-bool ErrorHandler::SetHasResponded(bool _hasResponded)
+void ErrorHandler::SetHasResponded(bool _hasResponded)
 {
 	hasResponded = _hasResponded;
 }
@@ -44,7 +50,7 @@ Error& ErrorHandler::GetCurrentResponseError()
 	return responseError;
 }
 
-Error& ErrorHandler::SetCurrentResponseError(Error& _currentResponseError)
+void ErrorHandler::SetCurrentResponseError(Error& _currentResponseError)
 {
 	responseError = _currentResponseError;
 }
@@ -54,7 +60,7 @@ bool ErrorHandler::GetResponseBool()
 	return responseBool;
 }
 
-bool ErrorHandler::SetResponseBool(bool _responseBool)
+void ErrorHandler::SetResponseBool(bool _responseBool)
 {
 	responseBool = _responseBool;
 }
@@ -65,10 +71,10 @@ std::string& ErrorHandler::GetResponseString()
 }
 
 
-std::string& ErrorHandler::SetResponseString(std::string& _responseString)
+void ErrorHandler::SetResponseString(std::string& _responseString)
 {
 	responseString = _responseString;
-
+}
 
 
 
